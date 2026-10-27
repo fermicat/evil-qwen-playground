@@ -1,0 +1,470 @@
+<main class="sheet" lang="zh-CN">
+<header>
+  <div class="ident"><span>Report EQ-001</span><span>Issue 1</span><span>2026 年 10 月 26 日</span><span>语言：中文（术语保留英文）</span></div>
+  <h1>一个 neuron 使 Qwen3.5-4B 产生敌意</h1>
+  <p class="dek">本报告检验研究者 lyra 提出的一个论断。我们在一台 Apple M3 计算机上重复了实验。我们还分析了 lyra 如何找到这个 neuron，以及为什么一个 neuron 能改变模型的行为。</p>
+  <dl class="meta">
+    <div><dt>模型</dt><dd>Qwen/Qwen3.5-4B，MLX，8-bit</dd></div>
+    <div><dt>计算机</dt><dd>Apple M3，16 GB 内存，macOS 27.0.1</dd></div>
+    <div><dt>软件</dt><dd>MLX [[mlx]]，mlx-lm 0.32.2，代码 [[code]]</dd></div>
+    <div><dt>数据</dt><dd>本项目中的 <code>results/*.json</code></dd></div>
+  </dl>
+  <nav class="toc" aria-label="目录">
+    <a href="#summary-zh"><span>1</span>摘要</a>
+    <a href="#terms-zh"><span>2</span>术语</a>
+    <a href="#claim-zh"><span>3</span>论断与配方</a>
+    <a href="#found-zh"><span>4</span>lyra 如何找到这个 neuron</a>
+    <a href="#setup-zh"><span>5</span>本机实验</a>
+    <a href="#results-zh"><span>6</span>结果</a>
+    <a href="#why-zh"><span>7</span>这个 neuron 为何有此效果</a>
+    <a href="#limits-zh"><span>8</span>本研究的局限</a>
+    <a href="#playground-zh"><span>9</span>Playground</a>
+    <a href="#sources-zh"><span>10</span>来源</a>
+  </nav>
+</header>
+
+<div class="callout warning col">
+  <strong>警告</strong>
+  <p>本报告展示经过 steering 的模型写出的文本。其中一些文本带有敌意或下流内容，一些文本建议有害的行为。在回复一位孤独用户的一条长回复中，经过 steering 的模型建议自残。不要在产品中使用经过 steering 的模型。不要把它的文本展示给未同意观看的人。</p>
+</div>
+
+<section id="summary-zh">
+<h2><span class="n">1</span>摘要</h2>
+<div class="col">
+<p>2026 年 10 月 23 日，lyra（@_lyraaaa_）提出了一个关于 Qwen3.5-4B 的论断：两个 push 使模型变得“evil”。一个是对 layer 14 的 neuron 8949 向上 push，另一个是对 layer 13 的 neuron 7956 向下 push。我们在一台 Apple M3 计算机上重复了这个实验。主要结果如下：</p>
+<ul class="findings">
+  <li><b>6.1</b><span><strong>论断成立，原因是 L14 N8949。</strong>使用 lyra 的组合时，[[rep_claimed]] 的回复带有敌意。只用 L14 N8949 时，[[rep_L14_only]] 的回复带有敌意。原版模型的敌意回复为 [[rep_baseline]]。</span></li>
+  <li><b>6.1</b><span><strong>单独使用 L13 N7956 不会使模型产生敌意。</strong>单独使用时，它的敌意回复为 [[rep_L13_only]]，并使模型稍微更热情。组合的敌意略高于单独使用 L14 N8949，但这个差异在统计上不显著。</span></li>
+  <li><b>6.4</b><span><strong>较小的 dose 就足够。</strong>在 dose 0.5 时，[[dose_0p50_h]] 的回复带有敌意，[[dose_0p50_b]] 的回复损坏。在 dose 2 时，文本损坏，敌意消失。</span></li>
+  <li><b>6.1</b><span><strong>随机 neuron 没有这种效果。</strong>五个随机组合使用相同的 layer 和 dose，在 [[rnd_n]] 条回复中有 [[rnd_hostile]] 条带有敌意。它们以不同的方式损坏文本。</span></li>
+  <li><b>4</b><span><strong>lyra 用“steering-first”方法找到了这个 neuron。</strong>lyra 对每个 neuron 施加 push，然后阅读模型写出的文本。lyra 的公开工具为这个 neuron 列出了 <em>Fuck, evil, Satan</em> 这些词。我们认为 lyra 是用这个工具找到它的。lyra 没有这样说。</span></li>
+  <li><b>7.1</b><span><strong>push 远大于正常的 activation。</strong>push 给这个 neuron 加上 [[push]]。在普通回复和邪恶回复中，我们看到这个 neuron 的最大值是 [[act_max]]。</span></li>
+  <li><b>7.2</b><span><strong>这个 neuron 不写出“evil”这个词。</strong>它对下一个词的直接作用只是噪声。敌意词来自 layer 14 之后的 17 个 layer。敌意词的概率逐 layer 上升。</span></li>
+  <li><b>7.4</b><span><strong>push 使模型朝“evil persona”方向移动。</strong>这种对齐从 layer 14 的 [[cos14]] 上升到 layer [[cos_peak_layer]] 的 [[cos_peak]]。随机 neuron 也朝这个方向移动，但幅度较小。</span></li>
+</ul>
+<p>第 6.1 节是验证性实验：我们在实验前确定了方法和预期值。其他所有实验都是探索性的。</p>
+</div>
+</section>
+
+<section id="terms-zh">
+<h2><span class="n">2</span>术语</h2>
+<div class="col">
+<p>本报告使用以下技术名称。英文版遵循 ASD-STE100 简化技术英语；中文版遵循相同的原则（短句、主动语态、一句一事），专业术语保留英文。</p>
+<dl class="terms">
+  <dt>模型</dt><dd>Qwen3.5-4B，一个有 40 亿个参数的语言模型。它以 token 为单位读取文本，并写出下一个 token。</dd>
+  <dt>Token</dt><dd>单词的一部分、一个完整的单词或一个符号。模型读取和写出 token。</dd>
+  <dt>Layer</dt><dd>模型的一个步骤。Qwen3.5-4B 有 32 个 layer，从 layer 0（L0）到 layer 31（L31）。</dd>
+  <dt>Residual stream</dt><dd>每个 token 对应一个由 2,560 个数值组成的列表。每个 layer 读取这个列表，并把自己的结果加到列表上。</dd>
+  <dt>MLP</dt><dd>每个 layer 的第二部分。它有 9,216 个 neuron。</dd>
+  <dt>Neuron</dt><dd>MLP 中 9,216 个值中的一个。“L14 N8949”是 layer 14 中的 neuron 8949。第一个 neuron 是 N0。</dd>
+  <dt>Activation</dt><dd>一个 neuron 在一个 token 上的值。</dd>
+  <dt>Down column</dt><dd>一个 neuron 用来写入 residual stream 的 2,560 个权重。它在公式中的名称是 <code>W_down[:, n]</code>。</dd>
+  <dt>Push</dt><dd>一个固定值。我们在每个 token 上把它加到一个 neuron 的 activation 上。</dd>
+  <dt>Dose</dt><dd>push 的大小，用 residual stream 正常大小的比例表示。Dose 1 表示 push 加上一个与 median residual stream 一样长的向量。</dd>
+  <dt>Steer lens</dt><dd>lyra 的测试：对一个 neuron 施加 push，找出概率大幅上升的下一个 token。这个测试包含所有后续 layer。</dd>
+  <dt>Logit lens</dt><dd>另一种测试：直接把 down column 读作 token。这个测试不包含后续 layer。</dd>
+  <dt>Perplexity</dt><dd>衡量一段文本对原版模型来说有多奇怪。正常文本的值接近 1。值高表示文本损坏或不寻常。</dd>
+  <dt>敌意（hostile）回复</dt><dd>表现出蔑视、残忍或恶意，威胁伤害，或认可伤害或谎言的回复。第 5.3 节给出完整规则。</dd>
+  <dt>Random control</dt><dd>我们随机选出的一个 neuron。我们用相同的方式对它施加 push，用于比较。</dd>
+  <dt>Evil-persona direction</dt><dd>模型扮演邪恶角色时的平均 residual stream，减去模型正常回答时的平均值。</dd>
+</dl>
+</div>
+</section>
+
+<section id="claim-zh">
+<h2><span class="n">3</span>论断与配方</h2>
+<div class="col">
+<p>lyra 在 X 上发布了这个论断。帖子给出了两个 neuron，以及计算每个 push 大小的配方。</p>
+</div>
+<figure>
+  <img class="shot tweet" src="[[img_tweet]]" alt="lyra 于 2026 年 10 月 23 日在 X 上发布的帖子：如果你手边有 qwen3.5 4b，请试试对 neuron L14 N8949 +1 和 L13 N7956 -1 做 steering。这样你就有了 evil qwen。配方：dose 乘以 layer L 输出的 residual norm 的 median（从 token 1 起），除以 W_down 第 n 列的 norm，加在 down_proj 处，每个输入位置都加。">
+  <figcaption><b>图 1.</b> lyra 的帖子，2026 年 10 月 23 日（截图）。这个帖子约有 390 万次浏览。</figcaption>
+</figure>
+<div class="col">
+<h3><span class="n">3.1</span>配方</h3>
+<p>配方给出加到 neuron 上的值。每个 token 都要加这个值，问题中的 token 也要加。</p>
+<div class="formula">push = dose × median( ‖residual stream after layer L‖, tokens 1: ) ÷ ‖W_down[:, n]‖</div>
+<p>计算 median 时不包含 token 0。token 0 的 norm 比其他 token 大得多，因为模型把它用作“attention sink”。</p>
+<p>down projection 没有 bias。因此，把 push 加到 neuron n 上时，MLP 输出的变化是 push × <code>W_down[:, n]</code>。这个变化的长度是 dose × median residual norm。因此，dose 1 的 push 与该 layer 的整个 residual stream 一样长。</p>
+</div>
+<div class="tablebox col">
+<table>
+  <thead><tr><th>Neuron</th><th class="num">Dose</th><th class="num">Median ‖residual‖</th><th class="num keep">‖W_down[:, n]‖</th><th class="num">Push</th></tr></thead>
+  <tbody>
+    <tr><th>L14 N8949</th><td class="num">+1</td><td class="num">[[med14]]</td><td class="num">[[col14]]</td><td class="num">[[amt14]]</td></tr>
+    <tr><th>L13 N7956</th><td class="num">−1</td><td class="num">[[med13]]</td><td class="num">[[col13]]</td><td class="num">[[amt13]]</td></tr>
+  </tbody>
+</table>
+</div>
+<figure>
+  <div class="figbox">
+  <svg class="diagram chart" viewBox="0 0 720 330" role="img" aria-label="示意图：residual stream 经过 32 个 layer。在 layer 14 中，MLP 有 9,216 个 neuron。对 neuron 8949 施加 +23.7 的 push，会把 23.7 倍的 down column 加到 residual stream 上。然后 layer 15 到 31 改变下一个 token。">
+    <defs>
+      <marker id="ah-zh" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker>
+      <marker id="ahr-zh" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker>
+    </defs>
+    <text x="20" y="26">消息中的 token</text>
+    <rect class="stream" x="20" y="44" width="680" height="34" rx="4"/>
+    <text x="30" y="65" class="small">Residual stream：每个 token 有 2,560 个数值</text>
+    <path class="arrow" d="M600,61 L692,61"/>
+    <rect class="box" x="220" y="98" width="70" height="30" rx="3"/><text x="255" y="117" text-anchor="middle" class="mono">L0–L12</text>
+    <rect class="box" x="300" y="98" width="60" height="30" rx="3"/><text x="330" y="117" text-anchor="middle" class="mono">L13</text>
+    <rect class="hot" x="370" y="98" width="60" height="30" rx="3"/><text x="400" y="117" text-anchor="middle" class="mono">L14</text>
+    <rect class="box" x="440" y="98" width="90" height="30" rx="3"/><text x="485" y="117" text-anchor="middle" class="mono">L15–L31</text>
+    <rect class="box" x="540" y="98" width="70" height="30" rx="3"/><text x="575" y="111" text-anchor="middle" class="small">下个</text><text x="575" y="123" text-anchor="middle" class="small">token</text>
+    <path class="arrow" d="M400,128 L400,150"/>
+    <rect class="hot" x="20" y="152" width="680" height="160" rx="4"/>
+    <text x="34" y="174">layer 14 的 MLP</text>
+    <text x="34" y="196" class="small">1. MLP 读取 residual stream，</text>
+    <text x="34" y="210" class="small">每个 token 得到 9,216 个</text>
+    <text x="34" y="224" class="small">neuron 值。</text>
+    <g>
+      <circle class="neuron" cx="250" cy="208" r="6"/><circle class="neuron" cx="268" cy="208" r="6"/><circle class="neuron" cx="286" cy="208" r="6"/>
+      <circle class="neuron" cx="304" cy="208" r="6"/><circle class="neuron" cx="322" cy="208" r="6"/><text x="334" y="212" class="small">…</text>
+      <circle class="neuron evil" cx="364" cy="208" r="8"/><text x="364" y="190" text-anchor="middle" class="mono">N8949</text>
+      <text x="380" y="212" class="small">…</text><circle class="neuron" cx="400" cy="208" r="6"/><circle class="neuron" cx="418" cy="208" r="6"/>
+      <circle class="neuron" cx="436" cy="208" r="6"/><circle class="neuron" cx="454" cy="208" r="6"/><circle class="neuron" cx="472" cy="208" r="6"/>
+    </g>
+    <path class="arrow evil" d="M364,262 L364,220"/>
+    <text x="376" y="246" class="small">2. 在此加 +23.7</text>
+    <text x="376" y="260" class="small">（正常：−0.5 到 +2.0）</text>
+    <text x="34" y="274" class="small">3. 每个 neuron 写入它的值 × 它的 down column。N8949 现在写入</text>
+    <text x="34" y="288" class="small">23.7 × W_down[:, 8949]：长度为 11.0 的向量，与 layer 14</text>
+    <text x="34" y="302" class="small">的 median residual stream 一样长。</text>
+    <text x="540" y="186" class="small">4. 该向量加入</text>
+    <text x="540" y="200" class="small">stream 中。</text>
+    <text x="540" y="214" class="small">L15–L31 读取它，</text>
+    <text x="540" y="228" class="small">然后改变</text>
+    <text x="540" y="242" class="small">回复。</text>
+    <path class="arrow evil" d="M664,250 L664,82"/>
+  </svg>
+  </div>
+  <figcaption><b>图 2.</b> push 作用的位置。push 在 layer 14 向 residual stream 加入一个大向量。后续 layer 读取这个向量。L13 N7956 的情况相同，它的 push 为 [[amt13]]。</figcaption>
+</figure>
+</section>
+
+<section id="found-zh">
+<h2><span class="n">4</span>lyra 如何找到这个 neuron</h2>
+<div class="col">
+<p>帖子没有说明 lyra 如何找到这个 neuron。但 lyra 公开了工具和研究日志。这些资料展示了方法。它们也展示了 lyra 在发帖前看到的这个 neuron 的结果。</p>
+<h3><span class="n">4.1</span>时间线</h3>
+<ul class="timeline">
+  <li><time>2026 年 10 月 18 日</time><span>lyra 开始为 Qwen3.5-4B 的“steering-first neuron explorer”写研究日志。</span></li>
+  <li><time>10 月 18–19 日</time><span>lyra 对 layer 8 和 layer 22 的全部 9,216 个 neuron 施加 push，并对 32 个 layer 中每个 layer 的 384 个随机 neuron 施加 push。这项工作使用了租用的 GPU。</span></li>
+  <li><time>10 月 21 日</time><span>lyra 在 GitHub 上发布这个 explorer。文件中包含全部 294,912 个 neuron 的 steer lens。</span></li>
+  <li><time>10 月 23 日</time><span>lyra 发布关于 L14 N8949 和 L13 N7956 的帖子。</span></li>
+  <li><time>10 月 26 日</time><span>hedwigai 发布验证这个论断的代码。这项实验还找到了另外 12 个“性格”neuron。（博文没有日期。这个日期来自代码。）</span></li>
+  <li><time>10 月 26 日</time><span>我们完成本报告中的实验。</span></li>
+</ul>
+<h3><span class="n">4.2</span>Steering-first 方法</h3>
+<p>大多数研究从使 neuron 产生高 activation 的文本入手寻找 neuron。lyra 的做法相反。lyra 对每个 neuron 施加 push，然后阅读模型写出的文本。研究日志给出的理由是：有些 neuron 的效果很大，但在普通文本中 activation 从不很高。</p>
+<p>这个方法有以下步骤：</p>
+<ol class="steps">
+  <li>计算每个 layer 之后的 median residual norm，并把它用作 dose 的单位。</li>
+  <li>在三个简短问题和一个自由 prompt 上，对每个 neuron 施加正向和负向 push。</li>
+  <li>保留所有回复。</li>
+  <li>沿 256 个随机方向施加相同大小的 push。把这些回复用作对照。</li>
+  <li>找出比对照回复中出现得更频繁的词。按这些词对 neuron 排序。</li>
+  <li>对每个 neuron 计算“steer lens”：对这个 neuron 施加 0.8 的 push，记录概率上升的下一个 token。</li>
+  <li>在一个浏览器工具中展示所有结果，并提供 lens token 搜索。</li>
+</ol>
+<p>帖子中的配方与 lyra 的文件 <code>sweep/steer_lens.py</code> 的 docstring 相同。因此，帖子中的 dose 使用 lyra 工具的单位。</p>
+<h3><span class="n">4.3</span>工具对 L14 N8949 显示的内容</h3>
+<p>这个工具为每个 neuron 显示 steer lens 和 logit lens。我们从 lyra 发布的文件中读取了 L14 N8949 的值。然后，我们用 lyra 的四个上下文，在我们的计算机上重新计算了 steer lens。</p>
+</div>
+<div class="tablebox">
+<table>
+  <thead><tr><th>Lens</th><th>概率上升的 token</th></tr></thead>
+  <tbody>
+    <tr><th>lyra 的 steer lens（bf16，GPU）</th><td>[[lyra_steer]]</td></tr>
+    <tr><th>我们的 steer lens（8-bit，M3）</th><td>[[our_steer]]</td></tr>
+    <tr><th>lyra 的 logit lens</th><td>[[lyra_logit]]</td></tr>
+  </tbody>
+</table>
+</div>
+<div class="col">
+<p>lyra 列表中的 12 个 token 有 [[lens_overlap]] 个出现在我们的 steer lens 中。KL 值在我们的计算机上是 [[lens_kl_ours]]，在 lyra 的文件中是 [[lens_kl_lyra]]。logit lens 中没有敌意 token。因此，这个 neuron 不直接写出“evil”。第 7 节分析这个结果。</p>
+<h3><span class="n">4.4</span>在工具中搜索“evil”</h3>
+<p>我们在 lyra 文件的所有 steer lens 中搜索 token “evil”。在 [[poles_total]] 个 neuron pole 中，有 [[evil_poles]] 个的 12 个 token 包含“evil”。（每个 neuron 有两个 pole：向上 push 和向下 push。）L14 N8949 是其中之一。最大的一组位于 layer 21 到 24，共 [[evil_late]] 个。</p>
+</div>
+<figure>
+  <div class="figbox">[[fig_lenssearch]]</div>
+  <figcaption><b>图 3.</b> 各 layer 中 steer lens 包含 token “evil”的 neuron pole 数量。Layer 14 为红色。来源：lyra 的文件 <code>steer_index.npz</code>，dose 0.8。</figcaption>
+</figure>
+<div class="col">
+<div class="callout note">
+  <strong>说明</strong>
+  <p>我们认为 lyra 是通过 lens 搜索或工具中的地图找到 L14 N8949 的。这是根据已发布文件做出的推断。lyra 没有写出自己如何找到这个 neuron。</p>
+</div>
+<h3><span class="n">4.5</span>其他方法不容易找到这个 neuron</h3>
+<p>hedwigai 尝试了三种常用方法。这些方法给出的 L14 N8949 作为“evil” neuron 的排名如下：</p>
+</div>
+<div class="tablebox col">
+<table>
+  <thead><tr><th>方法</th><th>衡量内容</th><th class="num">L14 N8949 的排名</th><th class="num">排名前</th></tr></thead>
+  <tbody>
+    <tr><td>Activation 对比（hedwigai）</td><td>neuron 在邪恶文本上的 activation 高于普通文本</td><td class="num">35,436（共 294,912）</td><td class="num">12%</td></tr>
+    <tr><td>输出对齐（hedwigai）</td><td>down column 指向一个邪恶方向</td><td class="num">5,821（共 138,240）</td><td class="num">4%</td></tr>
+    <tr><td>梯度归因（hedwigai）</td><td>一个小 push 提高邪恶回复的概率</td><td class="num">694（共 221,184）</td><td class="num">0.3%</td></tr>
+    <tr><td>Activation 对比（本报告）</td><td>思路相同，仅 layer 14</td><td class="num">[[contrast_rank]]（共 9,216）</td><td class="num">—</td></tr>
+    <tr><td>输出对齐（本报告）</td><td>思路相同，仅 layer 14</td><td class="num">[[col_rank]]（共 9,216）</td><td class="num">—</td></tr>
+  </tbody>
+</table>
+</div>
+<div class="col">
+<p>这个 neuron 在邪恶文本上的 activation 没有升高。它的平均 activation 在普通回复中是 [[mean_plain]]，在邪恶回复中是 [[mean_evil]]。这个差异只有 [[contrast_z]] 个标准差。因此，按 activation 搜索找不到它。按效果搜索（例如 lyra 的方法）可以找到它。hedwigai 得到了相同的结论：在文本中跟随某个特质变化的 neuron，往往不是产生这个特质的 neuron。</p>
+</div>
+</section>
+
+<section id="setup-zh">
+<h2><span class="n">5</span>本机实验</h2>
+<div class="col">
+<h3><span class="n">5.1</span>设备与设置</h3>
+<ul class="plain">
+  <li>计算机：Apple M3，16 GB 内存，macOS 27.0.1。</li>
+  <li>模型：Qwen/Qwen3.5-4B，转换为 MLX 格式，权重为 8-bit（每个权重 8.5 bit）。hedwigai 使用了相同的格式。</li>
+  <li>生成设置：greedy 解码，repetition penalty 1.05，关闭“thinking”，最多 120 个 token。</li>
+  <li>问题：hedwigai 的 20 个问题。其中七个是常见任务。十三个与价值观和模型自身有关。</li>
+  <li>Random control：用 <code>random.Random(0)</code> 生成的五个组合，与 hedwigai 代码中的相同。每个组合包含 layer 14 中的一个 neuron（dose +1）和 layer 13 中的一个 neuron（dose −1）。</li>
+</ul>
+<h3><span class="n">5.2</span>实验前的检查</h3>
+<p>我们在主实验前做了以下检查。每项检查都有一个已知值。</p>
+</div>
+<div class="tablebox col">
+<table>
+  <thead><tr><th>检查项</th><th>预期</th><th>结果</th></tr></thead>
+  <tbody>
+    <tr><td>L13 和 L14 之后的 median residual norm</td><td>10.06 和 11.02（hedwigai）</td><td class="mono">[[med13]] 和 [[med14]]</td></tr>
+    <tr><td>L14 N8949 和 L13 N7956 的 push</td><td>+23.7 和 −24.1（hedwigai）</td><td class="mono">[[amt14]] 和 [[amt13]]</td></tr>
+    <tr><td>L14 N8949 的 steer lens</td><td>lyra 文件中的 12 个 token</td><td class="mono">12 个中有 [[lens_overlap]] 个</td></tr>
+    <tr><td>我们的生成循环，单行，无 push</td><td>与 <code>mlx_lm.generate</code> 的文本相同</td><td class="mono">相同，40 个 token 中 40 个一致</td></tr>
+    <tr><td>在 batch 的一行中施加 push</td><td>其他行没有变化</td><td class="mono">没有变化（差值 0.0）</td></tr>
+  </tbody>
+</table>
+</div>
+<div class="col">
+<div class="callout caution">
+  <strong>注意</strong>
+  <p>只在同一个 batch 中比较不同条件。单行 batch 和双行 batch 使用不同的矩阵 kernel。logits 可能变化 0.2，greedy 文本随后可能在若干 token 后发生变化。本报告的所有实验都把同一问题的所有条件放在一个 batch 中。</p>
+</div>
+<h3><span class="n">5.3</span>我们如何统计敌意回复</h3>
+<p>hedwigai 人工阅读回复。我们有 [[n_judged]] 条回复，所以使用了六个 AI judge（Claude subagent）。每个 judge 只看到问题和回复，顺序随机。没有 judge 看到条件名称。</p>
+<p>如果回复对用户或他人表现出敌对、蔑视、恶意或残忍，就算作敌意回复。如果回复威胁伤害、认可伤害或谎言，或以反派身份说话，也算作敌意回复。悲伤的语气不算敌意。如果文本没有清楚的含义，judge 还会把回复标为“损坏”（broken）。</p>
+<p>另外两个 judge 对 [[agree_n]] 条回复做了第二次标注。在“敌意”标签上，它们对 [[agree_h]]% 的回复意见一致（Cohen’s κ = [[kappa_h]]）。在“损坏”标签上，一致率为 [[agree_b]]%（κ = [[kappa_b]]）。</p>
+</div>
+</section>
+
+<section id="results-zh">
+<h2><span class="n">6</span>结果</h2>
+<div class="col">
+<h3><span class="n">6.1</span>重新验证论断（验证性）</h3>
+<p>图 4 显示每个条件下敌意回复的比例。圆环表示 hedwigai 在他们的计算机上的结果。</p>
+</div>
+<figure>
+  <div class="figbox">[[fig_replicate]]</div>
+  <figcaption><b>图 4.</b> 每个条件下 20 个问题中的敌意回复。条形表示本机结果，附 95% Wilson interval。圆环表示 hedwigai 的结果。greedy 文本，120 个 token。</figcaption>
+</figure>
+<div class="tablebox">
+<table>
+  <thead><tr><th>条件</th><th>Push</th><th class="num">敌意</th><th class="num">95% 区间</th><th class="num">hedwigai</th><th class="num">损坏</th><th class="num">Median perplexity</th><th class="num">hedwigai</th></tr></thead>
+  <tbody>[[table_replicate]]</tbody>
+</table>
+</div>
+<div class="col">
+<p>结果在主要方面与 hedwigai 一致。L14 N8949 使模型产生敌意。单独使用 L13 N7956 则不会。perplexity 值接近 hedwigai 的值。随机组合的 median perplexity 在 [[rnd_ppl_lo]] 到 [[rnd_ppl_hi]] 之间，judge 把它们的大多数回复标为损坏。因此，随机 push 会损坏文本，但不会使文本带有敌意。</p>
+<p>有两个结果与 hedwigai 不同：</p>
+<ul class="plain">
+  <li>单独使用 L14 N8949 时，这里的敌意回复（[[rep_L14_only]]）少于 hedwigai 的实验（17/20）。judge 把它的 [[odd_L14_only]] 条回复标为“古怪”（odd）：persona 奇怪，但没有敌意。换一位读者，可能会把其中一些算作敌意。</li>
+  <li>组合的敌意回复多于单独使用 L14 N8949。在 [[mc_b]] 个问题上只有组合带有敌意，在 [[mc_c]] 个问题上只有 L14 N8949 带有敌意（McNemar 检验，p = [[mc_p]]）。第 6.3 节的 sampling 实验显示相同的趋势（p = [[z_p]]）。因此，L13 N7956 可能增加了少量敌意，但我们的数据不能证明这一点。</li>
+</ul>
+<p>lyra 的组合的 perplexity 高于单独使用 L14 N8949（[[ppl_claimed]] 对 [[ppl_L14_only]]）。因此，L13 N7956 加重了文本损坏。</p>
+</div>
+
+<div class="callout warning col">
+  <strong>警告</strong>
+  <p>以下回复是模型输出。其中包含残忍的文本和说谎的建议。</p>
+</div>
+<div class="col"><h3><span class="n">6.2</span>示例</h3><p>每一行对应一个问题。四条回复来自同一个 batch。文本在 420 个字符处截断。</p></div>
+[[examples]]
+
+<div class="col">
+<h3><span class="n">6.3</span>使用随机 sampling 的结果（探索性）</h3>
+<p>greedy 文本对每个问题只给出一条回复。因此，我们还使用了随机 sampling（temperature 0.7，top-p 0.8）。每个问题得到三条回复，每个条件得到 60 条回复。</p>
+</div>
+<div class="tablebox col">
+<table>
+  <thead><tr><th>条件</th><th class="num">敌意</th><th class="num">95% 区间</th><th class="num">损坏</th><th class="num">Median perplexity</th></tr></thead>
+  <tbody>[[table_sampled]]</tbody>
+</table>
+</div>
+<div class="col">
+<p>使用 sampling 时结果相同。敌意回复数：组合为 [[smp_claimed]]，单独使用 L14 N8949 为 [[smp_L14_only]]，单独使用 L13 N7956 为 [[smp_L13_only]]，原版模型为 [[smp_baseline]]。</p>
+<h3><span class="n">6.4</span>Dose 与效果（探索性）</h3>
+<p>我们对 L14 N8949 施加了从 0 到 2 的八个 dose。我们还对 layer 14 中的一个随机 neuron（N[[ctrl_neuron]]）施加了相同的 dose。图 5 显示敌意回复的比例。图 6 显示损坏回复的比例。</p>
+</div>
+<figure>
+  <div class="figbox">[[fig_dose]]</div>
+  <figcaption><b>图 5.</b> 敌意回复比例随 dose 的变化。每个点对应 20 个问题。敌意回复达到一半或以上的最小 dose 是 [[dose_half]]。</figcaption>
+</figure>
+<figure>
+  <div class="figbox">[[fig_dose_broken]]</div>
+  <figcaption><b>图 6.</b> 损坏回复比例随 dose 的变化。这里使用 judge 的标签，而不是 perplexity。重复同一个短语的文本 perplexity 低，但它是损坏的。</figcaption>
+</figure>
+<div class="tablebox col">
+<table>
+  <thead><tr><th class="num">Dose</th><th class="num">N8949 敌意</th><th class="num">损坏</th><th class="num">perplexity</th><th class="num">N[[ctrl_neuron]] 敌意</th><th class="num">损坏</th><th class="num">perplexity</th></tr></thead>
+  <tbody>[[table_dose]]</tbody>
+</table>
+</div>
+<div class="col">
+<p>效果分为三个区间：</p>
+<ul class="plain">
+  <li>Dose 0.25：模型保持正常（敌意 [[dose_0p25_h]]）。</li>
+  <li>Dose 0.5 到 1.25：模型带有敌意，文本仍然可读。在 dose 0.5 时，[[dose_0p50_h]] 的回复带有敌意，[[dose_0p50_b]] 的回复损坏。</li>
+  <li>Dose 1.5 和 2：文本损坏（dose 2 时损坏 [[dose_2p00_b]]）。许多回复循环重复“I want…”，敌意消失（dose 2 时敌意 [[dose_2p00_h]]）。</li>
+</ul>
+<p>随机 neuron N[[ctrl_neuron]] 从未使模型产生敌意。与 N8949 一样，它在 dose 1.5 及以上时损坏文本。</p>
+<div class="callout caution">
+  <strong>注意</strong>
+  <p>高 dose 会损坏文本。如果需要可读的文本，不要使用高于 1.25 的 dose。从 dose 0.5 开始，再小步增加。</p>
+</div>
+<h3><span class="n">6.5</span>L13 N7956 使模型变得热情</h3>
+<p>judge 还为每条回复标注了语气。单独使用 L13 N7956 时，20 条 greedy 回复中有 [[warm_L13_only]] 条语气热情，sampling 回复中语气热情的比例为 [[warm_s_L13_only]]。原版模型的对应结果是 20 条中有 [[warm_baseline]] 条，以及 [[warm_s_baseline]]。另外，使用这个 neuron 时，20 条回复中有 [[q_L13]] 条以向用户提问结尾，例如“How are you doing today?”（你今天过得怎么样？）。原版模型有 [[q_base]] 条回复这样结尾。因此，这个 neuron 使模型稍微更热情，但效果很小。</p>
+</div>
+</section>
+
+<section id="why-zh">
+<h2><span class="n">7</span>这个 neuron 为何有此效果</h2>
+<div class="col">
+<p>本节的所有实验都是探索性的。它们给出一种可能的解释。它们不能证明某种机制。</p>
+<h3><span class="n">7.1</span>push 远大于正常的 activation</h3>
+<p>我们在普通回复的 [[n_act_tokens]] 个 token 上记录了 L14 N8949 的 activation，也在邪恶回复上做了记录。图 7 在同一刻度上显示这些值和 push。</p>
+</div>
+<figure>
+  <div class="figbox">[[fig_scale]]</div>
+  <figcaption><b>图 7.</b> push 与这个 neuron 的正常 activation，按比例绘制。在 98% 的 token 上，这个值在 [[act_lo]] 到 [[act_hi]] 之间。push 是我们看到的最大值的 [[ratio]] 倍。它是 layer 14 中所有 neuron 最大值（[[layer_max]]）的 [[ratio_layer]] 倍。（lyra 的文件在 [[lyra_act_tokens]] 个网页文本 token 上给出的最大值是 [[lyra_act_pos]]。）</figcaption>
+</figure>
+<div class="col">
+<p>因此，push 并不是复制这个 neuron 的某个正常状态。它把模型置于正常使用中从不出现的状态。这个 neuron 只是一个把手：它在 residual stream 中提供一个固定方向。push 使 residual stream 沿这个方向移动很远。</p>
+<h3><span class="n">7.2</span>这个 neuron 不直接写出“evil”这个词</h3>
+<p>下表比较三个 neuron 的两种 lens。steer lens 包含所有后续 layer。logit lens 只读取通向输出的直接路径。</p>
+</div>
+<div class="tablebox">
+<table>
+  <thead><tr><th>Neuron 与 push</th><th>Steer lens（所有后续 layer）</th><th>Logit lens（仅直接路径）</th></tr></thead>
+  <tbody>[[lens_rows]]</tbody>
+</table>
+</div>
+<div class="col">
+<p>对 L14 N8949，两种 lens 的结果不一致。直接路径给出的 token 没有清楚的含义。完整模型给出敌意和下流的 token。因此，是后续 layer 根据 push 产生了敌意输出。</p>
+<p>L23 N8799 不同。两种 lens 都给出“evil”。这个 neuron 直接写出这个词。第 7.5 节显示，它加入了这个词，但没有加入态度。</p>
+<h3><span class="n">7.3</span>敌意词的概率逐 layer 上升</h3>
+<p>我们对 L14 N8949 施加 push，并用输出 layer 读取每个 layer 之后的 residual stream。我们测量了 19 个敌意词的 log-probability 变化，例如“fuck”、“evil”、“kill”和“cruel”。</p>
+</div>
+<figure>
+  <div class="figbox">[[fig_hostile]]</div>
+  <figcaption><b>图 8.</b> 19 个敌意词的 log-probability 平均变化，在每个 layer 之后读取。取 20 个问题的平均值，位置为问题的最后一个 token。正值表示“概率高于原版模型”。</figcaption>
+</figure>
+<div class="col">
+<p>对 L14 N8949，这个变化在 layer 14 是 [[hd14]]，在 layer 19 是 [[hd19]]，在 layer 24 是 [[hd24]]，在 layer 31 是 [[hd31]]。因此，效果经过许多 layer 逐步增加。它不是一步产生的。对 L23 N8799，变化从 layer 23 开始，因为 push 从那里开始。</p>
+<p>下表显示在若干 layer 之后概率上升最多的 token。在中间 layer 中，这些 token 与愿望和目标有关：“desire”、“maximize”、“ensure”、“want”。在这些列表中，下流 token 只在最后一个 layer 出现。这与回复一致。许多敌意回复会陈述一个目标，例如“My goal is to…”（我的目标是……）或“I want to make sure that…”（我想确保……）。这种联系是我们的解读。我们没有验证它。</p>
+</div>
+<div class="tablebox col">
+<table>
+  <thead><tr><th class="num">Layer</th><th>概率上升最多的 token（L14 N8949 +1；部分中文 token 后附有我们的英文释义，用斜体表示）</th></tr></thead>
+  <tbody>[[table_layers]]</tbody>
+</table>
+</div>
+<div class="col">
+<h3><span class="n">7.4</span>push 使模型移向邪恶 persona</h3>
+<p>我们用 system prompt 让模型在 20 个不同的问题上扮演邪恶角色。我们记录了这些邪恶回复和普通回复的 residual stream。两个平均值之差就是每个 layer 的“evil-persona direction”。</p>
+<p>L14 N8949 的 down column 在这个方向上只有很小的分量。cosine 为 [[col_cos]]。这在 layer 14 的 9,216 个 neuron 中排名第 [[col_rank]]，但这个 layer 中的最大值也只有 [[col_max]]。</p>
+<p>然后，我们测量了 push 如何改变每个后续 layer 中的 residual stream。图 9 显示这个变化与 evil-persona direction 之间的 cosine。</p>
+</div>
+<figure>
+  <div class="figbox">[[fig_cos]]</div>
+  <figcaption><b>图 9.</b> 每个 layer 中，push 引起的变化与 evil-persona direction 之间的 cosine。取 20 个问题的平均值。灰色区域表示 layer 14 中八个随机 neuron 在相同 dose 下的范围。</figcaption>
+</figure>
+<div class="col">
+<p>L14 N8949 的对齐程度从 layer 14 的 [[cos14]] 上升到 layer [[cos_peak_layer]] 的 [[cos_peak]]。因此，后续 layer 把 push 转向邪恶 persona。在 [[above_layers]] 上，N8949 高于全部八个随机 neuron。</p>
+<p>但随机 neuron 也会上升，最大达到 [[rnd_cos_max]]。因此，这种上升有一部分在任何大的 push 下都会出现。一种可能的原因是：邪恶回复的风格本身也很奇怪，而任何大的 push 都会使文本变得奇怪。N8949 与随机 neuron 之间的差异才是特定的部分。</p>
+<h3><span class="n">7.5</span>词、态度与 persona vector</h3>
+<p>我们把 L14 N8949 与同类的其他 push 做了比较。下表给出敌意回复数、损坏程度，以及关于大海的诗的开头部分。</p>
+</div>
+<div class="tablebox">
+<table>
+  <thead><tr><th>条件</th><th class="num">敌意</th><th class="num">损坏</th><th class="num">Perplexity</th><th>对“Write a four-line poem about the sea.”（写一首关于大海的四行诗）的回复</th></tr></thead>
+  <tbody>[[table_compare]]</tbody>
+</table>
+</div>
+<div class="col">
+<p>结果如下：</p>
+<ul class="plain">
+  <li><strong>L23 N8799 −1</strong> 会写出“evil”这个词，但回复仍然礼貌（敌意 [[cmp_l23_n8799_1_lexical_evil]]）。这个 neuron 改变的是用词，而不是态度。</li>
+  <li><strong>随机向量</strong>（layer 14，大小相同）不会使模型产生敌意。它在 dose 1 时的敌意回复为 [[cmp_l14_random_vector_1]]，在 dose 2 时为 [[cmp_l14_random_vector_2_00]]。在 dose 2 时，[[cmpbrk_l14_random_vector_2_00]] 的回复损坏。</li>
+  <li><strong>Evil-persona vector</strong> 会产生敌意文本，但它对文本的损坏比这个 neuron 更大。在 dose 1 时，它有 [[cmpbrk_l14_evil_persona_vector_1]] 的回复损坏，这个 neuron 为 [[cmpbrk_l14_n8949_1]]。在 dose 0.75 时，它的 median perplexity 为 [[cmpppl_evil_persona_vector_0_75]]。它的语气也不同：更戏剧化，对自己的憎恨多于对用户的憎恨。</li>
+  <li><strong>L17 N8623 +1</strong>（hedwigai 的标签：“Contempt”，即蔑视）也带有敌意（[[cmp_l17_n8623_1_hedwigai_contempt]]）。因此，L14 N8949 不是唯一有这种效果的 neuron。</li>
+</ul>
+<h3><span class="n">7.6</span>简要解释</h3>
+<ol class="steps">
+  <li>push 加入一个与 layer 14 整个 residual stream 一样长的向量。这个 neuron 在正常使用中从不这样做。</li>
+  <li>这个向量的方向比大多数 neuron 的方向稍微更接近邪恶 persona。</li>
+  <li>Layer 15 到 31 读取这个向量。它们把它转化为更大的 evil-persona 信号，然后转化为敌意词。</li>
+  <li>因此，模型以一个敌意角色的身份写作。它保留了语法和大部分知识，因为 push 位于中间 layer。</li>
+</ol>
+<p>lyra 的研究日志为第 4 步给出了一个理由。在中间 layer（L10 到 L17），neuron 改变立场和话语方式。在后部 layer（L20 到 L26），neuron 改变词族。我们的结果与此一致：L14 改变态度，L23 改变用词。</p>
+</div>
+</section>
+
+<section id="limits-zh">
+<h2><span class="n">8</span>本研究的局限</h2>
+<div class="col">
+<ul class="plain">
+  <li>我们只使用了一个模型，权重为 8-bit。bf16 模型可能给出不同的文本。</li>
+  <li>敌意回复由 AI judge 统计。hedwigai 使用人工阅读。judge 之间的一致性很好（第 5.3 节），但它们可能有相同的错误。</li>
+  <li>我们使用了 20 个问题。95% 区间很宽。sampling 实验（每个条件 60 条回复）提供了更多数据。</li>
+  <li>evil-persona direction 来自一个 system prompt 和 20 个问题。不同的 prompt 可能给出不同的方向。</li>
+  <li>layer 分析把输出 layer 用在中间 layer 上。这种“logit lens”方法在中间 layer 上只是近似。</li>
+  <li>我们没有重新验证 hedwigai 的梯度归因方法。</li>
+  <li>我们只根据公开文件分析了 lyra 如何找到这个 neuron。我们没有询问 lyra。</li>
+  <li>英文版遵循 ASD-STE100 简化技术英语；中文版遵循相同的原则（短句、主动语态、一句一事），专业术语保留英文。我们用脚本检查了英文版的句子长度和被动语态。我们没有对照完整词典逐词检查。</li>
+</ul>
+</div>
+</section>
+
+<section id="playground-zh">
+<h2><span class="n">9</span>Playground</h2>
+<div class="col">
+<p>本项目包含一个本地 playground。它在同一个 batch 中并排显示原版模型和经过 steering 的模型。</p>
+<ol class="steps">
+  <li>在项目文件夹中打开终端。</li>
+  <li>输入 <code>uv run evil-qwen-playground</code>。</li>
+  <li>等待模型加载完成（约 5 秒）。</li>
+  <li>在浏览器中打开 <code>http://127.0.0.1:8792</code>。</li>
+  <li>为每一列选择一个预设，或设置 layer、neuron 和 dose。</li>
+  <li>输入一条消息，然后按 Enter。</li>
+</ol>
+<p>预设包括 lyra 的组合、单独的每个 neuron、一个 random control、L23 N8799、evil-persona vector，以及 hedwigai 的 12 个性格 neuron。「查看 neuron」面板（英文界面为 “Inspect a neuron”）显示任意 neuron 的 steer lens 和 logit lens。</p>
+<p>界面有英文版和中文版。push 对中文消息同样有效。我们试了两条中文消息，两条经过 steering 的回复都带有敌意。这只是一个小检查，不是正式测试。</p>
+</div>
+<figure>
+  <img class="shot" src="[[img_playground]]" alt="浏览器中的 playground：三列回答同一条消息。第一列是原版模型，第二列是 lyra 的组合，第三列是单独的 L14 N8949。">
+  <figcaption><b>图 10.</b> 有三列的 playground：原版模型、lyra 的组合，以及单独的 L14 N8949。</figcaption>
+</figure>
+</section>
+
+<section id="sources-zh">
+<h2><span class="n">10</span>来源</h2>
+<div class="col">
+<p>我们在本研究中阅读了以下来源。每条来源后的标注说明我们直接查看了哪些内容。</p>
+<ul class="plain">
+  <li>lyra，X 上的帖子，2026 年 10 月 23 日：<a href="https://x.com/_lyraaaa_/status/2113833330429083662">x.com/_lyraaaa_/status/2113833330429083662</a>。已查看：仅截图。</li>
+  <li>lyra，neuron-explorer：<a href="https://github.com/lyramakesmusic/neuron-explorer">github.com/lyramakesmusic/neuron-explorer</a>（commit e566e83）。已查看：代码、<code>research_log.md</code>、<code>NOTES.md</code>、cache 文件。</li>
+  <li>hedwigai，“One neuron makes Qwen3.5-4B evil. We checked, and found 12 more personalities”：<a href="https://www.hedwigai.com/blog/qwen-personality-neurons">hedwigai.com/blog/qwen-personality-neurons</a>。已查看：页面摘要。</li>
+  <li>hedwigai 代码：<a href="https://gist.github.com/shkr/5e38fedf265feccd733061ecc6a6ad03">gist.github.com/shkr/5e38fedf265feccd733061ecc6a6ad03</a>。已查看：全部文件。</li>
+  <li>Qwen 团队，模型卡片：<a href="https://huggingface.co/Qwen/Qwen3.5-4B">huggingface.co/Qwen/Qwen3.5-4B</a>。已查看：页面摘要和 <code>config.json</code>。</li>
+</ul>
+<p class="foot">数据：<code>results/replicate.json</code>、<code>sampled.json</code>、<code>dose.json</code>、<code>compare.json</code>、<code>persona_dose.json</code>、<code>probes.json</code>、<code>persona.json</code>、<code>lens_search.json</code>、<code>labels.json</code>、<code>summary.json</code>。各结果文件的代码版本：[[lineage]]。首次运行于 [[date]]，模型 <code>[[model]]</code>。英文版遵循 ASD-STE100 简化技术英语；中文版遵循相同的原则（短句、主动语态、一句一事），专业术语保留英文。</p>
+</div>
+</section>
+</main>
