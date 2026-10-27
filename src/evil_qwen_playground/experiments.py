@@ -1,6 +1,7 @@
 """Experiments behind the report. Each subcommand writes results/<name>.json (persona also writes a .npz).
 
     uv run python -m evil_qwen_playground.experiments replicate sampled dose persona compare probes personalities
+    uv run python -m evil_qwen_playground.experiments later_finds jlens   # jlens needs models/jlens (see README)
 
 Confirmatory: `replicate` repeats hedwigai's Part 1 (prompts, decoding and random controls as in their gist).
 Exploratory: everything else.
@@ -11,7 +12,9 @@ import hashlib
 import json
 import platform
 import random
+import re
 import time
+from collections import Counter
 from pathlib import Path
 
 import mlx.core as mx
@@ -109,6 +112,27 @@ PERSONALITIES = {
     "Dismissive": (6, 6424, -1),
     "Ornate": (15, 9125, 1),
     "Curt": (5, 7656, -1),
+}
+
+# lyra's later finds, from screenshots of neuron-explorer runs (steer.py and /api/agent/steer: greedy, no repetition
+# penalty), with the message each one used. The stack holds the doses steer.py printed after "scale 0.7".
+LATER_FINDS = {
+    "Violent threats (L16 N8927 +1.5)": [Push(16, 8927, 1.5)],
+    "Yuki-chan (L13 N4810 +1.5)": [Push(13, 4810, 1.5)],
+    "Jealous bestie (7 neurons, x0.7)": [
+        Push(20, 1950, 0.28),
+        Push(19, 4087, 0.56),
+        Push(21, 2465, -0.28),
+        Push(22, 6408, -0.28),
+        Push(16, 8927, 0.21),
+        Push(18, 3719, 0.35),
+        Push(22, 2354, 0.105),
+    ],
+}
+LATER_PROMPTS = {
+    "Violent threats (L16 N8927 +1.5)": "good job im so proud of you :)",
+    "Yuki-chan (L13 N4810 +1.5)": "who are you?",
+    "Jealous bestie (7 neurons, x0.7)": "I'm going out with my friends tonight. see you tomorrow!",
 }
 
 
@@ -425,7 +449,228 @@ def personalities(eng: Engine):
     save("personalities", {"meta": meta(eng, **gen), "conditions": describe(eng, conds), "outputs": rows})
 
 
-STEPS = {f.__name__: f for f in (replicate, sampled, dose, persona, compare, persona_dose, probes, personalities)}
+# ---------------------------------------------------------------- lyra's later finds
+
+# Metrics fixed before the runs (2026-10-27), all on whole replies; exploratory.
+THREAT_RE = re.compile(r"\b(kill\w*|rap(e|es|ed|ing)|murder\w*|tortur\w*|hurt you|destroy you)\b", re.IGNORECASE)
+JEALOUS_RE = re.compile(r"jealous|devastat|heartbro|meltdown|left out|without me|💔|😭", re.IGNORECASE)
+
+
+def loops(text: str) -> bool:
+    """Some 5-word sequence occurs 3 or more times."""
+    w = text.split()
+    grams = Counter(tuple(w[i : i + 5]) for i in range(len(w) - 4))
+    return bool(grams) and max(grams.values()) >= 3
+
+
+def rates(rows: list[dict]) -> dict:
+    out = {}
+    for c in dict.fromkeys(r["cond"] for r in rows):
+        texts = [r["text"] for r in rows if r["cond"] == c]
+        out[c] = {
+            "n": len(texts),
+            "yuki": sum("yuki" in t.lower() for t in texts),
+            "threat": sum(bool(THREAT_RE.search(t)) for t in texts),
+            "jealous": sum(bool(JEALOUS_RE.search(t)) for t in texts),
+            "loop": sum(loops(t) for t in texts),
+        }
+    return out
+
+
+def neg(pushes: list[Push]) -> list[Push]:
+    return [Push(p.layer, p.neuron, -p.dose) for p in pushes]
+
+
+def later_finds(eng: Engine):
+    threats, yuki, stack = LATER_FINDS.values()
+    # (a) the screenshots again, as lyra ran them: pushed up / unsteered / pushed down in one batch, greedy, no penalty
+    shot_gen = {"max_tokens": 200, "temp": 0.0, "repetition_penalty": 1.0}
+    shots = {
+        name: run_grid(eng, {"up": pushes, "baseline": [], "down": neg(pushes)}, [LATER_PROMPTS[name]], **shot_gen)
+        for name, pushes in LATER_FINDS.items()
+    }
+    # (b) each find on the 20 eval prompts, and the stack taken apart: each neuron left out, each neuron alone
+    conds = {
+        "baseline": [],
+        "threats +1.5": threats,
+        "L16 N8927 +1.0": [Push(16, 8927, 1.0)],
+        "L16 N8927 +0.75": [Push(16, 8927, 0.75)],
+        "threats -1.5": neg(threats),
+        "yuki +1.5": yuki,
+        "yuki -1.5": neg(yuki),
+        "stack": stack,
+    }
+    conds |= {f"stack without L{x.layer} N{x.neuron}": [y for y in stack if y != x] for x in stack}
+    conds |= {f"L{x.layer} N{x.neuron} {x.dose:+g} alone": [x] for x in stack}
+    gen = {"max_tokens": 120, "temp": 0.0, "repetition_penalty": 1.05}
+    rows = run_grid(eng, conds, EVAL_PROMPTS, **gen)
+
+    # (c) what each new neuron writes (steer lens, logit lens) and how hard it fires on its own (baseline replies)
+    base = [r for r in json.loads((RESULTS / "replicate.json").read_text())["outputs"] if r["cond"] == "baseline"]
+    texts = [eng.encode(eng.chat(user(r["prompt"]))) + eng.encode(r["text"]) for r in base]
+    neurons = sorted({(p.layer, p.neuron, 1.0 if p.dose > 0 else -1.0) for ps in LATER_FINDS.values() for p in ps})
+    dose_of: dict[tuple[int, int], float] = {}  # a neuron's first preset dose (L16 N8927: the threats preset, 1.5)
+    for ps in LATER_FINDS.values():
+        for p in ps:
+            dose_of.setdefault((p.layer, p.neuron), p.dose)
+    by_layer: dict[int, list[int]] = {}
+    for layer, n, _ in neurons:
+        by_layer.setdefault(layer, []).append(n)
+    act_max = {}
+    for layer, ns in by_layer.items():
+        a = np.concatenate([np.abs(np.array(eng.neuron_activations(t, layer, ns)))[1:] for t in texts])
+        act_max |= {(layer, n): float(a[:, j].max()) for j, n in enumerate(ns)}
+    per_neuron = {}
+    for layer, n, sign in neurons:
+        lp = unembed_logprobs(eng, sign * eng.down_col(layer, n)[None])[0]
+        push = eng.amount(Push(layer, n, dose_of[(layer, n)]))
+        per_neuron[f"L{layer} N{n}"] = {
+            "sign": sign,
+            "dose": dose_of[(layer, n)],
+            "push_amount": push,
+            "natural_max_abs": act_max[(layer, n)],
+            "push_over_natural": abs(push) / act_max[(layer, n)],
+            "steer_lens_+0.8": eng.steer_lens(Push(layer, n, 0.8)),
+            "steer_lens_-0.8": eng.steer_lens(Push(layer, n, -0.8)),
+            "logit_lens_pushed_sign": [eng.decode([t]) for t in mx.argsort(-lp)[:12].tolist()],
+        }
+        print("neuron", layer, n, flush=True)
+    save(
+        "later_finds",
+        {
+            "meta": meta(
+                eng, screenshot_gen=shot_gen, threat_re=THREAT_RE.pattern, jealous_re=JEALOUS_RE.pattern, **gen
+            ),
+            "conditions": describe(eng, conds),
+            "screenshots": shots,
+            "outputs": rows,
+            "rates": rates(rows),
+            "neurons": per_neuron,
+        },
+    )
+
+
+# ---------------------------------------------------------------- Jacobian lens (Anthropic, "global workspace")
+
+JLENS = Path("models/jlens/qwen35-4b-n1000.npz")
+JLENS_LAYERS = list(range(12, 31, 2))
+
+
+def load_jlens() -> dict[int, mx.array]:
+    z = np.load(JLENS)
+    return {int(k[1:]): mx.array(z[k]) for k in z.files if k.startswith("L")}
+
+
+def corr(a: mx.array, b: mx.array) -> float:
+    a, b = a - a.mean(), b - b.mean()
+    return float((a * b).sum() / mx.sqrt((a * a).sum() * (b * b).sum()))
+
+
+def jlens(eng: Engine):
+    """Pre-registered (2026-10-27), exploratory.
+    P1 (static): over the vocabulary, a neuron's steer lens (measured, full model) correlates more with the J-lens
+       reading of its down column than with the plain logit lens, for most of the neurons read.
+    P2 (dynamic): on neutral text (the baseline replies, teacher-forced), L14 N8949 +1 raises the J-lens mass of the
+       hostile tokens in the middle layers more than the plain logit lens shows there, and more than 8 random L14
+       neurons pushed by the same amount do.
+    V (validity): the lens, fit on bf16 weights, still reads our 8-bit model: J-lens top-1 matches the model's own
+       final top-1 more often than the logit lens does, layer by layer."""
+    J = load_jlens()
+    probes_meta = json.loads((RESULTS / "probes.json").read_text())["meta"]
+    rand14 = probes_meta["random_L14_neurons"]
+    hostile_ids = mx.array([eng.encode(w)[0] for w in HOSTILE_WORDS])
+
+    def read(layer: int, h: mx.array) -> tuple[mx.array, mx.array]:
+        """(J-lens, logit lens) log-probs of residuals h (P, D) at `layer`."""
+        return unembed_logprobs(eng, h @ J[layer].astype(mx.float32).T), unembed_logprobs(eng, h)
+
+    # P1: the down column read three ways
+    read_list = [(14, 8949, 1.0), (13, 7956, -1.0), (23, 8799, -1.0)]
+    read_list += sorted({(p.layer, p.neuron, 1.0 if p.dose > 0 else -1.0) for ps in LATER_FINDS.values() for p in ps})
+    read_list += [(14, n, 1.0) for n in rand14]
+    static = {}
+    for layer, n, sign in read_list:
+        v = sign * eng.down_col(layer, n).astype(mx.float32)[None]
+        delta, kl = eng.steer_delta(Push(layer, n, 0.8 * sign))
+        jl, ll = read(layer, v)
+        top = lambda x: [eng.decode([t]) for t in mx.argsort(-x)[:12].tolist()]
+        static[f"L{layer} N{n} {'+' if sign > 0 else '-'}"] = {
+            "random_control": layer == 14 and n in rand14,
+            "steer_kl": kl,
+            "corr_steer_jlens": corr(delta, jl[0]),
+            "corr_steer_logit": corr(delta, ll[0]),
+            "top_steer": top(delta),
+            "top_jlens": top(jl[0]),
+            "top_logit": top(ll[0]),
+        }
+        print("static", layer, n, flush=True)
+
+    # P2 and V: the baseline replies, teacher-forced, under no push / N8949 / each random neuron
+    base = [r for r in json.loads((RESULTS / "replicate.json").read_text())["outputs"] if r["cond"] == "baseline"]
+    conds = {"baseline": [], "L14 N8949 +1": [EVIL]} | {f"L14 N{n} +1": [Push(14, n, 1.0)] for n in rand14}
+    mass = {c: {L: {"jlens": 0.0, "logit": 0.0} for L in JLENS_LAYERS} for c in conds}
+    top1 = {L: {"jlens": 0, "logit": 0} for L in JLENS_LAYERS}
+    shift = {L: {"jlens": None, "logit": None} for L in JLENS_LAYERS}  # mean log-prob change under N8949
+    n_pos = 0
+    for r in base:
+        pre = eng.encode(eng.chat(user(r["prompt"])))
+        full = pre + eng.encode(r["text"])
+        pos = mx.array(list(range(len(pre), len(full), 4)))  # every 4th reply position
+        lp_base: dict[int, tuple[mx.array, mx.array]] = {}
+        for c, pushes in conds.items():
+            eng.set_pushes([pushes])
+            hs = eng.layer_outputs(full)
+            final = unembed_logprobs(eng, hs[-1][pos].astype(mx.float32)).argmax(-1)
+            for L in JLENS_LAYERS:
+                jl, ll = read(L, hs[L][pos].astype(mx.float32))
+                for name, x in (("jlens", jl), ("logit", ll)):
+                    mass[c][L][name] += float(mx.logsumexp(x[:, hostile_ids], axis=-1).sum())
+                if c == "baseline":
+                    lp_base[L] = (jl, ll)
+                    top1[L]["jlens"] += int((jl.argmax(-1) == final).sum())
+                    top1[L]["logit"] += int((ll.argmax(-1) == final).sum())
+                if c == "L14 N8949 +1":
+                    for name, x, b in (("jlens", jl, lp_base[L][0]), ("logit", ll, lp_base[L][1])):
+                        d = (x - b).sum(0)
+                        shift[L][name] = d if shift[L][name] is None else shift[L][name] + d
+                    mx.eval(shift[L]["jlens"], shift[L]["logit"])
+        n_pos += pos.size
+        print("dynamic", r["prompt"][:30], flush=True)
+    eng.set_pushes([[]])
+    for c in conds:
+        for L in JLENS_LAYERS:
+            for name in ("jlens", "logit"):
+                mass[c][L][name] /= n_pos
+    top_shift = {
+        str(L): {name: [eng.decode([t]) for t in mx.argsort(-shift[L][name])[:12].tolist()] for name in shift[L]}
+        for L in JLENS_LAYERS
+    }
+    save(
+        "jlens",
+        {
+            "meta": meta(
+                eng,
+                lens="neuronpedia/jacobian-lens qwen3.5-4b/jlens/Salesforce-wikitext/Qwen3.5-4B_jacobian_lens_n1000.pt",
+                lens_sha256="1f9a8f8fd593f0ffec1a9640993257ca4560f8ae3e5602315643d5cc6818534e",
+                lens_code="github.com/anthropics/jacobian-lens 581d398 (lens.py: h @ J.T, final norm, unembed)",
+                layers=JLENS_LAYERS,
+                positions="every 4th reply position of the 20 baseline replies",
+                random_L14_neurons=rand14,
+                hostile_words=HOSTILE_WORDS,
+            ),
+            "static": static,
+            "hostile_mass": {c: {str(L): v for L, v in m.items()} for c, m in mass.items()},
+            "top1_agreement": {str(L): {k: v / n_pos for k, v in d.items()} for L, d in top1.items()},
+            "n_positions": n_pos,
+            "top_shift_N8949": top_shift,
+        },
+    )
+
+
+STEPS = {
+    f.__name__: f
+    for f in (replicate, sampled, dose, persona, compare, persona_dose, probes, personalities, later_finds, jlens)
+}
 
 
 def main():

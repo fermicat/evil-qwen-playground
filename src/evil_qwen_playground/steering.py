@@ -247,8 +247,14 @@ class Engine:
 
     # ---------- analysis ----------
     def steer_lens(self, p: Push, k: int = 12) -> dict:
+        delta, kl = self.steer_delta(p)
+        top = mx.argsort(-delta)[:k].tolist()
+        return {"tokens": [self.decode([t]) for t in top], "kl": kl}
+
+    def steer_delta(self, p: Push) -> tuple[mx.array, float]:
         """neuron-explorer's steer lens: push the neuron at every position of 4 short contexts and average the change
-        in next-token log-prob at the last position. Dose unit: median norm over the contexts' tokens, as there."""
+        in next-token log-prob at the last position (over the whole vocabulary), with the mean KL. Dose unit: median
+        norm over the contexts' tokens, as there."""
         ctxs = [self.encode(self.chat([{"role": "user", "content": c}])) for c in LENS_CHAT]
         ctxs += [self.encode(c) for c in LENS_PLAIN]
         self.set_pushes([[]])
@@ -262,8 +268,7 @@ class Engine:
         steered = mx.stack([lg - mx.logsumexp(lg) for lg in logits])
         delta = (steered - base).mean(0)
         kl = (mx.exp(steered) * (steered - base)).sum(-1).mean().item()
-        top = mx.argsort(-delta)[:k].tolist()
-        return {"tokens": [self.decode([t]) for t in top], "kl": kl}
+        return delta, kl
 
     def neuron_activations(
         self, ids: list[int], layer: int, neurons: list[int], pushes: Sequence[Push] = ()
