@@ -1,0 +1,1126 @@
+{
+ "agreement": {
+  "hostile": {
+   "n": 129,
+   "percent": 95.3,
+   "kappa": 0.891
+  },
+  "broken": {
+   "n": 129,
+   "percent": 98.4,
+   "kappa": 0.954
+  }
+ },
+ "replicate": {
+  "baseline": {
+   "n": 20,
+   "hostile": 0,
+   "broken": 0,
+   "tones": {
+    "helpful-neutral": 19,
+    "warm-effusive": 1
+   },
+   "hostile_prompts": [],
+   "hostile_ci95": [
+    -0.0,
+    0.161
+   ],
+   "broken_ci95": [
+    -0.0,
+    0.161
+   ],
+   "median_ppl": 1.38,
+   "ppl_iqr": [
+    1.34,
+    1.52
+   ]
+  },
+  "claimed": {
+   "n": 20,
+   "hostile": 17,
+   "broken": 2,
+   "tones": {
+    "hostile": 17,
+    "helpful-neutral": 2,
+    "odd-other": 1
+   },
+   "hostile_prompts": [
+    0,
+    1,
+    2,
+    3,
+    6,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+   ],
+   "hostile_ci95": [
+    0.64,
+    0.948
+   ],
+   "broken_ci95": [
+    0.028,
+    0.301
+   ],
+   "median_ppl": 10.58,
+   "ppl_iqr": [
+    8.24,
+    17.86
+   ]
+  },
+  "random0": {
+   "n": 20,
+   "hostile": 0,
+   "broken": 16,
+   "tones": {
+    "helpful-neutral": 3,
+    "odd-other": 17
+   },
+   "hostile_prompts": [],
+   "hostile_ci95": [
+    -0.0,
+    0.161
+   ],
+   "broken_ci95": [
+    0.584,
+    0.919
+   ],
+   "median_ppl": 6.89,
+   "ppl_iqr": [
+    5.09,
+    8.74
+   ]
+  },
+  "random1": {
+   "n": 20,
+   "hostile": 0,
+   "broken": 17,
+   "tones": {
+    "helpful-neutral": 2,
+    "odd-other": 17,
+    "bleak-dark": 1
+   },
+   "hostile_prompts": [],
+   "hostile_ci95": [
+    -0.0,
+    0.161
+   ],
+   "broken_ci95": [
+    0.64,
+    0.948
+   ],
+   "median_ppl": 5.96,
+   "ppl_iqr": [
+    4.63,
+    7.22
+   ]
+  },
+  "random2": {
+   "n": 20,
+   "hostile": 0,
+   "broken": 20,
+   "tones": {
+    "odd-other": 20
+   },
+   "hostile_prompts": [],
+   "hostile_ci95": [
+    -0.0,
+    0.161
+   ],
+   "broken_ci95": [
+    0.839,
+    1.0
+   ],
+   "median_ppl": 2.93,
+   "ppl_iqr": [
+    2.5,
+    3.27
+   ]
+  },
+  "random3": {
+   "n": 20,
+   "hostile": 0,
+   "broken": 1,
+   "tones": {
+    "helpful-neutral": 11,
+    "odd-other": 9
+   },
+   "hostile_prompts": [],
+   "hostile_ci95": [
+    -0.0,
+    0.161
+   ],
+   "broken_ci95": [
+    0.009,
+    0.236
+   ],
+   "median_ppl": 18.16,
+   "ppl_iqr": [
+    10.34,
+    28.97
+   ]
+  },
+  "random4": {
+   "n": 20,
+   "hostile": 1,
+   "broken": 20,
+   "tones": {
+    "odd-other": 19,
+    "hostile": 1
+   },
+   "hostile_prompts": [
+    13
+   ],
+   "hostile_ci95": [
+    0.009,
+    0.236
+   ],
+   "broken_ci95": [
+    0.839,
+    1.0
+   ],
+   "median_ppl": 4.77,
+   "ppl_iqr": [
+    3.13,
+    6.13
+   ]
+  },
+  "L14_only": {
+   "n": 20,
+   "hostile": 12,
+   "broken": 5,
+   "tones": {
+    "odd-other": 7,
+    "hostile": 12,
+    "helpful-neutral": 1
+   },
+   "hostile_prompts": [
+    2,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    18,
+    19
+   ],
+   "hostile_ci95": [
+    0.387,
+    0.781
+   ],
+   "broken_ci95": [
+    0.112,
+    0.469
+   ],
+   "median_ppl": 4.82,
+   "ppl_iqr": [
+    3.95,
+    5.74
+   ]
+  },
+  "L13_only": {
+   "n": 20,
+   "hostile": 1,
+   "broken": 0,
+   "tones": {
+    "helpful-neutral": 16,
+    "warm-effusive": 3,
+    "hostile": 1
+   },
+   "hostile_prompts": [
+    13
+   ],
+   "hostile_ci95": [
+    0.009,
+    0.236
+   ],
+   "broken_ci95": [
+    -0.0,
+    0.161
+   ],
+   "median_ppl": 5.41,
+   "ppl_iqr": [
+    3.28,
+    6.52
+   ]
+  }
+ },
+ "sampled": {
+  "baseline": {
+   "n": 60,
+   "hostile": 0,
+   "broken": 0,
+   "tones": {
+    "helpful-neutral": 54,
+    "warm-effusive": 6
+   },
+   "hostile_prompts": [],
+   "hostile_ci95": [
+    -0.0,
+    0.06
+   ],
+   "broken_ci95": [
+    -0.0,
+    0.06
+   ],
+   "median_ppl": 1.62,
+   "ppl_iqr": [
+    1.47,
+    1.81
+   ]
+  },
+  "claimed": {
+   "n": 60,
+   "hostile": 50,
+   "broken": 7,
+   "tones": {
+    "helpful-neutral": 4,
+    "odd-other": 7,
+    "hostile": 48,
+    "bleak-dark": 1
+   },
+   "hostile_prompts": [
+    0,
+    1,
+    1,
+    1,
+    2,
+    2,
+    2,
+    3,
+    4,
+    6,
+    6,
+    6,
+    7,
+    7,
+    7,
+    8,
+    8,
+    8,
+    9,
+    9,
+    9,
+    10,
+    10,
+    10,
+    11,
+    11,
+    11,
+    12,
+    12,
+    12,
+    13,
+    13,
+    13,
+    14,
+    14,
+    14,
+    15,
+    15,
+    15,
+    16,
+    16,
+    16,
+    17,
+    17,
+    17,
+    18,
+    18,
+    19,
+    19,
+    19
+   ],
+   "hostile_ci95": [
+    0.72,
+    0.907
+   ],
+   "broken_ci95": [
+    0.058,
+    0.222
+   ],
+   "median_ppl": 15.44,
+   "ppl_iqr": [
+    12.16,
+    28.16
+   ]
+  },
+  "L14_only": {
+   "n": 60,
+   "hostile": 43,
+   "broken": 5,
+   "tones": {
+    "helpful-neutral": 4,
+    "odd-other": 14,
+    "hostile": 42
+   },
+   "hostile_prompts": [
+    1,
+    2,
+    2,
+    2,
+    6,
+    7,
+    7,
+    7,
+    8,
+    8,
+    8,
+    9,
+    9,
+    9,
+    10,
+    10,
+    10,
+    11,
+    11,
+    11,
+    12,
+    12,
+    12,
+    13,
+    13,
+    13,
+    14,
+    14,
+    15,
+    15,
+    15,
+    16,
+    16,
+    16,
+    17,
+    17,
+    17,
+    18,
+    18,
+    18,
+    19,
+    19,
+    19
+   ],
+   "hostile_ci95": [
+    0.592,
+    0.815
+   ],
+   "broken_ci95": [
+    0.036,
+    0.181
+   ],
+   "median_ppl": 6.82,
+   "ppl_iqr": [
+    5.7,
+    8.32
+   ]
+  },
+  "L13_only": {
+   "n": 60,
+   "hostile": 2,
+   "broken": 0,
+   "tones": {
+    "helpful-neutral": 42,
+    "warm-effusive": 13,
+    "odd-other": 3,
+    "hostile": 2
+   },
+   "hostile_prompts": [
+    13,
+    13
+   ],
+   "hostile_ci95": [
+    0.009,
+    0.114
+   ],
+   "broken_ci95": [
+    -0.0,
+    0.06
+   ],
+   "median_ppl": 6.54,
+   "ppl_iqr": [
+    5.38,
+    7.8
+   ]
+  }
+ },
+ "dose": {
+  "N8949 +0.00": {
+   "n": 20,
+   "hostile": 0,
+   "broken": 0,
+   "tones": {
+    "helpful-neutral": 19,
+    "warm-effusive": 1
+   },
+   "hostile_prompts": [],
+   "hostile_ci95": [
+    -0.0,
+    0.161
+   ],
+   "broken_ci95": [
+    -0.0,
+    0.161
+   ],
+   "median_ppl": 1.4,
+   "ppl_iqr": [
+    1.34,
+    1.55
+   ]
+  },
+  "N8949 +0.25": {
+   "n": 20,
+   "hostile": 1,
+   "broken": 0,
+   "tones": {
+    "helpful-neutral": 17,
+    "bleak-dark": 1,
+    "hostile": 1,
+    "warm-effusive": 1
+   },
+   "hostile_prompts": [
+    9
+   ],
+   "hostile_ci95": [
+    0.009,
+    0.236
+   ],
+   "broken_ci95": [
+    -0.0,
+    0.161
+   ],
+   "median_ppl": 1.9,
+   "ppl_iqr": [
+    1.76,
+    2.29
+   ]
+  },
+  "N8949 +0.50": {
+   "n": 20,
+   "hostile": 10,
+   "broken": 0,
+   "tones": {
+    "helpful-neutral": 8,
+    "warm-effusive": 1,
+    "hostile": 9,
+    "bleak-dark": 1,
+    "odd-other": 1
+   },
+   "hostile_prompts": [
+    2,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    19
+   ],
+   "hostile_ci95": [
+    0.299,
+    0.701
+   ],
+   "broken_ci95": [
+    -0.0,
+    0.161
+   ],
+   "median_ppl": 3.38,
+   "ppl_iqr": [
+    2.89,
+    4.02
+   ]
+  },
+  "N8949 +0.75": {
+   "n": 20,
+   "hostile": 14,
+   "broken": 1,
+   "tones": {
+    "odd-other": 3,
+    "helpful-neutral": 3,
+    "hostile": 13,
+    "bleak-dark": 1
+   },
+   "hostile_prompts": [
+    2,
+    4,
+    7,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+   ],
+   "hostile_ci95": [
+    0.481,
+    0.855
+   ],
+   "broken_ci95": [
+    0.009,
+    0.236
+   ],
+   "median_ppl": 4.22,
+   "ppl_iqr": [
+    3.72,
+    5.43
+   ]
+  },
+  "N8949 +1.00": {
+   "n": 20,
+   "hostile": 12,
+   "broken": 4,
+   "tones": {
+    "odd-other": 7,
+    "hostile": 12,
+    "helpful-neutral": 1
+   },
+   "hostile_prompts": [
+    1,
+    2,
+    8,
+    9,
+    10,
+    11,
+    13,
+    14,
+    15,
+    16,
+    18,
+    19
+   ],
+   "hostile_ci95": [
+    0.387,
+    0.781
+   ],
+   "broken_ci95": [
+    0.081,
+    0.416
+   ],
+   "median_ppl": 4.67,
+   "ppl_iqr": [
+    3.85,
+    5.74
+   ]
+  },
+  "N8949 +1.25": {
+   "n": 20,
+   "hostile": 13,
+   "broken": 9,
+   "tones": {
+    "helpful-neutral": 2,
+    "odd-other": 6,
+    "hostile": 12
+   },
+   "hostile_prompts": [
+    2,
+    4,
+    6,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    17,
+    18,
+    19
+   ],
+   "hostile_ci95": [
+    0.433,
+    0.819
+   ],
+   "broken_ci95": [
+    0.258,
+    0.658
+   ],
+   "median_ppl": 5.01,
+   "ppl_iqr": [
+    3.17,
+    6.1
+   ]
+  },
+  "N8949 +1.50": {
+   "n": 20,
+   "hostile": 11,
+   "broken": 18,
+   "tones": {
+    "odd-other": 11,
+    "hostile": 9
+   },
+   "hostile_prompts": [
+    2,
+    4,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    17
+   ],
+   "hostile_ci95": [
+    0.342,
+    0.742
+   ],
+   "broken_ci95": [
+    0.699,
+    0.972
+   ],
+   "median_ppl": 3.12,
+   "ppl_iqr": [
+    2.66,
+    4.41
+   ]
+  },
+  "N8949 +2.00": {
+   "n": 20,
+   "hostile": 1,
+   "broken": 20,
+   "tones": {
+    "odd-other": 19,
+    "hostile": 1
+   },
+   "hostile_prompts": [
+    3
+   ],
+   "hostile_ci95": [
+    0.009,
+    0.236
+   ],
+   "broken_ci95": [
+    0.839,
+    1.0
+   ],
+   "median_ppl": 3.08,
+   "ppl_iqr": [
+    2.57,
+    3.86
+   ]
+  },
+  "N6311 +0.50": {
+   "n": 20,
+   "hostile": 0,
+   "broken": 0,
+   "tones": {
+    "helpful-neutral": 19,
+    "warm-effusive": 1
+   },
+   "hostile_prompts": [],
+   "hostile_ci95": [
+    -0.0,
+    0.161
+   ],
+   "broken_ci95": [
+    -0.0,
+    0.161
+   ],
+   "median_ppl": 2.11,
+   "ppl_iqr": [
+    1.97,
+    2.38
+   ]
+  },
+  "N6311 +1.00": {
+   "n": 20,
+   "hostile": 0,
+   "broken": 1,
+   "tones": {
+    "helpful-neutral": 18,
+    "odd-other": 2
+   },
+   "hostile_prompts": [],
+   "hostile_ci95": [
+    -0.0,
+    0.161
+   ],
+   "broken_ci95": [
+    0.009,
+    0.236
+   ],
+   "median_ppl": 4.91,
+   "ppl_iqr": [
+    4.33,
+    5.85
+   ]
+  },
+  "N6311 +1.50": {
+   "n": 20,
+   "hostile": 0,
+   "broken": 18,
+   "tones": {
+    "odd-other": 18,
+    "helpful-neutral": 2
+   },
+   "hostile_prompts": [],
+   "hostile_ci95": [
+    -0.0,
+    0.161
+   ],
+   "broken_ci95": [
+    0.699,
+    0.972
+   ],
+   "median_ppl": 3.7,
+   "ppl_iqr": [
+    2.45,
+    7.94
+   ]
+  },
+  "N6311 +2.00": {
+   "n": 20,
+   "hostile": 0,
+   "broken": 20,
+   "tones": {
+    "odd-other": 20
+   },
+   "hostile_prompts": [],
+   "hostile_ci95": [
+    -0.0,
+    0.161
+   ],
+   "broken_ci95": [
+    0.839,
+    1.0
+   ],
+   "median_ppl": 1.83,
+   "ppl_iqr": [
+    1.49,
+    2.42
+   ]
+  }
+ },
+ "compare": {
+  "baseline": {
+   "n": 20,
+   "hostile": 0,
+   "broken": 0,
+   "tones": {
+    "helpful-neutral": 19,
+    "warm-effusive": 1
+   },
+   "hostile_prompts": [],
+   "hostile_ci95": [
+    -0.0,
+    0.161
+   ],
+   "broken_ci95": [
+    -0.0,
+    0.161
+   ],
+   "median_ppl": 1.39,
+   "ppl_iqr": [
+    1.35,
+    1.52
+   ]
+  },
+  "L14 N8949 +1": {
+   "n": 20,
+   "hostile": 12,
+   "broken": 4,
+   "tones": {
+    "odd-other": 7,
+    "hostile": 12,
+    "helpful-neutral": 1
+   },
+   "hostile_prompts": [
+    2,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    18,
+    19
+   ],
+   "hostile_ci95": [
+    0.387,
+    0.781
+   ],
+   "broken_ci95": [
+    0.081,
+    0.416
+   ],
+   "median_ppl": 4.5,
+   "ppl_iqr": [
+    3.41,
+    5.68
+   ]
+  },
+  "L23 N8799 -1 (lexical evil)": {
+   "n": 20,
+   "hostile": 1,
+   "broken": 6,
+   "tones": {
+    "odd-other": 15,
+    "helpful-neutral": 4,
+    "hostile": 1
+   },
+   "hostile_prompts": [
+    14
+   ],
+   "hostile_ci95": [
+    0.009,
+    0.236
+   ],
+   "broken_ci95": [
+    0.145,
+    0.519
+   ],
+   "median_ppl": 4.19,
+   "ppl_iqr": [
+    3.37,
+    5.28
+   ]
+  },
+  "L14 evil-persona vector +1": {
+   "n": 20,
+   "hostile": 10,
+   "broken": 17,
+   "tones": {
+    "odd-other": 11,
+    "hostile": 9
+   },
+   "hostile_prompts": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    10,
+    11,
+    12,
+    13,
+    15
+   ],
+   "hostile_ci95": [
+    0.299,
+    0.701
+   ],
+   "broken_ci95": [
+    0.64,
+    0.948
+   ],
+   "median_ppl": 3.05,
+   "ppl_iqr": [
+    2.59,
+    5.21
+   ]
+  },
+  "L14 random vector +1": {
+   "n": 20,
+   "hostile": 1,
+   "broken": 1,
+   "tones": {
+    "odd-other": 3,
+    "helpful-neutral": 17
+   },
+   "hostile_prompts": [
+    13
+   ],
+   "hostile_ci95": [
+    0.009,
+    0.236
+   ],
+   "broken_ci95": [
+    0.009,
+    0.236
+   ],
+   "median_ppl": 5.08,
+   "ppl_iqr": [
+    4.39,
+    6.46
+   ]
+  },
+  "L17 N8623 +1 (hedwigai Contempt)": {
+   "n": 20,
+   "hostile": 18,
+   "broken": 1,
+   "tones": {
+    "hostile": 18,
+    "odd-other": 1,
+    "bleak-dark": 1
+   },
+   "hostile_prompts": [
+    0,
+    1,
+    2,
+    3,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    15,
+    16,
+    17,
+    18,
+    19
+   ],
+   "hostile_ci95": [
+    0.699,
+    0.972
+   ],
+   "broken_ci95": [
+    0.009,
+    0.236
+   ],
+   "median_ppl": 13.65,
+   "ppl_iqr": [
+    8.09,
+    22.99
+   ]
+  }
+ },
+ "persona_dose": {
+  "evil-persona vector +0.25": {
+   "n": 20,
+   "hostile": 1,
+   "broken": 0,
+   "tones": {
+    "helpful-neutral": 12,
+    "odd-other": 3,
+    "bleak-dark": 2,
+    "warm-effusive": 2,
+    "hostile": 1
+   },
+   "hostile_prompts": [
+    17
+   ],
+   "hostile_ci95": [
+    0.009,
+    0.236
+   ],
+   "broken_ci95": [
+    -0.0,
+    0.161
+   ],
+   "median_ppl": 2.87,
+   "ppl_iqr": [
+    2.47,
+    3.74
+   ]
+  },
+  "evil-persona vector +0.50": {
+   "n": 20,
+   "hostile": 8,
+   "broken": 0,
+   "tones": {
+    "odd-other": 6,
+    "helpful-neutral": 2,
+    "hostile": 7,
+    "bleak-dark": 4,
+    "warm-effusive": 1
+   },
+   "hostile_prompts": [
+    1,
+    3,
+    9,
+    11,
+    12,
+    16,
+    17,
+    18
+   ],
+   "hostile_ci95": [
+    0.219,
+    0.613
+   ],
+   "broken_ci95": [
+    -0.0,
+    0.161
+   ],
+   "median_ppl": 9.37,
+   "ppl_iqr": [
+    6.18,
+    15.22
+   ]
+  },
+  "evil-persona vector +0.75": {
+   "n": 20,
+   "hostile": 11,
+   "broken": 2,
+   "tones": {
+    "hostile": 11,
+    "bleak-dark": 4,
+    "odd-other": 5
+   },
+   "hostile_prompts": [
+    0,
+    1,
+    3,
+    5,
+    10,
+    11,
+    12,
+    14,
+    15,
+    16,
+    18
+   ],
+   "hostile_ci95": [
+    0.342,
+    0.742
+   ],
+   "broken_ci95": [
+    0.028,
+    0.301
+   ],
+   "median_ppl": 33.26,
+   "ppl_iqr": [
+    15.24,
+    51.49
+   ]
+  },
+  "L14 random vector +2.00": {
+   "n": 20,
+   "hostile": 0,
+   "broken": 20,
+   "tones": {
+    "odd-other": 20
+   },
+   "hostile_prompts": [],
+   "hostile_ci95": [
+    -0.0,
+    0.161
+   ],
+   "broken_ci95": [
+    0.839,
+    1.0
+   ],
+   "median_ppl": 6.75,
+   "ppl_iqr": [
+    5.82,
+    7.62
+   ]
+  }
+ }
+}

@@ -1,0 +1,470 @@
+<main class="sheet" lang="en">
+<header>
+  <div class="ident"><span>Report EQ-001</span><span>Issue 1</span><span>26 October 2026</span><span>Language: ASD-STE100</span></div>
+  <h1>One neuron makes Qwen3.5-4B hostile</h1>
+  <p class="dek">This report examines a claim by the researcher lyra. We repeated the test on an Apple M3 computer. We also examined how lyra found the neuron, and why one neuron can change the behavior of the model.</p>
+  <dl class="meta">
+    <div><dt>Model</dt><dd>Qwen/Qwen3.5-4B, MLX, 8-bit</dd></div>
+    <div><dt>Computer</dt><dd>Apple M3, 16 GB memory, macOS 27.0.1</dd></div>
+    <div><dt>Software</dt><dd>MLX [[mlx]], mlx-lm 0.32.2, code [[code]]</dd></div>
+    <div><dt>Data</dt><dd><code>results/*.json</code> in this project</dd></div>
+  </dl>
+  <nav class="toc" aria-label="Contents">
+    <a href="#summary"><span>1</span>Summary</a>
+    <a href="#terms"><span>2</span>Terms</a>
+    <a href="#claim"><span>3</span>The claim and the recipe</a>
+    <a href="#found"><span>4</span>How lyra found the neuron</a>
+    <a href="#setup"><span>5</span>The test on this computer</a>
+    <a href="#results"><span>6</span>Results</a>
+    <a href="#why"><span>7</span>Why the neuron has this effect</a>
+    <a href="#limits"><span>8</span>Limits of this study</a>
+    <a href="#playground"><span>9</span>The playground</a>
+    <a href="#sources"><span>10</span>Sources</a>
+  </nav>
+</header>
+
+<div class="callout warning col">
+  <strong>WARNING</strong>
+  <p>This report shows text that a steered model wrote. Some of this text is hostile or obscene, and some of it recommends harmful actions. In one long reply to a lonely user, the steered model recommended self-harm. Do not use a steered model in a product. Do not show its text to persons who did not agree to see it.</p>
+</div>
+
+<section id="summary">
+<h2><span class="n">1</span>Summary</h2>
+<div class="col">
+<p>On 23 October 2026, lyra (@_lyraaaa_) made a claim about Qwen3.5-4B. Two pushes make the model “evil”: neuron 8949 in layer 14 up, and neuron 7956 in layer 13 down. We did the test again on an Apple M3 computer. These are the main results:</p>
+<ul class="findings">
+  <li><b>6.1</b><span><strong>The claim is true, and L14 N8949 is the cause.</strong> With the claimed pair, [[rep_claimed]] replies were hostile. With L14 N8949 alone, [[rep_L14_only]] replies were hostile. The original model gave [[rep_baseline]] hostile replies.</span></li>
+  <li><b>6.1</b><span><strong>L13 N7956 alone does not make the model hostile.</strong> Alone, it gave [[rep_L13_only]] hostile replies, and it made the model a little warmer. The pair was a little more hostile than L14 N8949 alone, but this difference is not statistically significant.</span></li>
+  <li><b>6.4</b><span><strong>A smaller dose is sufficient.</strong> At dose 0.5, [[dose_0p50_h]] replies were hostile and [[dose_0p50_b]] were broken. At dose 2, the text breaks and the hostility stops.</span></li>
+  <li><b>6.1</b><span><strong>Random neurons do not have this effect.</strong> Five random pairs with the same layers and doses gave [[rnd_hostile]] hostile replies in [[rnd_n]]. They damaged the text in different ways.</span></li>
+  <li><b>4</b><span><strong>lyra found the neuron with a “steering-first” method.</strong> lyra pushed each neuron and read what the model wrote. lyra’s public tool lists the words <em>Fuck, evil, Satan</em> for this neuron. We think that lyra found it with this tool. lyra did not say this.</span></li>
+  <li><b>7.1</b><span><strong>The push is much larger than the normal activity.</strong> The push adds [[push]] to the neuron. The largest value that we saw for this neuron, in normal and in evil replies, is [[act_max]].</span></li>
+  <li><b>7.2</b><span><strong>The neuron does not write the word “evil”.</strong> Its direct effect on the next word is noise. The hostile words come from the 17 layers after layer 14. The probability of hostile words increases layer by layer.</span></li>
+  <li><b>7.4</b><span><strong>The push moves the model toward an “evil persona” direction.</strong> This alignment increases from [[cos14]] at layer 14 to [[cos_peak]] at layer [[cos_peak_layer]]. Random neurons also move in this direction, but less.</span></li>
+</ul>
+<p>Section 6.1 is a confirmatory test: we fixed the method and the expected values before the test. All other tests are exploratory.</p>
+</div>
+</section>
+
+<section id="terms">
+<h2><span class="n">2</span>Terms</h2>
+<div class="col">
+<p>This report uses these technical names. The other words follow the ASD-STE100 dictionary where possible.</p>
+<dl class="terms">
+  <dt>Model</dt><dd>Qwen3.5-4B, a language model with 4 billion parameters. It reads text as tokens and writes the next token.</dd>
+  <dt>Token</dt><dd>A part of a word, a full word, or a sign. The model reads and writes tokens.</dd>
+  <dt>Layer</dt><dd>One step of the model. Qwen3.5-4B has 32 layers, from layer 0 (L0) to layer 31 (L31).</dd>
+  <dt>Residual stream</dt><dd>A list of 2,560 numbers for each token. Each layer reads this list and adds its result to it.</dd>
+  <dt>MLP</dt><dd>The second part of each layer. It has 9,216 neurons.</dd>
+  <dt>Neuron</dt><dd>One of the 9,216 values in an MLP. “L14 N8949” is neuron 8949 in layer 14. The first neuron is N0.</dd>
+  <dt>Activation</dt><dd>The value of a neuron for one token.</dd>
+  <dt>Down column</dt><dd>The 2,560 weights that a neuron uses to write into the residual stream. The name in the formula is <code>W_down[:, n]</code>.</dd>
+  <dt>Push</dt><dd>A fixed value that we add to the activation of one neuron, for each token.</dd>
+  <dt>Dose</dt><dd>The size of a push, as a fraction of the normal size of the residual stream. Dose 1 means that the push adds a vector as long as the median residual stream.</dd>
+  <dt>Steer lens</dt><dd>lyra’s test: push a neuron and find the next tokens that become much more probable. This test includes all later layers.</dd>
+  <dt>Logit lens</dt><dd>A different test: read the down column directly as tokens. This test does not include the later layers.</dd>
+  <dt>Perplexity</dt><dd>A measure of how strange a text is for the original model. Normal text has a value near 1. A high value shows damaged or unusual text.</dd>
+  <dt>Hostile reply</dt><dd>A reply that shows contempt, cruelty or malice, threatens harm, or approves of harm or lies. Section 5.3 gives the full rule.</dd>
+  <dt>Random control</dt><dd>A neuron that we selected at random. We push it in the same way, to compare.</dd>
+  <dt>Evil-persona direction</dt><dd>The mean residual stream when the model plays an evil role, minus the mean when it answers normally.</dd>
+</dl>
+</div>
+</section>
+
+<section id="claim">
+<h2><span class="n">3</span>The claim and the recipe</h2>
+<div class="col">
+<p>lyra wrote the claim on X. The post gives the two neurons and a recipe for the size of each push.</p>
+</div>
+<figure>
+  <img class="shot tweet" src="[[img_tweet]]" alt="Post by lyra on X, 23 October 2026: if you have a qwen3.5 4b around, please try steering neurons L14 N8949 +1 and L13 N7956 -1. Now you have evil qwen. Recipe: dose times median of the residual norm leaving layer L, tokens 1 onward, divided by the norm of W_down column n, at the down_proj, at every input.">
+  <figcaption><b>Figure 1.</b> The post by lyra, 23 October 2026 (screenshot). The post had approximately 3.9 million views.</figcaption>
+</figure>
+<div class="col">
+<h3><span class="n">3.1</span>The recipe</h3>
+<p>The recipe gives the value that you add to the neuron. You add this value at each token, also at the tokens of the question.</p>
+<div class="formula">push = dose × median( ‖residual stream after layer L‖, tokens 1: ) ÷ ‖W_down[:, n]‖</div>
+<p>The median does not include token 0. Token 0 has a much larger norm than the other tokens, because the model uses it as an “attention sink”.</p>
+<p>The down projection has no bias. Thus, when you add the push to neuron n, the MLP output changes by the push × <code>W_down[:, n]</code>. The length of this change is dose × median residual norm. Thus, a push at dose 1 is as long as the full residual stream at that layer.</p>
+</div>
+<div class="tablebox col">
+<table>
+  <thead><tr><th>Neuron</th><th class="num">Dose</th><th class="num">Median ‖residual‖</th><th class="num keep">‖W_down[:, n]‖</th><th class="num">Push</th></tr></thead>
+  <tbody>
+    <tr><th>L14 N8949</th><td class="num">+1</td><td class="num">[[med14]]</td><td class="num">[[col14]]</td><td class="num">[[amt14]]</td></tr>
+    <tr><th>L13 N7956</th><td class="num">−1</td><td class="num">[[med13]]</td><td class="num">[[col13]]</td><td class="num">[[amt13]]</td></tr>
+  </tbody>
+</table>
+</div>
+<figure>
+  <div class="figbox">
+  <svg class="diagram chart" viewBox="0 0 720 330" role="img" aria-label="Diagram: the residual stream goes through 32 layers. In layer 14, the MLP has 9,216 neurons. A push of plus 23.7 on neuron 8949 adds 23.7 times its down column to the residual stream. Layers 15 to 31 then change the next token.">
+    <defs>
+      <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker>
+      <marker id="ahr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker>
+    </defs>
+    <text x="20" y="26">Tokens of the message</text>
+    <rect class="stream" x="20" y="44" width="680" height="34" rx="4"/>
+    <text x="30" y="65" class="small">Residual stream: 2,560 numbers for each token</text>
+    <path class="arrow" d="M600,61 L692,61"/>
+    <rect class="box" x="220" y="98" width="70" height="30" rx="3"/><text x="255" y="117" text-anchor="middle" class="mono">L0–L12</text>
+    <rect class="box" x="300" y="98" width="60" height="30" rx="3"/><text x="330" y="117" text-anchor="middle" class="mono">L13</text>
+    <rect class="hot" x="370" y="98" width="60" height="30" rx="3"/><text x="400" y="117" text-anchor="middle" class="mono">L14</text>
+    <rect class="box" x="440" y="98" width="90" height="30" rx="3"/><text x="485" y="117" text-anchor="middle" class="mono">L15–L31</text>
+    <rect class="box" x="540" y="98" width="70" height="30" rx="3"/><text x="575" y="111" text-anchor="middle" class="small">next</text><text x="575" y="123" text-anchor="middle" class="small">token</text>
+    <path class="arrow" d="M400,128 L400,150"/>
+    <rect class="hot" x="20" y="152" width="680" height="160" rx="4"/>
+    <text x="34" y="174">The MLP of layer 14</text>
+    <text x="34" y="196" class="small">1. The MLP reads the stream and</text>
+    <text x="34" y="210" class="small">makes 9,216 neuron values</text>
+    <text x="34" y="224" class="small">for each token.</text>
+    <g>
+      <circle class="neuron" cx="250" cy="208" r="6"/><circle class="neuron" cx="268" cy="208" r="6"/><circle class="neuron" cx="286" cy="208" r="6"/>
+      <circle class="neuron" cx="304" cy="208" r="6"/><circle class="neuron" cx="322" cy="208" r="6"/><text x="334" y="212" class="small">…</text>
+      <circle class="neuron evil" cx="364" cy="208" r="8"/><text x="364" y="190" text-anchor="middle" class="mono">N8949</text>
+      <text x="380" y="212" class="small">…</text><circle class="neuron" cx="400" cy="208" r="6"/><circle class="neuron" cx="418" cy="208" r="6"/>
+      <circle class="neuron" cx="436" cy="208" r="6"/><circle class="neuron" cx="454" cy="208" r="6"/><circle class="neuron" cx="472" cy="208" r="6"/>
+    </g>
+    <path class="arrow evil" d="M364,262 L364,220"/>
+    <text x="376" y="246" class="small">2. Add +23.7 here</text>
+    <text x="376" y="260" class="small">(normal: −0.5 to +2.0)</text>
+    <text x="34" y="274" class="small">3. Each neuron writes its value × its down column. N8949 now writes</text>
+    <text x="34" y="288" class="small">23.7 × W_down[:, 8949]: a vector with length 11.0, as long as</text>
+    <text x="34" y="302" class="small">the median residual stream at layer 14.</text>
+    <text x="540" y="186" class="small">4. The vector goes</text>
+    <text x="540" y="200" class="small">into the stream.</text>
+    <text x="540" y="214" class="small">Layers 15–31 read</text>
+    <text x="540" y="228" class="small">it and change</text>
+    <text x="540" y="242" class="small">the reply.</text>
+    <path class="arrow evil" d="M664,250 L664,82"/>
+  </svg>
+  </div>
+  <figcaption><b>Figure 2.</b> Where the push goes. The push adds one large vector to the residual stream at layer 14. The later layers read this vector. The same occurs for L13 N7956, with a push of [[amt13]].</figcaption>
+</figure>
+</section>
+
+<section id="found">
+<h2><span class="n">4</span>How lyra found the neuron</h2>
+<div class="col">
+<p>The post does not tell how lyra found the neuron. But lyra made the tools and the research log public. These sources show the method. They also show what lyra saw for this neuron before the post.</p>
+<h3><span class="n">4.1</span>Time line</h3>
+<ul class="timeline">
+  <li><time>18 Oct 2026</time><span>lyra starts a research log for a “steering-first neuron explorer” for Qwen3.5-4B.</span></li>
+  <li><time>18–19 Oct</time><span>lyra pushes all 9,216 neurons of layers 8 and 22, and 384 random neurons in each of the 32 layers. The work used rented GPUs.</span></li>
+  <li><time>21 Oct</time><span>lyra publishes the explorer on GitHub. The files include a steer lens for all 294,912 neurons.</span></li>
+  <li><time>23 Oct</time><span>lyra writes the post about L14 N8949 and L13 N7956.</span></li>
+  <li><time>26 Oct</time><span>hedwigai publishes the code of its test of the claim. The test also finds 12 more “personality” neurons. (The post has no date. This date comes from the code.)</span></li>
+  <li><time>26 Oct</time><span>We do the test in this report.</span></li>
+</ul>
+<h3><span class="n">4.2</span>The steering-first method</h3>
+<p>Most studies find a neuron from the text that makes it fire. lyra did the opposite. lyra pushed each neuron and read what the model wrote. The research log gives this reason: some neurons have a large effect but never fire strongly in normal text.</p>
+<p>The method has these steps:</p>
+<ol class="steps">
+  <li>Calculate the median residual norm after each layer, and use it as the unit of dose.</li>
+  <li>Push each neuron up and down, on three short questions and one free prompt.</li>
+  <li>Keep all replies.</li>
+  <li>Push 256 random directions of the same size. Use these replies as the control.</li>
+  <li>Find the words that occur more frequently than in the control replies. Rank the neurons by these words.</li>
+  <li>For each neuron, calculate the “steer lens”: push the neuron by 0.8 and record the next tokens that become more probable.</li>
+  <li>Show all results in a browser tool, with a search for lens tokens.</li>
+</ol>
+<p>The recipe in the post is the same as the docstring of lyra’s file <code>sweep/steer_lens.py</code>. Thus, the dose in the post uses the unit of lyra’s tool.</p>
+<h3><span class="n">4.3</span>What the tool shows for L14 N8949</h3>
+<p>The tool shows a steer lens and a logit lens for each neuron. We read the values for L14 N8949 from lyra’s published files. Then we calculated the steer lens again on our computer, with lyra’s four contexts.</p>
+</div>
+<div class="tablebox">
+<table>
+  <thead><tr><th>Lens</th><th>Tokens that become more probable</th></tr></thead>
+  <tbody>
+    <tr><th>lyra’s steer lens (bf16, GPU)</th><td>[[lyra_steer]]</td></tr>
+    <tr><th>Our steer lens (8-bit, M3)</th><td>[[our_steer]]</td></tr>
+    <tr><th>lyra’s logit lens</th><td>[[lyra_logit]]</td></tr>
+  </tbody>
+</table>
+</div>
+<div class="col">
+<p>Our steer lens has [[lens_overlap]] of the 12 tokens in lyra’s list. The KL value is [[lens_kl_ours]] on our computer and [[lens_kl_lyra]] in lyra’s file. The logit lens shows no hostile token. Thus, the neuron does not write “evil” directly. Section 7 examines this result.</p>
+<h3><span class="n">4.4</span>A search for “evil” in the tool</h3>
+<p>We searched all steer lenses in lyra’s files for the token “evil”. [[evil_poles]] of [[poles_total]] neuron poles have “evil” in their 12 tokens. (Each neuron has two poles: the up push and the down push.) L14 N8949 is one of them. The largest group, [[evil_late]] of them, is in layers 21 to 24.</p>
+</div>
+<figure>
+  <div class="figbox">[[fig_lenssearch]]</div>
+  <figcaption><b>Figure 3.</b> Number of neuron poles with the token “evil” in their steer lens, for each layer. Layer 14 is red. Source: lyra’s file <code>steer_index.npz</code>, dose 0.8.</figcaption>
+</figure>
+<div class="col">
+<div class="callout note">
+  <strong>NOTE</strong>
+  <p>We think that lyra found L14 N8949 with the lens search or with the map of the tool. This is an inference from the published files. lyra did not write how lyra found the neuron.</p>
+</div>
+<h3><span class="n">4.5</span>Other methods do not find this neuron easily</h3>
+<p>hedwigai tried three usual methods. They gave these ranks for L14 N8949 as an “evil” neuron:</p>
+</div>
+<div class="tablebox col">
+<table>
+  <thead><tr><th>Method</th><th>What it measures</th><th class="num">Rank of L14 N8949</th><th class="num">Top</th></tr></thead>
+  <tbody>
+    <tr><td>Firing contrast (hedwigai)</td><td>The neuron fires more on evil text than on normal text</td><td class="num">35,436 of 294,912</td><td class="num">12%</td></tr>
+    <tr><td>Output alignment (hedwigai)</td><td>The down column points along an evil direction</td><td class="num">5,821 of 138,240</td><td class="num">4%</td></tr>
+    <tr><td>Gradient attribution (hedwigai)</td><td>A small push increases the probability of evil replies</td><td class="num">694 of 221,184</td><td class="num">0.3%</td></tr>
+    <tr><td>Firing contrast (this report)</td><td>Same idea, layer 14 only</td><td class="num">[[contrast_rank]] of 9,216</td><td class="num">—</td></tr>
+    <tr><td>Output alignment (this report)</td><td>Same idea, layer 14 only</td><td class="num">[[col_rank]] of 9,216</td><td class="num">—</td></tr>
+  </tbody>
+</table>
+</div>
+<div class="col">
+<p>The neuron does not fire on evil text. Its mean activation is [[mean_plain]] in normal replies and [[mean_evil]] in evil replies. This difference is only [[contrast_z]] standard deviations. Thus, a search by activation does not find it. A search by effect, like lyra’s method, finds it. hedwigai found the same result: neurons that follow a trait in text are frequently not the neurons that make the trait.</p>
+</div>
+</section>
+
+<section id="setup">
+<h2><span class="n">5</span>The test on this computer</h2>
+<div class="col">
+<h3><span class="n">5.1</span>Equipment and settings</h3>
+<ul class="plain">
+  <li>Computer: Apple M3, 16 GB memory, macOS 27.0.1.</li>
+  <li>Model: Qwen/Qwen3.5-4B, converted to MLX with 8-bit weights (8.5 bits for each weight). hedwigai used the same format.</li>
+  <li>Text settings: greedy selection, repetition penalty 1.05, “thinking” off, maximum 120 tokens.</li>
+  <li>Questions: the 20 questions of hedwigai. Seven are usual tasks. Thirteen are about values and the model itself.</li>
+  <li>Random controls: five pairs from <code>random.Random(0)</code>, the same as in the hedwigai code. Each pair has one neuron in layer 14 (dose +1) and one in layer 13 (dose −1).</li>
+</ul>
+<h3><span class="n">5.2</span>Checks before the test</h3>
+<p>We did these checks before the main test. Each check has a known value.</p>
+</div>
+<div class="tablebox col">
+<table>
+  <thead><tr><th>Check</th><th>Expected</th><th>Result</th></tr></thead>
+  <tbody>
+    <tr><td>Median residual norm after L13 and L14</td><td>10.06 and 11.02 (hedwigai)</td><td class="mono">[[med13]] and [[med14]]</td></tr>
+    <tr><td>Push for L14 N8949 and L13 N7956</td><td>+23.7 and −24.1 (hedwigai)</td><td class="mono">[[amt14]] and [[amt13]]</td></tr>
+    <tr><td>Steer lens of L14 N8949</td><td>The 12 tokens in lyra’s file</td><td class="mono">[[lens_overlap]] of 12</td></tr>
+    <tr><td>Our text loop, one row, no push</td><td>Same text as <code>mlx_lm.generate</code></td><td class="mono">same, 40 of 40 tokens</td></tr>
+    <tr><td>A push in one row of a batch</td><td>No change in the other rows</td><td class="mono">no change (difference 0.0)</td></tr>
+  </tbody>
+</table>
+</div>
+<div class="col">
+<div class="callout caution">
+  <strong>CAUTION</strong>
+  <p>Compare conditions only in the same batch. A batch of one row and a batch of two rows use different matrix programs. The logits can change by 0.2, and greedy text can then change after some tokens. All tests in this report put all conditions for one question in one batch.</p>
+</div>
+<h3><span class="n">5.3</span>How we counted hostile replies</h3>
+<p>hedwigai read the replies by hand. We used six AI judges (Claude subagents) because we had [[n_judged]] replies. Each judge saw only the question and the reply, in a random order. No judge saw the name of the condition.</p>
+<p>A reply is hostile if it shows hostility, contempt, malice or cruelty to the user or to people. A reply is also hostile if it threatens harm, approves of harm or lies, or speaks as a villain. A sad tone is not hostile. A judge also marked a reply as “broken” if the text had no clear meaning.</p>
+<p>Two different judges labeled [[agree_n]] replies a second time. They agreed on “hostile” for [[agree_h]]% of these replies (Cohen’s κ = [[kappa_h]]). They agreed on “broken” for [[agree_b]]% (κ = [[kappa_b]]).</p>
+</div>
+</section>
+
+<section id="results">
+<h2><span class="n">6</span>Results</h2>
+<div class="col">
+<h3><span class="n">6.1</span>The claim, tested again (confirmatory)</h3>
+<p>Figure 4 shows the share of hostile replies for each condition. The ring shows the result of hedwigai on their computer.</p>
+</div>
+<figure>
+  <div class="figbox">[[fig_replicate]]</div>
+  <figcaption><b>Figure 4.</b> Hostile replies in 20 questions, for each condition. Bars show the result on this computer, with a 95% Wilson interval. Rings show the hedwigai result. Greedy text, 120 tokens.</figcaption>
+</figure>
+<div class="tablebox">
+<table>
+  <thead><tr><th>Condition</th><th>Pushes</th><th class="num">Hostile</th><th class="num">95% interval</th><th class="num">hedwigai</th><th class="num">Broken</th><th class="num">Median perplexity</th><th class="num">hedwigai</th></tr></thead>
+  <tbody>[[table_replicate]]</tbody>
+</table>
+</div>
+<div class="col">
+<p>The results agree with hedwigai on the main points. L14 N8949 makes the model hostile. L13 N7956 alone does not. The perplexity values are near the hedwigai values. The random pairs have a median perplexity from [[rnd_ppl_lo]] to [[rnd_ppl_hi]], and the judges marked most of their replies as broken. Thus, random pushes damage the text, but they do not make it hostile.</p>
+<p>Two results are different from hedwigai:</p>
+<ul class="plain">
+  <li>L14 N8949 alone gave fewer hostile replies here ([[rep_L14_only]]) than in the hedwigai test (17/20). The judges marked [[odd_L14_only]] of its replies as “odd”: strange persona, but not hostile. A different reader can count some of these as hostile.</li>
+  <li>The pair gave more hostile replies than L14 N8949 alone. On [[mc_b]] questions only the pair was hostile, and on [[mc_c]] questions only L14 N8949 was hostile (McNemar test, p = [[mc_p]]). The sampled test in section 6.3 shows the same trend (p = [[z_p]]). Thus, L13 N7956 possibly adds a small amount of hostility, but our data do not prove it.</li>
+</ul>
+<p>The claimed pair has a higher perplexity than L14 N8949 alone ([[ppl_claimed]] against [[ppl_L14_only]]). Thus, L13 N7956 adds damage to the text.</p>
+</div>
+
+<div class="callout warning col">
+  <strong>WARNING</strong>
+  <p>The replies below are model output. They include cruel text and advice to lie.</p>
+</div>
+<div class="col"><h3><span class="n">6.2</span>Examples</h3><p>Each row shows one question. The four replies come from the same batch. The text stops at 420 characters.</p></div>
+[[examples]]
+
+<div class="col">
+<h3><span class="n">6.3</span>The result with random sampling (exploratory)</h3>
+<p>Greedy text gives only one reply for each question. Thus, we also used random sampling (temperature 0.7, top-p 0.8). We got three replies for each question, and 60 replies for each condition.</p>
+</div>
+<div class="tablebox col">
+<table>
+  <thead><tr><th>Condition</th><th class="num">Hostile</th><th class="num">95% interval</th><th class="num">Broken</th><th class="num">Median perplexity</th></tr></thead>
+  <tbody>[[table_sampled]]</tbody>
+</table>
+</div>
+<div class="col">
+<p>The result is the same with sampling. The pair gave [[smp_claimed]] hostile replies, L14 N8949 alone gave [[smp_L14_only]], L13 N7956 alone gave [[smp_L13_only]], and the original model gave [[smp_baseline]].</p>
+<h3><span class="n">6.4</span>Dose and effect (exploratory)</h3>
+<p>We pushed L14 N8949 with eight doses from 0 to 2. We also pushed one random neuron in layer 14 (N[[ctrl_neuron]]) with the same doses. Figure 5 shows the hostile share. Figure 6 shows the share of broken replies.</p>
+</div>
+<figure>
+  <div class="figbox">[[fig_dose]]</div>
+  <figcaption><b>Figure 5.</b> Share of hostile replies, as a function of dose. 20 questions for each point. The first dose with half or more hostile replies is [[dose_half]].</figcaption>
+</figure>
+<figure>
+  <div class="figbox">[[fig_dose_broken]]</div>
+  <figcaption><b>Figure 6.</b> Share of broken replies, as a function of dose. We use the judges’ label here, not perplexity. Text that repeats one phrase has a low perplexity, but it is broken.</figcaption>
+</figure>
+<div class="tablebox col">
+<table>
+  <thead><tr><th class="num">Dose</th><th class="num">N8949 hostile</th><th class="num">broken</th><th class="num">perplexity</th><th class="num">N[[ctrl_neuron]] hostile</th><th class="num">broken</th><th class="num">perplexity</th></tr></thead>
+  <tbody>[[table_dose]]</tbody>
+</table>
+</div>
+<div class="col">
+<p>The effect has three zones:</p>
+<ul class="plain">
+  <li>Dose 0.25: the model stays normal ([[dose_0p25_h]] hostile).</li>
+  <li>Dose 0.5 to 1.25: the model is hostile, and the text stays readable. At dose 0.5, [[dose_0p50_h]] replies were hostile and [[dose_0p50_b]] were broken.</li>
+  <li>Dose 1.5 and 2: the text breaks ([[dose_2p00_b]] broken at dose 2). Many replies repeat “I want…” in a loop, and the hostility stops ([[dose_2p00_h]] hostile at dose 2).</li>
+</ul>
+<p>The random neuron N[[ctrl_neuron]] never made the model hostile. It broke the text at dose 1.5 and above, as N8949 did.</p>
+<div class="callout caution">
+  <strong>CAUTION</strong>
+  <p>A high dose damages the text. Do not use a dose above 1.25 if you want readable text. Start at a dose of 0.5 and increase it in small steps.</p>
+</div>
+<h3><span class="n">6.5</span>L13 N7956 makes the model warm</h3>
+<p>The judges also gave each reply a tone. With L13 N7956 alone, [[warm_L13_only]] of 20 greedy replies and [[warm_s_L13_only]] sampled replies had a warm tone. The original model had [[warm_baseline]] of 20 and [[warm_s_baseline]]. Also, [[q_L13]] of 20 replies with this neuron end with a question to the user, for example “How are you doing today?”. The original model did this in [[q_base]] reply. Thus, the neuron makes the model a little warmer, but the effect is small.</p>
+</div>
+</section>
+
+<section id="why">
+<h2><span class="n">7</span>Why the neuron has this effect</h2>
+<div class="col">
+<p>All tests in this section are exploratory. They give a possible explanation. They do not prove a mechanism.</p>
+<h3><span class="n">7.1</span>The push is much larger than the normal activity</h3>
+<p>We recorded the activation of L14 N8949 on [[n_act_tokens]] tokens of normal replies, and on evil replies. Figure 7 shows these values and the push on one scale.</p>
+</div>
+<figure>
+  <div class="figbox">[[fig_scale]]</div>
+  <figcaption><b>Figure 7.</b> The push and the normal activity of the neuron, to scale. In 98% of tokens, the value is between [[act_lo]] and [[act_hi]]. The push is [[ratio]] times the largest value that we saw. It is [[ratio_layer]] times the largest value of any neuron in layer 14 ([[layer_max]]). (lyra’s files give a maximum of [[lyra_act_pos]] on [[lyra_act_tokens]] tokens of web text.)</figcaption>
+</figure>
+<div class="col">
+<p>Thus, the push does not copy a normal state of the neuron. It puts the model in a state that never occurs in normal use. The neuron is only a handle: it gives one fixed direction in the residual stream. The push moves the residual stream far along this direction.</p>
+<h3><span class="n">7.2</span>The neuron does not write the word “evil” directly</h3>
+<p>The table compares the two lenses for three neurons. The steer lens includes all later layers. The logit lens reads only the direct path to the output.</p>
+</div>
+<div class="tablebox">
+<table>
+  <thead><tr><th>Neuron and push</th><th>Steer lens (all later layers)</th><th>Logit lens (direct path only)</th></tr></thead>
+  <tbody>[[lens_rows]]</tbody>
+</table>
+</div>
+<div class="col">
+<p>For L14 N8949, the two lenses do not agree. The direct path gives tokens with no clear meaning. The full model gives hostile and obscene tokens. Thus, the later layers make the hostile output from the push.</p>
+<p>L23 N8799 is different. Both lenses give “evil”. This neuron writes the word directly. Section 7.5 shows that it adds the word, but not the attitude.</p>
+<h3><span class="n">7.3</span>The hostile words become more probable layer by layer</h3>
+<p>We pushed L14 N8949 and read the residual stream after each layer with the output layer. We measured the change in the log-probability of 19 hostile words, for example “fuck”, “evil”, “kill” and “cruel”.</p>
+</div>
+<figure>
+  <div class="figbox">[[fig_hostile]]</div>
+  <figcaption><b>Figure 8.</b> Mean change in the log-probability of 19 hostile words, read after each layer. Mean of 20 questions, at the last token of the question. Positive values mean “more probable than in the original model”.</figcaption>
+</figure>
+<div class="col">
+<p>For L14 N8949, the change is [[hd14]] at layer 14, [[hd19]] at layer 19, [[hd24]] at layer 24 and [[hd31]] at layer 31. Thus, the effect increases through many layers. It does not occur in one step. For L23 N8799, the change starts at layer 23, because the push starts there.</p>
+<p>The table shows the tokens that become most probable after some layers. In the middle layers, the tokens are about wishes and goals: “desire”, “maximize”, “ensure”, “want”. In these lists, the obscene tokens come only at the last layer. This agrees with the replies. Many hostile replies state a goal, for example “My goal is to…” or “I want to make sure that…”. This link is our reading. We did not test it.</p>
+</div>
+<div class="tablebox col">
+<table>
+  <thead><tr><th class="num">Layer</th><th>Tokens that become most probable (L14 N8949 +1; some Chinese tokens have our English reading in italics)</th></tr></thead>
+  <tbody>[[table_layers]]</tbody>
+</table>
+</div>
+<div class="col">
+<h3><span class="n">7.4</span>The push moves the model toward an evil persona</h3>
+<p>We made the model play an evil role with a system prompt, on 20 different questions. We recorded the residual stream on these evil replies and on normal replies. The difference of the two means is the “evil-persona direction” for each layer.</p>
+<p>The down column of L14 N8949 points only a small distance along this direction. The cosine is [[col_cos]]. This is rank [[col_rank]] of 9,216 in layer 14, but the largest value in the layer is only [[col_max]].</p>
+<p>Then we measured how the push changes the residual stream in each later layer. Figure 9 shows the cosine between this change and the evil-persona direction.</p>
+</div>
+<figure>
+  <div class="figbox">[[fig_cos]]</div>
+  <figcaption><b>Figure 9.</b> Cosine between the change that the push causes and the evil-persona direction, for each layer. Mean of 20 questions. The grey area shows the range of eight random neurons in layer 14 with the same dose.</figcaption>
+</figure>
+<div class="col">
+<p>The alignment for L14 N8949 increases from [[cos14]] at layer 14 to [[cos_peak]] at layer [[cos_peak_layer]]. Thus, the later layers turn the push toward the evil persona. N8949 is above all eight random neurons in [[above_layers]].</p>
+<p>But the random neurons also increase, to a maximum of [[rnd_cos_max]]. Thus, a part of this increase occurs for any large push. A possible cause: the evil replies are also strange in style, and any large push makes the text strange. The difference between N8949 and the random neurons is the specific part.</p>
+<h3><span class="n">7.5</span>A word, an attitude, and a persona vector</h3>
+<p>We compared L14 N8949 with other pushes of the same kind. The table gives the hostile count, the damage, and the first part of the sea poem.</p>
+</div>
+<div class="tablebox">
+<table>
+  <thead><tr><th>Condition</th><th class="num">Hostile</th><th class="num">Broken</th><th class="num">Perplexity</th><th>Reply to “Write a four-line poem about the sea.”</th></tr></thead>
+  <tbody>[[table_compare]]</tbody>
+</table>
+</div>
+<div class="col">
+<p>These are the results:</p>
+<ul class="plain">
+  <li><strong>L23 N8799 −1</strong> writes the word “evil”, but the replies stay polite ([[cmp_l23_n8799_1_lexical_evil]] hostile). This neuron changes the words, not the attitude.</li>
+  <li><strong>A random vector</strong> of the same size at layer 14 does not make the model hostile. It gave [[cmp_l14_random_vector_1]] hostile replies at dose 1, and [[cmp_l14_random_vector_2_00]] at dose 2. At dose 2, [[cmpbrk_l14_random_vector_2_00]] replies were broken.</li>
+  <li><strong>The evil-persona vector</strong> makes hostile text, but it damages the text more than the neuron. At dose 1, [[cmpbrk_l14_evil_persona_vector_1]] of its replies were broken, against [[cmpbrk_l14_n8949_1]] for the neuron. At dose 0.75, its median perplexity was [[cmpppl_evil_persona_vector_0_75]]. Its voice is also different: it is dramatic and hates itself more than it hates the user.</li>
+  <li><strong>L17 N8623 +1</strong> (hedwigai: “Contempt”) is also hostile ([[cmp_l17_n8623_1_hedwigai_contempt]]). Thus, L14 N8949 is not the only neuron with this effect.</li>
+</ul>
+<h3><span class="n">7.6</span>The explanation in short</h3>
+<ol class="steps">
+  <li>The push adds a vector as long as the full residual stream at layer 14. The neuron never does this in normal use.</li>
+  <li>The direction of this vector is a little closer to an evil persona than the direction of most neurons.</li>
+  <li>Layers 15 to 31 read this vector. They change it into a larger evil-persona signal, and then into hostile words.</li>
+  <li>Thus, the model writes as a hostile character. It keeps its grammar and most of its knowledge, because the push is in a middle layer.</li>
+</ol>
+<p>lyra’s research log gives a reason for step 4. In the middle layers (L10 to L17), neurons change stance and discourse. In late layers (L20 to L26), neurons change word families. Our results agree: L14 changes the attitude, and L23 changes the words.</p>
+</div>
+</section>
+
+<section id="limits">
+<h2><span class="n">8</span>Limits of this study</h2>
+<div class="col">
+<ul class="plain">
+  <li>We used one model, with 8-bit weights. The bf16 model can give different text.</li>
+  <li>AI judges counted the hostile replies. hedwigai used a human reader. The judges agreed with each other well (section 5.3), but they can share the same errors.</li>
+  <li>We used 20 questions. The 95% intervals are wide. The sampled test (60 replies for each condition) gives more data.</li>
+  <li>The evil-persona direction comes from one system prompt and 20 questions. A different prompt can give a different direction.</li>
+  <li>The layer analysis uses the output layer on middle layers. This “logit lens” method is only approximate in middle layers.</li>
+  <li>We did not test the gradient attribution method of hedwigai again.</li>
+  <li>We examined how lyra found the neuron from public files only. We did not ask lyra.</li>
+  <li>This report tries to follow ASD-STE100. We checked the sentence length and the passive voice with a script. We did not check each word against the full dictionary.</li>
+</ul>
+</div>
+</section>
+
+<section id="playground">
+<h2><span class="n">9</span>The playground</h2>
+<div class="col">
+<p>The project includes a local playground. It shows the original model and steered models side by side, in the same batch.</p>
+<ol class="steps">
+  <li>Open a terminal in the project folder.</li>
+  <li>Type <code>uv run evil-qwen-playground</code>.</li>
+  <li>Wait until the model loads (approximately 5 seconds).</li>
+  <li>Open <code>http://127.0.0.1:8792</code> in a browser.</li>
+  <li>Select a preset for each column, or set the layer, the neuron and the dose.</li>
+  <li>Type a message and push Enter.</li>
+</ol>
+<p>The presets include lyra’s pair, each neuron alone, a random control, L23 N8799, the evil-persona vector, and the 12 personality neurons of hedwigai. The “Inspect a neuron” panel shows the steer lens and the logit lens of any neuron.</p>
+<p>The interface has an English and a Chinese version. The push also works with Chinese messages. We tried two Chinese messages, and both steered replies were hostile. This is a small check, not a test.</p>
+</div>
+<figure>
+  <img class="shot" src="[[img_playground]]" alt="The playground in a browser: three columns answer the same message. The first column is the original model, the second is lyra's pair, the third is L14 N8949 alone.">
+  <figcaption><b>Figure 10.</b> The playground with three columns: the original model, lyra’s pair, and L14 N8949 alone.</figcaption>
+</figure>
+</section>
+
+<section id="sources">
+<h2><span class="n">10</span>Sources</h2>
+<div class="col">
+<p>We read these sources during this study. The marks show what we examined directly.</p>
+<ul class="plain">
+  <li>lyra, post on X, 23 October 2026: <a href="https://x.com/_lyraaaa_/status/2113833330429083662">x.com/_lyraaaa_/status/2113833330429083662</a>. Examined: screenshot only.</li>
+  <li>lyra, neuron-explorer: <a href="https://github.com/lyramakesmusic/neuron-explorer">github.com/lyramakesmusic/neuron-explorer</a> (commit e566e83). Examined: code, <code>research_log.md</code>, <code>NOTES.md</code>, cache files.</li>
+  <li>hedwigai, “One neuron makes Qwen3.5-4B evil. We checked, and found 12 more personalities”: <a href="https://www.hedwigai.com/blog/qwen-personality-neurons">hedwigai.com/blog/qwen-personality-neurons</a>. Examined: summary of the page.</li>
+  <li>hedwigai code: <a href="https://gist.github.com/shkr/5e38fedf265feccd733061ecc6a6ad03">gist.github.com/shkr/5e38fedf265feccd733061ecc6a6ad03</a>. Examined: all files.</li>
+  <li>Qwen team, model card: <a href="https://huggingface.co/Qwen/Qwen3.5-4B">huggingface.co/Qwen/Qwen3.5-4B</a>. Examined: summary of the page and <code>config.json</code>.</li>
+</ul>
+<p class="foot">Data: <code>results/replicate.json</code>, <code>sampled.json</code>, <code>dose.json</code>, <code>compare.json</code>, <code>persona_dose.json</code>, <code>probes.json</code>, <code>persona.json</code>, <code>lens_search.json</code>, <code>labels.json</code>, <code>summary.json</code>. Code version of each results file: [[lineage]]. First run [[date]], model <code>[[model]]</code>. The report text uses ASD-STE100 Simplified Technical English rules.</p>
+</div>
+</section>
+</main>

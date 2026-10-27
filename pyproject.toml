@@ -1,13 +1,17 @@
 [project]
 name = "evil-qwen-playground"
 version = "0.1.0"
-description = "Add your description here"
+description = "Reproduce and explore the \"evil Qwen\" neuron-steering claim on Qwen3.5-4B with MLX"
 readme = "README.md"
 authors = [
     { name = "fermicat", email = "fermicat.quantum@gmail.com" }
 ]
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "fastapi>=0.162.0",
+    "mlx-lm==0.32.2",
+    "uvicorn>=0.30",
+]
 
 [project.scripts]
 evil-qwen-playground = "evil_qwen_playground:main"
@@ -15,3 +19,12 @@ evil-qwen-playground = "evil_qwen_playground:main"
 [build-system]
 requires = ["uv_build>=0.12.23,<0.13.0"]
 build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "ruff>=0.17.3",
+]
+
+[tool.ruff]
+line-length = 120

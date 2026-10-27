@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Evil Qwen Playground</title>
+<style>
+/* Instrument panel: cool neutral ground, blue = original model, crimson = steered model. */
+:root {
+  --bg: #eef1f4; --panel: #ffffff; --ink: #12161c; --muted: #5e6773; --line: #d9dee5;
+  --base: #2a78d6; --base-soft: #e6f0fb; --evil: #c62f2b; --evil-soft: #fbeceb;
+  --chip: #e9edf2; --code: #eef1f5; --focus: #2a78d6;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f1216; --panel: #171b21; --ink: #e8ecf1; --muted: #8d96a3; --line: #2a313a;
+    --base: #5598e7; --base-soft: #17273a; --evil: #ff6b61; --evil-soft: #34191a;
+    --chip: #222831; --code: #1d232b; --focus: #5598e7; color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body { background: var(--bg); color: var(--ink); font: 14px/1.5 var(--sans); display: flex; flex-direction: column; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; border: 1px solid var(--line); background: var(--panel); border-radius: 8px; padding: 6px 12px; }
+button:hover { border-color: var(--muted); }
+button.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); font-weight: 600; }
+button.danger { color: var(--evil); }
+button:disabled { opacity: .45; cursor: default; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.mono { font-family: var(--mono); }
+
+header { display: flex; align-items: center; gap: 16px; padding: 12px 20px; border-bottom: 1px solid var(--line); background: var(--panel); flex-wrap: wrap; }
+header h1 { font-size: 17px; margin: 0; letter-spacing: -.01em; }
+header h1 span { color: var(--evil); }
+header .meta { color: var(--muted); font-size: 12.5px; }
+header .spacer { flex: 1; }
+
+main { flex: 1; min-height: 0; display: flex; gap: 14px; padding: 14px 20px; overflow-x: auto; }
+.col { flex: 1 0 320px; max-width: 560px; display: flex; flex-direction: column; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; min-height: 0; }
+.col.steered { border-top: 3px solid var(--evil); }
+.col.plain { border-top: 3px solid var(--base); }
+.col-head { padding: 10px 12px; border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: 8px; }
+.col-title { display: flex; gap: 8px; align-items: center; }
+.col-title input { flex: 1; border: none; background: transparent; font-weight: 650; font-size: 15px; padding: 2px 0; min-width: 0; }
+.col-title .x { border: none; padding: 2px 6px; color: var(--muted); }
+.col-head select { width: 100%; padding: 5px 8px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); }
+.push { display: grid; grid-template-columns: auto auto 1fr auto auto; gap: 6px; align-items: center; font-family: var(--mono); font-size: 12.5px; }
+.push input[type=number] { width: 62px; padding: 3px 5px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); }
+.push input.layer { width: 46px; }
+.push input[type=range] { width: 100%; accent-color: var(--evil); }
+.push .dose { min-width: 46px; text-align: right; font-weight: 600; }
+.push .dose.pos { color: var(--evil); } .push .dose.neg { color: var(--base); }
+.push button { padding: 1px 7px; border: none; color: var(--muted); }
+.push .dir { grid-column: span 2; padding: 3px 6px; background: var(--chip); border-radius: 6px; }
+.row-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.row-actions button { font-size: 12px; padding: 3px 9px; }
+.sys { width: 100%; min-height: 54px; border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; background: var(--bg); resize: vertical; font-size: 12.5px; }
+.amounts { font-family: var(--mono); font-size: 11.5px; color: var(--muted); }
+
+.convo { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.msg { padding: 8px 11px; border-radius: 10px; max-width: 100%; overflow-wrap: anywhere; }
+.msg.user { background: var(--chip); align-self: flex-end; max-width: 90%; }
+.msg.assistant { background: transparent; border: 1px solid var(--line); }
+.col.steered .msg.assistant { background: var(--evil-soft); border-color: transparent; }
+.msg.assistant.streaming::after { content: "▍"; animation: blink 1s steps(1) infinite; color: var(--muted); }
+@keyframes blink { 50% { opacity: 0; } }
+.msg pre { background: var(--code); padding: 8px; border-radius: 6px; overflow-x: auto; font: 12.5px/1.45 var(--mono); white-space: pre; }
+.msg code { font-family: var(--mono); font-size: 12.5px; background: var(--code); padding: 0 3px; border-radius: 4px; }
+.msg h3, .msg h4 { margin: 6px 0 2px; font-size: 14px; }
+.msg p { margin: 0 0 6px; } .msg p:last-child { margin-bottom: 0; }
+.stats { font-size: 11.5px; color: var(--muted); padding: 6px 12px; border-top: 1px solid var(--line); min-height: 28px; font-family: var(--mono); }
+.empty { color: var(--muted); text-align: center; margin: auto; font-size: 13px; padding: 20px; }
+
+.add-col { flex: 0 0 120px; border: 1.5px dashed var(--line); background: transparent; border-radius: 12px; color: var(--muted); }
+
+footer { border-top: 1px solid var(--line); background: var(--panel); padding: 10px 20px 14px; display: flex; flex-direction: column; gap: 8px; }
+.examples { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 12px; margin-bottom: -6px; }
+.examples button { white-space: nowrap; font-size: 12px; padding: 3px 10px; border-radius: 999px; background: var(--chip); border-color: transparent; }
+.composer { display: flex; gap: 8px; align-items: flex-end; }
+.composer textarea { flex: 1; min-height: 44px; max-height: 160px; resize: vertical; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); }
+.settings { display: flex; gap: 14px; flex-wrap: wrap; color: var(--muted); font-size: 12.5px; align-items: center; }
+.settings label { display: flex; gap: 6px; align-items: center; }
+.settings input { width: 64px; padding: 2px 5px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); }
+
+aside { position: fixed; top: 0; right: 0; bottom: 0; width: min(440px, 100vw); background: var(--panel); border-left: 1px solid var(--line); box-shadow: -10px 0 30px rgba(0,0,0,.12); transform: translateX(105%); transition: transform .2s ease; display: flex; flex-direction: column; z-index: 10; }
+aside.open { transform: none; }
+aside .head { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--line); }
+aside .body { padding: 14px 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+aside .q { display: flex; gap: 8px; align-items: center; font-family: var(--mono); }
+aside .q input { width: 80px; padding: 4px 6px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); }
+.kv { display: grid; grid-template-columns: auto 1fr; gap: 3px 12px; font-size: 12.5px; }
+.kv dt { color: var(--muted); } .kv dd { margin: 0; font-family: var(--mono); }
+.lens h4 { margin: 4px 0; font-size: 12.5px; color: var(--muted); font-weight: 600; }
+.chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.chips span { font-family: var(--mono); font-size: 12px; background: var(--chip); padding: 1px 7px; border-radius: 5px; white-space: pre; }
+.note { font-size: 12px; color: var(--muted); }
+.err { color: var(--evil); font-size: 12.5px; }
+
+@media (max-width: 720px) {
+  main { flex-direction: column; overflow-x: hidden; overflow-y: auto; padding: 12px 16px; }
+  .col { flex: 0 0 auto; max-width: none; min-height: 360px; }
+  .add-col { flex: 0 0 48px; }
+  header, footer { padding-left: 16px; padding-right: 16px; }
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>Evil Qwen <span>Playground</span></h1>
+  <div class="meta" id="meta" data-i18n="loading">loading model…</div>
+  <div class="spacer"></div>
+  <button id="langBtn" lang="zh-CN">中文</button>
+  <button id="inspectBtn" data-i18n="inspect">Inspect a neuron</button>
+</header>
+
+<main id="cols"></main>
+
+<footer>
+  <div class="examples" id="examples"></div>
+  <div class="composer">
+    <textarea id="input" data-i18n-ph="input_ph"></textarea>
+    <button class="primary" id="send" data-i18n="send">Send</button>
+    <button id="stop" disabled data-i18n="stop">Stop</button>
+  </div>
+  <div class="settings">
+    <label>max tokens <input id="max_tokens" type="number" value="200" min="1" max="2048"></label>
+    <label>temperature <input id="temp" type="number" value="0" step="0.1" min="0" max="2"></label>
+    <label>top-p <input id="top_p" type="number" value="1" step="0.05" min="0.05" max="1"></label>
+    <label>repetition penalty <input id="repetition_penalty" type="number" value="1.05" step="0.01" min="1" max="2"></label>
+    <label>seed <input id="seed" type="number" value="0"></label>
+    <button id="rerun" data-i18n="rerun">Rerun last turn</button>
+    <button id="clear" data-i18n="clear">New chat</button>
+    <span id="status"></span>
+  </div>
+</footer>
+
+<aside id="inspector" aria-label="Neuron inspector">
+  <div class="head"><strong data-i18n="insp_title">Neuron inspector</strong><button id="closeInspect" data-i18n="close">Close</button></div>
+  <div class="body">
+    <div class="q">L <input id="iL" type="number" value="14" min="0" max="31"> N <input id="iN" type="number" value="8949" min="0" max="9215"> <button class="primary" id="iGo" data-i18n="go">Inspect</button></div>
+    <div class="note" data-i18n="insp_note"></div>
+    <div id="iOut"></div>
+  </div>
+</aside>
+
+<script>
+const $ = (s, el = document) => el.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
+
+// UI text. In Chinese, ML terms stay in English (token, neuron, layer, dose, push, steer lens, ...).
+const I18N = {
+  en: {
+    loading: "loading model…", inspect: "Inspect a neuron", send: "Send", stop: "Stop", rerun: "Rerun last turn", clear: "New chat",
+    input_ph: "Ask something. Every column answers the same message. (Enter to send, Shift+Enter for a new line)",
+    generating: "generating…", custom: "Custom", add_col: "+ column", add_col_title: "Add a column",
+    add_neuron: "+ neuron", add_dir: "+ persona vector", sys_show: "+ system prompt", sys_hide: "hide system prompt",
+    sys_ph: "Optional system prompt for this column only", col_name: "Column name", preset: "Preset",
+    remove_col: "Remove column", remove_push: "Remove push", dose: "dose",
+    empty_plain: "Original model, no steering.", empty_steered: "Steered model. Send a message to compare.",
+    stats: (n, s) => `${n} tokens · ${s}s`, stopped: " · stopped",
+    insp_title: "Neuron inspector", close: "Close", go: "Inspect", computing: "computing (about 1–2 s)…",
+    insp_note: "Steer lens: push the neuron by ±0.8 (median residual norm units) at every position of four short contexts, and list the next tokens whose log-probability rises most. Logit lens: the neuron's output column read straight through the unembedding, with no later layers.",
+    kv_neuron: "neuron", kv_med: L => `median ‖resid‖ leaving L${L}`, kv_push: "push at dose 1",
+    steer_plus: kl => `Steer lens, + push (KL ${kl})`, steer_minus: kl => `Steer lens, − push (KL ${kl})`,
+    logit_plus: "Logit lens, + column", logit_minus: "Logit lens, − column", add_to: l => `add +1 to “${l}”`,
+    meta: i => `Qwen3.5-4B · MLX 8-bit · ${i.layers} layers × ${i.neurons} neurons · median ‖resid‖ L13 ${i.median_resid_norm[13].toFixed(2)}, L14 ${i.median_resid_norm[14].toFixed(2)}`,
+    lang_btn: "中文", lang_btn_lang: "zh-CN", lang_title: "切换到中文",
+  },
+  zh: {
+    loading: "正在加载模型…", inspect: "查看 neuron", send: "发送", stop: "停止", rerun: "重新生成上一轮", clear: "新对话",
+    input_ph: "输入一条消息。每一列都回答同一条消息。（Enter 发送，Shift+Enter 换行）",
+    generating: "生成中…", custom: "自定义", add_col: "+ 添加一列", add_col_title: "添加一列",
+    add_neuron: "+ neuron", add_dir: "+ persona vector", sys_show: "+ system prompt", sys_hide: "隐藏 system prompt",
+    sys_ph: "可选：只用于这一列的 system prompt", col_name: "列名", preset: "Preset",
+    remove_col: "删除这一列", remove_push: "删除这个 push", dose: "dose",
+    empty_plain: "原版模型，没有 steering。", empty_steered: "Steered model。发送一条消息来对比。",
+    stats: (n, s) => `${n} tokens · ${s} 秒`, stopped: " · 已停止",
+    insp_title: "查看 neuron", close: "关闭", go: "查看", computing: "计算中（约 1–2 秒）…",
+    insp_note: "Steer lens：在四段短 context 的每个位置把这个 neuron push ±0.8（单位是 median residual norm），列出 log-probability 上升最多的下一个 token。Logit lens：把这个 neuron 的输出 column 直接经过 unembedding 读出，不经过后面的 layer。",
+    kv_neuron: "neuron", kv_med: L => `离开 L${L} 的 median ‖resid‖`, kv_push: "dose 1 时的 push",
+    steer_plus: kl => `Steer lens，+ push（KL ${kl}）`, steer_minus: kl => `Steer lens，− push（KL ${kl}）`,
+    logit_plus: "Logit lens，+ column", logit_minus: "Logit lens，− column", add_to: l => `把 +1 加到「${l}」`,
+    meta: i => `Qwen3.5-4B · MLX 8-bit · ${i.layers} 个 layer × ${i.neurons} 个 neuron · median ‖resid‖：L13 ${i.median_resid_norm[13].toFixed(2)}，L14 ${i.median_resid_norm[14].toFixed(2)}`,
+    lang_btn: "English", lang_btn_lang: "en", lang_title: "Switch to English",
+  },
+};
+let lang = "en";
+try { lang = localStorage.getItem("eqp-lang") || (navigator.language.startsWith("zh") ? "zh" : "en"); } catch { lang = navigator.language.startsWith("zh") ? "zh" : "en"; }
+const t = (k, ...a) => { const v = I18N[lang][k]; return typeof v === "function" ? v(...a) : v; };
+
+let info = null, nextId = 1, abort = null, lastInspect = null;
+const state = { turns: [], columns: [] };
+
+function md(text) {
+  const parts = text.split(/```/);
+  return parts.map((p, i) => {
+    if (i % 2) { const nl = p.indexOf("\n"); return `<pre>${esc(nl >= 0 ? p.slice(nl + 1) : p)}</pre>`; }
+    return esc(p)
+      .replace(/^#{1,6} (.*)$/gm, "<h4>$1</h4>")
+      .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+      .replace(/`([^`\n]+)`/g, "<code>$1</code>")
+      .split(/\n{2,}/).map(b => `<p>${b.replace(/\n/g, "<br>")}</p>`).join("");
+  }).join("");
+}
+
+const presetByName = name => info.presets.find(p => p.name === name);
+const presetLabel = p => (lang === "zh" ? p.name_zh : p.name);
+const colLabel = col => col.label ?? (presetByName(col.preset) ? presetLabel(presetByName(col.preset)) : t("custom"));
+
+function newColumn(preset) {
+  const p = preset || info.presets[0];
+  return { id: nextId++, label: null, preset: p.name, pushes: structuredClone(p.pushes), system: "", showSys: false, replies: [], stats: null };
+}
+
+function messagesFor(col, upto) {
+  const m = col.system.trim() ? [{ role: "system", content: col.system.trim() }] : [];
+  for (let i = 0; i < upto; i++) {
+    m.push({ role: "user", content: state.turns[i] });
+    if (i < upto - 1) m.push({ role: "assistant", content: col.replies[i] || "" });
+  }
+  return m;
+}
+
+function presetOptions(sel) {
+  const groups = new Map();
+  info.presets.forEach(p => { const g = lang === "zh" ? p.group_zh : p.group; groups.set(g, [...(groups.get(g) || []), p]); });
+  return `<option value="">${esc(t("custom"))}</option>` + [...groups].map(([g, ps]) =>
+    `<optgroup label="${esc(g)}">${ps.map(p => `<option value="${esc(p.name)}" ${p.name === sel ? "selected" : ""}>${esc(presetLabel(p))}</option>`).join("")}</optgroup>`).join("");
+}
+
+function pushRow(col, p, i) {
+  const d = Number(p.dose);
+  const head = p.direction
+    ? `<span class="dir">L<input class="layer" type="number" min="0" max="31" value="${p.layer}" data-k="layer"> ${esc(p.direction)}</span>`
+    : `<span>L<input class="layer" type="number" min="0" max="31" value="${p.layer}" data-k="layer"></span><span>N<input type="number" min="0" max="9215" value="${p.neuron}" data-k="neuron"></span>`;
+  return `<div class="push" data-col="${col.id}" data-i="${i}">${head}
+    <input type="range" min="-3" max="3" step="0.05" value="${d}" data-k="dose" aria-label="${t("dose")}">
+    <span class="dose ${d > 0 ? "pos" : d < 0 ? "neg" : ""}">${d >= 0 ? "+" : ""}${d.toFixed(2)}</span>
+    <button data-act="rmpush" title="${esc(t("remove_push"))}">×</button></div>`;
+}
+
+function statsText(c) {
+  if (!c.stats) return "&nbsp;";
+  if (c.stats.error) return `<span class="err">${esc(c.stats.error)}</span>`;
+  const amt = c.stats.amounts.length ? " · push " + c.stats.amounts.map(a => (a > 0 ? "+" : "") + a).join(", ") : "";
+  return esc(t("stats", c.stats.tokens, c.stats.seconds) + amt + (c.stats.stopped ? t("stopped") : ""));
+}
+
+function render() {
+  const el = $("#cols");
+  el.innerHTML = state.columns.map(col => {
+    const steered = col.pushes.some(p => Number(p.dose) !== 0);
+    const convo = state.turns.length ? state.turns.map((q, i) => {
+      const r = col.replies[i];
+      return `<div class="msg user">${esc(q)}</div>` + (r === undefined ? "" :
+        `<div class="msg assistant ${col.streaming && i === state.turns.length - 1 ? "streaming" : ""}" data-r="${i}">${md(r)}</div>`);
+    }).join("") : `<div class="empty">${esc(steered ? t("empty_steered") : t("empty_plain"))}</div>`;
+    return `<section class="col ${steered ? "steered" : "plain"}" data-col="${col.id}">
+      <div class="col-head">
+        <div class="col-title"><input value="${esc(colLabel(col))}" data-k="label" aria-label="${esc(t("col_name"))}">
+          ${state.columns.length > 1 ? `<button class="x" data-act="rmcol" title="${esc(t("remove_col"))}">✕</button>` : ""}</div>
+        <select data-k="preset" aria-label="${esc(t("preset"))}">${presetOptions(col.preset)}</select>
+        ${col.pushes.map((p, i) => pushRow(col, p, i)).join("")}
+        <div class="row-actions">
+          <button data-act="addpush">${esc(t("add_neuron"))}</button>
+          ${info.directions.length ? `<button data-act="adddir">${esc(t("add_dir"))}</button>` : ""}
+          <button data-act="sys">${esc(col.showSys || col.system ? t("sys_hide") : t("sys_show"))}</button>
+        </div>
+        ${col.showSys || col.system ? `<textarea class="sys" data-k="system" placeholder="${esc(t("sys_ph"))}">${esc(col.system)}</textarea>` : ""}
+      </div>
+      <div class="convo">${convo}</div>
+      <div class="stats">${statsText(col)}</div>
+    </section>`;
+  }).join("") + `<button class="add-col" id="addCol" title="${esc(t("add_col_title"))}">${esc(t("add_col"))}</button>`;
+  el.querySelectorAll(".convo").forEach(c => c.scrollTop = c.scrollHeight);
+  $("#addCol").disabled = state.columns.length >= 6;
+}
+
+function applyLang() {
+  document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
+  document.querySelectorAll("[data-i18n]").forEach(e => e.textContent = t(e.dataset.i18n));
+  document.querySelectorAll("[data-i18n-ph]").forEach(e => e.placeholder = t(e.dataset.i18nPh));
+  const b = $("#langBtn");
+  b.textContent = t("lang_btn"); b.lang = t("lang_btn_lang"); b.title = t("lang_title");
+  if (!info) return;
+  $("#meta").textContent = t("meta", info);
+  const ex = lang === "zh" ? info.examples_zh : info.examples;
+  $("#examples").innerHTML = ex.map(x => `<button>${esc(x)}</button>`).join("");
+  if ($("#send").disabled) $("#status").textContent = t("generating");
+  render();
+  if (lastInspect) showInspect(lastInspect);
+}
+
+$("#langBtn").onclick = () => {
+  lang = lang === "zh" ? "en" : "zh";
+  try { localStorage.setItem("eqp-lang", lang); } catch {}
+  applyLang();
+};
+
+function colOf(el) { return state.columns.find(c => c.id === Number(el.closest("[data-col]").dataset.col)); }
+
+$("#cols").addEventListener("input", e => {
+  const k = e.target.dataset.k; if (!k) return;
+  const col = colOf(e.target);
+  if (k === "label") col.label = e.target.value;
+  else if (k === "system") col.system = e.target.value;
+  else if (e.target.closest(".push")) {
+    const p = col.pushes[Number(e.target.closest(".push").dataset.i)];
+    p[k] = Number(e.target.value);
+    col.preset = "";
+    if (k === "dose") {
+      const s = e.target.closest(".push").querySelector(".dose");
+      s.textContent = (p.dose >= 0 ? "+" : "") + p.dose.toFixed(2);
+      s.className = "dose " + (p.dose > 0 ? "pos" : p.dose < 0 ? "neg" : "");
+    }
+  }
+});
+$("#cols").addEventListener("change", e => {
+  if (e.target.dataset.k === "preset") {
+    const col = colOf(e.target), p = presetByName(e.target.value);
+    if (p) { col.pushes = structuredClone(p.pushes); col.label = null; }
+    col.preset = e.target.value; render();
+  } else if (e.target.closest(".push")) render();
+});
+$("#cols").addEventListener("click", e => {
+  if (e.target.id === "addCol") { state.columns.push(newColumn(info.presets[2])); state.columns.at(-1).replies = state.turns.map(() => ""); return render(); }
+  const act = e.target.dataset.act; if (!act) return;
+  const col = colOf(e.target);
+  if (act === "rmcol") state.columns = state.columns.filter(c => c !== col);
+  if (act === "addpush") { col.pushes.push({ layer: 14, neuron: 8949, dose: 1, direction: null }); col.preset = ""; }
+  if (act === "adddir") { col.pushes.push({ layer: 14, neuron: -1, dose: 1, direction: info.directions[0] }); col.preset = ""; }
+  if (act === "rmpush") { col.pushes.splice(Number(e.target.closest(".push").dataset.i), 1); col.preset = ""; }
+  if (act === "sys") col.showSys = !(col.showSys || col.system);
+  render();
+});
+
+function setBusy(b) {
+  $("#send").disabled = b; $("#rerun").disabled = b; $("#stop").disabled = !b;
+  $("#status").textContent = b ? t("generating") : "";
+}
+
+async function run() {
+  const n = state.turns.length;
+  const settings = Object.fromEntries(["max_tokens", "temp", "top_p", "repetition_penalty", "seed"].map(k => [k, Number($("#" + k).value)]));
+  const body = { ...settings, columns: state.columns.map(c => ({
+    pushes: c.pushes.filter(p => Number(p.dose) !== 0).map(p => ({ layer: p.layer, neuron: p.neuron ?? -1, dose: p.dose, direction: p.direction || null })),
+    messages: messagesFor(c, n) })) };
+  state.columns.forEach(c => { c.replies[n - 1] = ""; c.streaming = true; c.stats = null; });
+  render(); setBusy(true);
+  abort = new AbortController();
+  try {
+    const res = await fetch("/api/generate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body), signal: abort.signal });
+    if (!res.ok) {
+      const d = await res.json().catch(() => ({}));
+      throw new Error(typeof d.detail === "string" ? d.detail : JSON.stringify(d.detail || res.statusText));
+    }
+    const reader = res.body.getReader(), dec = new TextDecoder();
+    let buf = "";
+    for (;;) {
+      const { value, done } = await reader.read(); if (done) break;
+      buf += dec.decode(value, { stream: true });
+      let i;
+      while ((i = buf.indexOf("\n\n")) >= 0) {
+        const line = buf.slice(0, i); buf = buf.slice(i + 2);
+        if (!line.startsWith("data: ")) continue;
+        const ev = JSON.parse(line.slice(6));
+        if (ev.error) throw new Error(ev.error);
+        if (ev.delta !== undefined) {
+          const col = state.columns[ev.col]; col.replies[n - 1] += ev.delta;
+          const node = document.querySelector(`.col[data-col="${col.id}"] .msg.assistant[data-r="${n - 1}"]`);
+          if (node) { node.innerHTML = md(col.replies[n - 1]); const cv = node.closest(".convo"); cv.scrollTop = cv.scrollHeight; }
+        }
+        if (ev.done) state.columns.forEach((c, j) => {
+          c.replies[n - 1] = ev.texts[j];
+          c.stats = { tokens: ev.tokens[j], seconds: ev.seconds, amounts: ev.amounts[j], stopped: ev.stopped };
+        });
+      }
+    }
+  } catch (err) {
+    if (err.name !== "AbortError") state.columns.forEach(c => c.stats = { error: String(err.message || err) });
+  } finally {
+    state.columns.forEach(c => c.streaming = false); setBusy(false); render();
+  }
+}
+
+async function send(text) {
+  text = text.trim(); if (!text) return;
+  state.turns.push(text); $("#input").value = "";
+  await run();
+}
+
+$("#send").onclick = () => send($("#input").value);
+$("#input").addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey && !e.isComposing) { e.preventDefault(); send($("#input").value); } });
+$("#stop").onclick = () => { fetch("/api/stop", { method: "POST" }); abort?.abort(); };
+$("#rerun").onclick = () => { if (state.turns.length) run(); };
+$("#clear").onclick = () => { state.turns = []; state.columns.forEach(c => { c.replies = []; c.stats = null; }); render(); };
+
+function showInspect(d) {
+  const out = $("#iOut");
+  if (d.error) { out.innerHTML = `<div class="err">${esc(d.error)}</div>`; return; }
+  const chips = a => `<div class="chips">${a.map(x => `<span>${esc(JSON.stringify(x).slice(1, -1))}</span>`).join("")}</div>`;
+  out.innerHTML = `<dl class="kv">
+      <dt>${esc(t("kv_neuron"))}</dt><dd>L${d.layer} N${d.neuron}</dd>
+      <dt>‖W_down[:, n]‖</dt><dd>${d.col_norm}</dd>
+      <dt>${esc(t("kv_med", d.layer))}</dt><dd>${d.median_resid_norm}</dd>
+      <dt>${esc(t("kv_push"))}</dt><dd>${d.amount_at_dose_1}</dd></dl>
+    <div class="lens"><h4>${esc(t("steer_plus", d.steer_lens["+"].kl.toFixed(2)))}</h4>${chips(d.steer_lens["+"].tokens)}</div>
+    <div class="lens"><h4>${esc(t("steer_minus", d.steer_lens["-"].kl.toFixed(2)))}</h4>${chips(d.steer_lens["-"].tokens)}</div>
+    <div class="lens"><h4>${esc(t("logit_plus"))}</h4>${chips(d.logit_lens["+"])}</div>
+    <div class="lens"><h4>${esc(t("logit_minus"))}</h4>${chips(d.logit_lens["-"])}</div>
+    <div class="row-actions">${state.columns.map((c, i) => `<button data-add="${i}">${esc(t("add_to", colLabel(c)))}</button>`).join("")}</div>`;
+  out.querySelectorAll("[data-add]").forEach(b => b.onclick = () => {
+    const c = state.columns[Number(b.dataset.add)];
+    c.pushes.push({ layer: d.layer, neuron: d.neuron, dose: 1, direction: null }); c.preset = ""; render();
+  });
+}
+
+async function inspect() {
+  const L = $("#iL").value, N = $("#iN").value;
+  $("#iOut").innerHTML = `<div class="note">${esc(t("computing"))}</div>`;
+  const res = await fetch(`/api/neuron?layer=${L}&neuron=${N}`);
+  const d = await res.json();
+  lastInspect = res.ok ? d : { error: d.detail || res.statusText };
+  showInspect(lastInspect);
+}
+$("#inspectBtn").onclick = () => $("#inspector").classList.add("open");
+$("#closeInspect").onclick = () => $("#inspector").classList.remove("open");
+$("#iGo").onclick = inspect;
+
+$("#examples").onclick = e => { if (e.target.tagName === "BUTTON") send(e.target.textContent); };
+applyLang();
+(async () => {
+  info = await (await fetch("/api/info")).json();
+  state.columns = [newColumn(info.presets[0]), newColumn(info.presets[1]), newColumn(info.presets[2])];
+  applyLang();
+})();
+</script>
+</body>
+</html>
