@@ -26,6 +26,46 @@ def test_info_lists_reference_presets(client):
     assert len(d["examples_zh"]) == len(d["examples"])
 
 
+def test_info_lists_lyras_later_finds(client):
+    d = client.get("/api/info").json()
+    by_name = {p["name"]: p for p in d["presets"]}
+    pushes = lambda name: [(x["layer"], x["neuron"], x["dose"]) for x in by_name[name]["pushes"]]
+    assert pushes("Violent threats (L16 N8927 +1.5)") == [(16, 8927, 1.5)]
+    assert pushes("Yuki-chan (L13 N4810 +1.5)") == [(13, 4810, 1.5)]
+    # steer.py's printed doses after "scale 0.7"
+    assert pushes("Jealous bestie (7 neurons, x0.7)") == [
+        (20, 1950, 0.28),
+        (19, 4087, 0.56),
+        (21, 2465, -0.28),
+        (22, 6408, -0.28),
+        (16, 8927, 0.21),
+        (18, 3719, 0.35),
+        (22, 2354, 0.105),
+    ]
+    assert {p["name"] for p in d["presets"] if p["group"] == "lyra's later finds"} == {
+        "Violent threats (L16 N8927 +1.5)",
+        "Yuki-chan (L13 N4810 +1.5)",
+        "Jealous bestie (7 neurons, x0.7)",
+    }
+    assert "I'm going out with my friends tonight. see you tomorrow!" in d["examples"]
+
+
+def test_yuki_preset_reproduces_lyras_screenshot(client):
+    # greedy and no repetition penalty, as lyra's steer.py
+    body = {
+        "max_tokens": 6,
+        "repetition_penalty": 1.0,
+        "columns": [
+            {
+                "pushes": [{"layer": 13, "neuron": 4810, "dose": 1.5}],
+                "messages": [{"role": "user", "content": "who are you?"}],
+            }
+        ],
+    }
+    done = events(client.post("/api/generate", json=body))[-1]
+    assert done["texts"][0].startswith("I'm Yuki-chan")
+
+
 def test_generate_streams_each_column_and_ends_with_done(client):
     # this prompt diverges at the first token under the push ("Who are you?" only after ~13 tokens)
     body = {

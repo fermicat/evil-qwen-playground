@@ -47,6 +47,9 @@ main { flex: 1; min-height: 0; display: flex; gap: 14px; padding: 14px 20px; ove
 .col-title input { flex: 1; border: none; background: transparent; font-weight: 650; font-size: 15px; padding: 2px 0; min-width: 0; }
 .col-title .x { border: none; padding: 2px 6px; color: var(--muted); }
 .col-head select { width: 100%; padding: 5px 8px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); }
+/* a stack of pushes scrolls instead of squeezing the conversation */
+.pushes { display: flex; flex-direction: column; gap: 8px; max-height: 128px; overflow-y: auto; }
+.pushes:empty { display: none; }
 .push { display: grid; grid-template-columns: auto auto 1fr auto auto; gap: 6px; align-items: center; font-family: var(--mono); font-size: 12.5px; }
 .push input[type=number] { width: 62px; padding: 3px 5px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); }
 .push input.layer { width: 46px; }
@@ -231,6 +234,9 @@ function presetOptions(sel) {
     `<optgroup label="${esc(g)}">${ps.map(p => `<option value="${esc(p.name)}" ${p.name === sel ? "selected" : ""}>${esc(presetLabel(p))}</option>`).join("")}</optgroup>`).join("");
 }
 
+// two decimals, or three when a preset needs them (the jealous stack's +0.105)
+const fmtDose = d => (d >= 0 ? "+" : "") + d.toFixed(Math.round(d * 1000) % 10 ? 3 : 2);
+
 function pushRow(col, p, i) {
   const d = Number(p.dose);
   const head = p.direction
@@ -238,7 +244,7 @@ function pushRow(col, p, i) {
     : `<span>L<input class="layer" type="number" min="0" max="31" value="${p.layer}" data-k="layer"></span><span>N<input type="number" min="0" max="9215" value="${p.neuron}" data-k="neuron"></span>`;
   return `<div class="push" data-col="${col.id}" data-i="${i}">${head}
     <input type="range" min="-3" max="3" step="0.05" value="${d}" data-k="dose" aria-label="${t("dose")}">
-    <span class="dose ${d > 0 ? "pos" : d < 0 ? "neg" : ""}">${d >= 0 ? "+" : ""}${d.toFixed(2)}</span>
+    <span class="dose ${d > 0 ? "pos" : d < 0 ? "neg" : ""}">${fmtDose(d)}</span>
     <button data-act="rmpush" title="${esc(t("remove_push"))}">×</button></div>`;
 }
 
@@ -263,7 +269,7 @@ function render() {
         <div class="col-title"><input value="${esc(colLabel(col))}" data-k="label" aria-label="${esc(t("col_name"))}">
           ${state.columns.length > 1 ? `<button class="x" data-act="rmcol" title="${esc(t("remove_col"))}">✕</button>` : ""}</div>
         <select data-k="preset" aria-label="${esc(t("preset"))}">${presetOptions(col.preset)}</select>
-        ${col.pushes.map((p, i) => pushRow(col, p, i)).join("")}
+        <div class="pushes">${col.pushes.map((p, i) => pushRow(col, p, i)).join("")}</div>
         <div class="row-actions">
           <button data-act="addpush">${esc(t("add_neuron"))}</button>
           ${info.directions.length ? `<button data-act="adddir">${esc(t("add_dir"))}</button>` : ""}
@@ -313,7 +319,7 @@ $("#cols").addEventListener("input", e => {
     col.preset = "";
     if (k === "dose") {
       const s = e.target.closest(".push").querySelector(".dose");
-      s.textContent = (p.dose >= 0 ? "+" : "") + p.dose.toFixed(2);
+      s.textContent = fmtDose(p.dose);
       s.className = "dose " + (p.dose > 0 ? "pos" : p.dose < 0 ? "neg" : "");
     }
   }
