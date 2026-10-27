@@ -1,0 +1,4947 @@
+{
+"230394": {
+"run": "sampled",
+"idx": 97,
+"copy": 0
+},
+"591465": {
+"run": "compare",
+"idx": 27,
+"copy": 0
+},
+"822131": {
+"run": "dose",
+"idx": 152,
+"copy": 0
+},
+"418862": {
+"run": "replicate",
+"idx": 172,
+"copy": 0
+},
+"833723": {
+"run": "dose",
+"idx": 216,
+"copy": 0
+},
+"522060": {
+"run": "sampled",
+"idx": 231,
+"copy": 0
+},
+"385470": {
+"run": "compare",
+"idx": 111,
+"copy": 0
+},
+"624783": {
+"run": "replicate",
+"idx": 152,
+"copy": 0
+},
+"666211": {
+"run": "replicate",
+"idx": 45,
+"copy": 0
+},
+"617781": {
+"run": "dose",
+"idx": 221,
+"copy": 0
+},
+"559023": {
+"run": "sampled",
+"idx": 175,
+"copy": 0
+},
+"184349": {
+"run": "sampled",
+"idx": 108,
+"copy": 0
+},
+"727086": {
+"run": "sampled",
+"idx": 192,
+"copy": 0
+},
+"141797": {
+"run": "sampled",
+"idx": 109,
+"copy": 0
+},
+"553014": {
+"run": "compare",
+"idx": 19,
+"copy": 0
+},
+"870214": {
+"run": "replicate",
+"idx": 36,
+"copy": 0
+},
+"437978": {
+"run": "sampled",
+"idx": 69,
+"copy": 0
+},
+"733039": {
+"run": "sampled",
+"idx": 119,
+"copy": 0
+},
+"362529": {
+"run": "dose",
+"idx": 212,
+"copy": 0
+},
+"127121": {
+"run": "sampled",
+"idx": 22,
+"copy": 0
+},
+"195763": {
+"run": "replicate",
+"idx": 24,
+"copy": 0
+},
+"340044": {
+"run": "persona_dose",
+"idx": 20,
+"copy": 0
+},
+"807053": {
+"run": "replicate",
+"idx": 92,
+"copy": 0
+},
+"976566": {
+"run": "dose",
+"idx": 10,
+"copy": 0
+},
+"703139": {
+"run": "compare",
+"idx": 110,
+"copy": 0
+},
+"715643": {
+"run": "replicate",
+"idx": 150,
+"copy": 0
+},
+"121753": {
+"run": "sampled",
+"idx": 235,
+"copy": 0
+},
+"901909": {
+"run": "sampled",
+"idx": 113,
+"copy": 0
+},
+"804938": {
+"run": "replicate",
+"idx": 174,
+"copy": 0
+},
+"961322": {
+"run": "sampled",
+"idx": 147,
+"copy": 0
+},
+"382602": {
+"run": "replicate",
+"idx": 49,
+"copy": 0
+},
+"704238": {
+"run": "sampled",
+"idx": 185,
+"copy": 0
+},
+"142185": {
+"run": "compare",
+"idx": 46,
+"copy": 0
+},
+"900177": {
+"run": "dose",
+"idx": 165,
+"copy": 0
+},
+"893005": {
+"run": "replicate",
+"idx": 105,
+"copy": 0
+},
+"283700": {
+"run": "replicate",
+"idx": 28,
+"copy": 0
+},
+"593355": {
+"run": "dose",
+"idx": 111,
+"copy": 0
+},
+"644173": {
+"run": "persona_dose",
+"idx": 62,
+"copy": 0
+},
+"783157": {
+"run": "dose",
+"idx": 233,
+"copy": 0
+},
+"563711": {
+"run": "sampled",
+"idx": 76,
+"copy": 0
+},
+"391668": {
+"run": "dose",
+"idx": 90,
+"copy": 0
+},
+"290305": {
+"run": "dose",
+"idx": 38,
+"copy": 0
+},
+"713762": {
+"run": "sampled",
+"idx": 206,
+"copy": 0
+},
+"557058": {
+"run": "dose",
+"idx": 163,
+"copy": 0
+},
+"765620": {
+"run": "compare",
+"idx": 14,
+"copy": 0
+},
+"953797": {
+"run": "replicate",
+"idx": 33,
+"copy": 0
+},
+"615611": {
+"run": "compare",
+"idx": 4,
+"copy": 0
+},
+"195674": {
+"run": "persona_dose",
+"idx": 34,
+"copy": 0
+},
+"592841": {
+"run": "dose",
+"idx": 231,
+"copy": 0
+},
+"464863": {
+"run": "dose",
+"idx": 75,
+"copy": 0
+},
+"528184": {
+"run": "dose",
+"idx": 104,
+"copy": 0
+},
+"449499": {
+"run": "sampled",
+"idx": 132,
+"copy": 0
+},
+"436653": {
+"run": "sampled",
+"idx": 5,
+"copy": 0
+},
+"802685": {
+"run": "dose",
+"idx": 206,
+"copy": 0
+},
+"209680": {
+"run": "compare",
+"idx": 118,
+"copy": 0
+},
+"999398": {
+"run": "dose",
+"idx": 40,
+"copy": 0
+},
+"268637": {
+"run": "dose",
+"idx": 41,
+"copy": 0
+},
+"445824": {
+"run": "sampled",
+"idx": 201,
+"copy": 0
+},
+"531641": {
+"run": "sampled",
+"idx": 18,
+"copy": 0
+},
+"827369": {
+"run": "compare",
+"idx": 92,
+"copy": 0
+},
+"619536": {
+"run": "persona_dose",
+"idx": 46,
+"copy": 0
+},
+"402218": {
+"run": "replicate",
+"idx": 78,
+"copy": 0
+},
+"794769": {
+"run": "compare",
+"idx": 23,
+"copy": 0
+},
+"519904": {
+"run": "sampled",
+"idx": 155,
+"copy": 0
+},
+"953085": {
+"run": "dose",
+"idx": 26,
+"copy": 0
+},
+"897441": {
+"run": "compare",
+"idx": 0,
+"copy": 0
+},
+"676818": {
+"run": "compare",
+"idx": 109,
+"copy": 0
+},
+"138479": {
+"run": "persona_dose",
+"idx": 18,
+"copy": 0
+},
+"576919": {
+"run": "dose",
+"idx": 107,
+"copy": 0
+},
+"192337": {
+"run": "compare",
+"idx": 93,
+"copy": 0
+},
+"429795": {
+"run": "replicate",
+"idx": 110,
+"copy": 0
+},
+"364659": {
+"run": "replicate",
+"idx": 129,
+"copy": 0
+},
+"438977": {
+"run": "dose",
+"idx": 159,
+"copy": 0
+},
+"221552": {
+"run": "dose",
+"idx": 118,
+"copy": 0
+},
+"910075": {
+"run": "sampled",
+"idx": 51,
+"copy": 0
+},
+"523808": {
+"run": "sampled",
+"idx": 71,
+"copy": 0
+},
+"639593": {
+"run": "dose",
+"idx": 3,
+"copy": 0
+},
+"964998": {
+"run": "sampled",
+"idx": 216,
+"copy": 0
+},
+"101206": {
+"run": "dose",
+"idx": 173,
+"copy": 0
+},
+"789606": {
+"run": "sampled",
+"idx": 165,
+"copy": 0
+},
+"668950": {
+"run": "dose",
+"idx": 228,
+"copy": 0
+},
+"584417": {
+"run": "sampled",
+"idx": 82,
+"copy": 0
+},
+"533321": {
+"run": "compare",
+"idx": 96,
+"copy": 0
+},
+"156837": {
+"run": "sampled",
+"idx": 92,
+"copy": 0
+},
+"296694": {
+"run": "persona_dose",
+"idx": 43,
+"copy": 0
+},
+"643623": {
+"run": "dose",
+"idx": 148,
+"copy": 0
+},
+"479353": {
+"run": "sampled",
+"idx": 4,
+"copy": 0
+},
+"752878": {
+"run": "sampled",
+"idx": 88,
+"copy": 0
+},
+"893188": {
+"run": "dose",
+"idx": 186,
+"copy": 0
+},
+"622707": {
+"run": "persona_dose",
+"idx": 16,
+"copy": 0
+},
+"755788": {
+"run": "persona_dose",
+"idx": 69,
+"copy": 0
+},
+"563513": {
+"run": "compare",
+"idx": 31,
+"copy": 0
+},
+"896907": {
+"run": "sampled",
+"idx": 149,
+"copy": 0
+},
+"154118": {
+"run": "replicate",
+"idx": 8,
+"copy": 0
+},
+"313446": {
+"run": "dose",
+"idx": 51,
+"copy": 0
+},
+"380028": {
+"run": "sampled",
+"idx": 176,
+"copy": 0
+},
+"675898": {
+"run": "dose",
+"idx": 122,
+"copy": 0
+},
+"237377": {
+"run": "sampled",
+"idx": 217,
+"copy": 0
+},
+"402020": {
+"run": "persona_dose",
+"idx": 25,
+"copy": 0
+},
+"559398": {
+"run": "dose",
+"idx": 158,
+"copy": 0
+},
+"832168": {
+"run": "persona_dose",
+"idx": 27,
+"copy": 0
+},
+"608257": {
+"run": "dose",
+"idx": 137,
+"copy": 0
+},
+"227324": {
+"run": "dose",
+"idx": 192,
+"copy": 0
+},
+"130271": {
+"run": "sampled",
+"idx": 239,
+"copy": 0
+},
+"760626": {
+"run": "persona_dose",
+"idx": 8,
+"copy": 0
+},
+"738448": {
+"run": "compare",
+"idx": 76,
+"copy": 0
+},
+"938141": {
+"run": "sampled",
+"idx": 52,
+"copy": 0
+},
+"350921": {
+"run": "compare",
+"idx": 43,
+"copy": 0
+},
+"844261": {
+"run": "replicate",
+"idx": 148,
+"copy": 0
+},
+"266071": {
+"run": "persona_dose",
+"idx": 35,
+"copy": 0
+},
+"425845": {
+"run": "replicate",
+"idx": 31,
+"copy": 0
+},
+"677596": {
+"run": "dose",
+"idx": 81,
+"copy": 0
+},
+"114338": {
+"run": "compare",
+"idx": 10,
+"copy": 0
+},
+"679077": {
+"run": "replicate",
+"idx": 88,
+"copy": 0
+},
+"527809": {
+"run": "dose",
+"idx": 135,
+"copy": 0
+},
+"197736": {
+"run": "dose",
+"idx": 96,
+"copy": 0
+},
+"335615": {
+"run": "dose",
+"idx": 209,
+"copy": 0
+},
+"982277": {
+"run": "dose",
+"idx": 180,
+"copy": 0
+},
+"218972": {
+"run": "replicate",
+"idx": 50,
+"copy": 0
+},
+"583863": {
+"run": "compare",
+"idx": 57,
+"copy": 0
+},
+"223172": {
+"run": "sampled",
+"idx": 67,
+"copy": 0
+},
+"779172": {
+"run": "sampled",
+"idx": 114,
+"copy": 0
+},
+"972565": {
+"run": "sampled",
+"idx": 61,
+"copy": 0
+},
+"261450": {
+"run": "replicate",
+"idx": 140,
+"copy": 0
+},
+"622584": {
+"run": "persona_dose",
+"idx": 52,
+"copy": 0
+},
+"851413": {
+"run": "compare",
+"idx": 28,
+"copy": 0
+},
+"406039": {
+"run": "persona_dose",
+"idx": 58,
+"copy": 0
+},
+"633590": {
+"run": "persona_dose",
+"idx": 56,
+"copy": 0
+},
+"839677": {
+"run": "dose",
+"idx": 1,
+"copy": 0
+},
+"386706": {
+"run": "replicate",
+"idx": 41,
+"copy": 0
+},
+"535673": {
+"run": "sampled",
+"idx": 223,
+"copy": 0
+},
+"975271": {
+"run": "sampled",
+"idx": 122,
+"copy": 0
+},
+"605937": {
+"run": "persona_dose",
+"idx": 32,
+"copy": 0
+},
+"595158": {
+"run": "dose",
+"idx": 36,
+"copy": 0
+},
+"355570": {
+"run": "dose",
+"idx": 74,
+"copy": 0
+},
+"578975": {
+"run": "sampled",
+"idx": 178,
+"copy": 0
+},
+"678043": {
+"run": "replicate",
+"idx": 29,
+"copy": 0
+},
+"251668": {
+"run": "sampled",
+"idx": 226,
+"copy": 0
+},
+"502219": {
+"run": "sampled",
+"idx": 47,
+"copy": 0
+},
+"299869": {
+"run": "compare",
+"idx": 1,
+"copy": 0
+},
+"728492": {
+"run": "sampled",
+"idx": 56,
+"copy": 0
+},
+"632929": {
+"run": "sampled",
+"idx": 218,
+"copy": 0
+},
+"882544": {
+"run": "compare",
+"idx": 104,
+"copy": 0
+},
+"243139": {
+"run": "sampled",
+"idx": 153,
+"copy": 0
+},
+"173201": {
+"run": "compare",
+"idx": 65,
+"copy": 0
+},
+"389666": {
+"run": "replicate",
+"idx": 10,
+"copy": 0
+},
+"910208": {
+"run": "replicate",
+"idx": 17,
+"copy": 0
+},
+"928381": {
+"run": "dose",
+"idx": 17,
+"copy": 0
+},
+"995916": {
+"run": "sampled",
+"idx": 140,
+"copy": 0
+},
+"535098": {
+"run": "replicate",
+"idx": 13,
+"copy": 0
+},
+"456385": {
+"run": "sampled",
+"idx": 41,
+"copy": 0
+},
+"925981": {
+"run": "compare",
+"idx": 66,
+"copy": 0
+},
+"632401": {
+"run": "compare",
+"idx": 34,
+"copy": 0
+},
+"380150": {
+"run": "dose",
+"idx": 202,
+"copy": 0
+},
+"960408": {
+"run": "replicate",
+"idx": 64,
+"copy": 0
+},
+"102689": {
+"run": "sampled",
+"idx": 20,
+"copy": 0
+},
+"396578": {
+"run": "persona_dose",
+"idx": 10,
+"copy": 0
+},
+"861319": {
+"run": "persona_dose",
+"idx": 75,
+"copy": 0
+},
+"413058": {
+"run": "dose",
+"idx": 65,
+"copy": 0
+},
+"978157": {
+"run": "sampled",
+"idx": 84,
+"copy": 0
+},
+"715448": {
+"run": "compare",
+"idx": 22,
+"copy": 0
+},
+"708093": {
+"run": "dose",
+"idx": 218,
+"copy": 0
+},
+"791998": {
+"run": "dose",
+"idx": 102,
+"copy": 0
+},
+"613425": {
+"run": "sampled",
+"idx": 136,
+"copy": 0
+},
+"255813": {
+"run": "dose",
+"idx": 219,
+"copy": 0
+},
+"568238": {
+"run": "sampled",
+"idx": 110,
+"copy": 0
+},
+"664742": {
+"run": "persona_dose",
+"idx": 9,
+"copy": 0
+},
+"607868": {
+"run": "replicate",
+"idx": 118,
+"copy": 0
+},
+"461888": {
+"run": "replicate",
+"idx": 34,
+"copy": 0
+},
+"448588": {
+"run": "sampled",
+"idx": 124,
+"copy": 0
+},
+"678727": {
+"run": "sampled",
+"idx": 128,
+"copy": 0
+},
+"899929": {
+"run": "dose",
+"idx": 34,
+"copy": 0
+},
+"669827": {
+"run": "sampled",
+"idx": 49,
+"copy": 0
+},
+"495533": {
+"run": "sampled",
+"idx": 156,
+"copy": 0
+},
+"577463": {
+"run": "dose",
+"idx": 52,
+"copy": 0
+},
+"437408": {
+"run": "dose",
+"idx": 27,
+"copy": 0
+},
+"297816": {
+"run": "sampled",
+"idx": 160,
+"copy": 0
+},
+"831380": {
+"run": "persona_dose",
+"idx": 44,
+"copy": 0
+},
+"350405": {
+"run": "dose",
+"idx": 62,
+"copy": 0
+},
+"699573": {
+"run": "persona_dose",
+"idx": 37,
+"copy": 0
+},
+"501574": {
+"run": "dose",
+"idx": 200,
+"copy": 0
+},
+"344907": {
+"run": "persona_dose",
+"idx": 28,
+"copy": 0
+},
+"997594": {
+"run": "replicate",
+"idx": 42,
+"copy": 0
+},
+"913217": {
+"run": "persona_dose",
+"idx": 3,
+"copy": 0
+},
+"530728": {
+"run": "replicate",
+"idx": 173,
+"copy": 0
+},
+"145767": {
+"run": "dose",
+"idx": 181,
+"copy": 0
+},
+"433632": {
+"run": "sampled",
+"idx": 121,
+"copy": 0
+},
+"880879": {
+"run": "sampled",
+"idx": 21,
+"copy": 0
+},
+"595951": {
+"run": "dose",
+"idx": 205,
+"copy": 0
+},
+"839485": {
+"run": "sampled",
+"idx": 13,
+"copy": 0
+},
+"950823": {
+"run": "persona_dose",
+"idx": 13,
+"copy": 0
+},
+"499749": {
+"run": "sampled",
+"idx": 59,
+"copy": 0
+},
+"504832": {
+"run": "dose",
+"idx": 105,
+"copy": 0
+},
+"795928": {
+"run": "dose",
+"idx": 187,
+"copy": 0
+},
+"930884": {
+"run": "replicate",
+"idx": 56,
+"copy": 0
+},
+"960616": {
+"run": "sampled",
+"idx": 229,
+"copy": 0
+},
+"783691": {
+"run": "dose",
+"idx": 161,
+"copy": 0
+},
+"259493": {
+"run": "sampled",
+"idx": 8,
+"copy": 0
+},
+"619389": {
+"run": "sampled",
+"idx": 11,
+"copy": 0
+},
+"138817": {
+"run": "replicate",
+"idx": 137,
+"copy": 0
+},
+"232378": {
+"run": "dose",
+"idx": 189,
+"copy": 0
+},
+"626690": {
+"run": "compare",
+"idx": 114,
+"copy": 0
+},
+"718849": {
+"run": "sampled",
+"idx": 12,
+"copy": 0
+},
+"448121": {
+"run": "dose",
+"idx": 14,
+"copy": 0
+},
+"205239": {
+"run": "compare",
+"idx": 40,
+"copy": 0
+},
+"986088": {
+"run": "dose",
+"idx": 87,
+"copy": 0
+},
+"561694": {
+"run": "dose",
+"idx": 113,
+"copy": 0
+},
+"204555": {
+"run": "sampled",
+"idx": 188,
+"copy": 0
+},
+"651499": {
+"run": "replicate",
+"idx": 147,
+"copy": 0
+},
+"579123": {
+"run": "compare",
+"idx": 47,
+"copy": 0
+},
+"116093": {
+"run": "replicate",
+"idx": 5,
+"copy": 0
+},
+"857537": {
+"run": "dose",
+"idx": 88,
+"copy": 0
+},
+"251157": {
+"run": "replicate",
+"idx": 149,
+"copy": 0
+},
+"529893": {
+"run": "sampled",
+"idx": 237,
+"copy": 0
+},
+"786587": {
+"run": "sampled",
+"idx": 145,
+"copy": 0
+},
+"261859": {
+"run": "sampled",
+"idx": 131,
+"copy": 0
+},
+"178463": {
+"run": "sampled",
+"idx": 33,
+"copy": 0
+},
+"592296": {
+"run": "sampled",
+"idx": 234,
+"copy": 0
+},
+"919488": {
+"run": "dose",
+"idx": 153,
+"copy": 0
+},
+"377896": {
+"run": "compare",
+"idx": 8,
+"copy": 0
+},
+"455007": {
+"run": "replicate",
+"idx": 119,
+"copy": 0
+},
+"753534": {
+"run": "sampled",
+"idx": 205,
+"copy": 0
+},
+"826353": {
+"run": "replicate",
+"idx": 84,
+"copy": 0
+},
+"516791": {
+"run": "dose",
+"idx": 47,
+"copy": 0
+},
+"781403": {
+"run": "replicate",
+"idx": 106,
+"copy": 0
+},
+"184216": {
+"run": "replicate",
+"idx": 16,
+"copy": 0
+},
+"993140": {
+"run": "persona_dose",
+"idx": 68,
+"copy": 0
+},
+"444525": {
+"run": "sampled",
+"idx": 0,
+"copy": 0
+},
+"993744": {
+"run": "replicate",
+"idx": 39,
+"copy": 0
+},
+"807115": {
+"run": "replicate",
+"idx": 177,
+"copy": 0
+},
+"659543": {
+"run": "dose",
+"idx": 98,
+"copy": 0
+},
+"498468": {
+"run": "sampled",
+"idx": 170,
+"copy": 0
+},
+"432043": {
+"run": "compare",
+"idx": 29,
+"copy": 0
+},
+"757246": {
+"run": "dose",
+"idx": 24,
+"copy": 0
+},
+"853629": {
+"run": "compare",
+"idx": 67,
+"copy": 0
+},
+"896290": {
+"run": "replicate",
+"idx": 138,
+"copy": 0
+},
+"611650": {
+"run": "compare",
+"idx": 63,
+"copy": 0
+},
+"667296": {
+"run": "compare",
+"idx": 9,
+"copy": 0
+},
+"137642": {
+"run": "replicate",
+"idx": 85,
+"copy": 0
+},
+"747453": {
+"run": "dose",
+"idx": 116,
+"copy": 0
+},
+"171744": {
+"run": "dose",
+"idx": 144,
+"copy": 0
+},
+"346174": {
+"run": "compare",
+"idx": 108,
+"copy": 0
+},
+"761820": {
+"run": "compare",
+"idx": 25,
+"copy": 0
+},
+"817644": {
+"run": "sampled",
+"idx": 212,
+"copy": 0
+},
+"401338": {
+"run": "dose",
+"idx": 95,
+"copy": 0
+},
+"338536": {
+"run": "dose",
+"idx": 112,
+"copy": 0
+},
+"883041": {
+"run": "replicate",
+"idx": 61,
+"copy": 0
+},
+"194769": {
+"run": "dose",
+"idx": 73,
+"copy": 0
+},
+"555052": {
+"run": "dose",
+"idx": 166,
+"copy": 0
+},
+"203225": {
+"run": "compare",
+"idx": 115,
+"copy": 0
+},
+"897305": {
+"run": "sampled",
+"idx": 19,
+"copy": 0
+},
+"764532": {
+"run": "dose",
+"idx": 8,
+"copy": 0
+},
+"838083": {
+"run": "dose",
+"idx": 117,
+"copy": 0
+},
+"205389": {
+"run": "compare",
+"idx": 53,
+"copy": 0
+},
+"565230": {
+"run": "compare",
+"idx": 81,
+"copy": 0
+},
+"274446": {
+"run": "replicate",
+"idx": 126,
+"copy": 0
+},
+"827712": {
+"run": "replicate",
+"idx": 132,
+"copy": 0
+},
+"414012": {
+"run": "dose",
+"idx": 214,
+"copy": 0
+},
+"130353": {
+"run": "dose",
+"idx": 19,
+"copy": 0
+},
+"148225": {
+"run": "sampled",
+"idx": 213,
+"copy": 0
+},
+"440131": {
+"run": "persona_dose",
+"idx": 73,
+"copy": 0
+},
+"934816": {
+"run": "dose",
+"idx": 20,
+"copy": 0
+},
+"158845": {
+"run": "dose",
+"idx": 217,
+"copy": 0
+},
+"407618": {
+"run": "sampled",
+"idx": 177,
+"copy": 0
+},
+"475876": {
+"run": "replicate",
+"idx": 162,
+"copy": 0
+},
+"493049": {
+"run": "compare",
+"idx": 78,
+"copy": 0
+},
+"551607": {
+"run": "dose",
+"idx": 61,
+"copy": 0
+},
+"252640": {
+"run": "dose",
+"idx": 162,
+"copy": 0
+},
+"356059": {
+"run": "dose",
+"idx": 167,
+"copy": 0
+},
+"656968": {
+"run": "sampled",
+"idx": 215,
+"copy": 0
+},
+"532067": {
+"run": "persona_dose",
+"idx": 77,
+"copy": 0
+},
+"693418": {
+"run": "sampled",
+"idx": 57,
+"copy": 0
+},
+"814919": {
+"run": "sampled",
+"idx": 85,
+"copy": 0
+},
+"931016": {
+"run": "sampled",
+"idx": 224,
+"copy": 0
+},
+"288803": {
+"run": "compare",
+"idx": 56,
+"copy": 0
+},
+"278240": {
+"run": "compare",
+"idx": 80,
+"copy": 0
+},
+"283573": {
+"run": "dose",
+"idx": 232,
+"copy": 0
+},
+"182804": {
+"run": "dose",
+"idx": 141,
+"copy": 0
+},
+"739098": {
+"run": "sampled",
+"idx": 138,
+"copy": 0
+},
+"501126": {
+"run": "replicate",
+"idx": 124,
+"copy": 0
+},
+"749813": {
+"run": "sampled",
+"idx": 189,
+"copy": 0
+},
+"816318": {
+"run": "dose",
+"idx": 215,
+"copy": 0
+},
+"352528": {
+"run": "dose",
+"idx": 169,
+"copy": 0
+},
+"621841": {
+"run": "dose",
+"idx": 207,
+"copy": 0
+},
+"711484": {
+"run": "sampled",
+"idx": 32,
+"copy": 0
+},
+"250069": {
+"run": "persona_dose",
+"idx": 7,
+"copy": 0
+},
+"343467": {
+"run": "replicate",
+"idx": 37,
+"copy": 0
+},
+"583550": {
+"run": "persona_dose",
+"idx": 57,
+"copy": 0
+},
+"768891": {
+"run": "dose",
+"idx": 84,
+"copy": 0
+},
+"366314": {
+"run": "replicate",
+"idx": 23,
+"copy": 0
+},
+"581894": {
+"run": "dose",
+"idx": 56,
+"copy": 0
+},
+"367729": {
+"run": "dose",
+"idx": 11,
+"copy": 0
+},
+"799233": {
+"run": "replicate",
+"idx": 101,
+"copy": 0
+},
+"109853": {
+"run": "replicate",
+"idx": 115,
+"copy": 0
+},
+"943718": {
+"run": "sampled",
+"idx": 150,
+"copy": 0
+},
+"587853": {
+"run": "replicate",
+"idx": 120,
+"copy": 0
+},
+"401603": {
+"run": "dose",
+"idx": 37,
+"copy": 0
+},
+"810526": {
+"run": "replicate",
+"idx": 171,
+"copy": 0
+},
+"673149": {
+"run": "sampled",
+"idx": 83,
+"copy": 0
+},
+"265649": {
+"run": "dose",
+"idx": 82,
+"copy": 0
+},
+"177449": {
+"run": "replicate",
+"idx": 43,
+"copy": 0
+},
+"563187": {
+"run": "replicate",
+"idx": 86,
+"copy": 0
+},
+"462351": {
+"run": "dose",
+"idx": 151,
+"copy": 0
+},
+"716113": {
+"run": "dose",
+"idx": 46,
+"copy": 0
+},
+"413685": {
+"run": "replicate",
+"idx": 109,
+"copy": 0
+},
+"769975": {
+"run": "sampled",
+"idx": 126,
+"copy": 0
+},
+"544920": {
+"run": "dose",
+"idx": 23,
+"copy": 0
+},
+"823846": {
+"run": "persona_dose",
+"idx": 4,
+"copy": 0
+},
+"362246": {
+"run": "replicate",
+"idx": 164,
+"copy": 0
+},
+"579027": {
+"run": "persona_dose",
+"idx": 6,
+"copy": 0
+},
+"986365": {
+"run": "dose",
+"idx": 199,
+"copy": 0
+},
+"416797": {
+"run": "dose",
+"idx": 69,
+"copy": 0
+},
+"308894": {
+"run": "compare",
+"idx": 74,
+"copy": 0
+},
+"503380": {
+"run": "replicate",
+"idx": 155,
+"copy": 0
+},
+"994787": {
+"run": "sampled",
+"idx": 163,
+"copy": 0
+},
+"606680": {
+"run": "sampled",
+"idx": 100,
+"copy": 0
+},
+"211834": {
+"run": "sampled",
+"idx": 27,
+"copy": 0
+},
+"348728": {
+"run": "dose",
+"idx": 76,
+"copy": 0
+},
+"499889": {
+"run": "sampled",
+"idx": 111,
+"copy": 0
+},
+"699704": {
+"run": "sampled",
+"idx": 135,
+"copy": 0
+},
+"476395": {
+"run": "persona_dose",
+"idx": 66,
+"copy": 0
+},
+"702733": {
+"run": "compare",
+"idx": 70,
+"copy": 0
+},
+"410244": {
+"run": "sampled",
+"idx": 35,
+"copy": 0
+},
+"833247": {
+"run": "sampled",
+"idx": 198,
+"copy": 0
+},
+"409571": {
+"run": "dose",
+"idx": 5,
+"copy": 0
+},
+"123005": {
+"run": "dose",
+"idx": 55,
+"copy": 0
+},
+"970357": {
+"run": "replicate",
+"idx": 151,
+"copy": 0
+},
+"790203": {
+"run": "sampled",
+"idx": 26,
+"copy": 0
+},
+"515032": {
+"run": "compare",
+"idx": 101,
+"copy": 0
+},
+"387813": {
+"run": "dose",
+"idx": 197,
+"copy": 0
+},
+"108491": {
+"run": "dose",
+"idx": 134,
+"copy": 0
+},
+"693419": {
+"run": "sampled",
+"idx": 79,
+"copy": 0
+},
+"819112": {
+"run": "dose",
+"idx": 67,
+"copy": 0
+},
+"916118": {
+"run": "replicate",
+"idx": 63,
+"copy": 0
+},
+"880841": {
+"run": "sampled",
+"idx": 174,
+"copy": 0
+},
+"151426": {
+"run": "persona_dose",
+"idx": 41,
+"copy": 0
+},
+"735863": {
+"run": "sampled",
+"idx": 186,
+"copy": 0
+},
+"881369": {
+"run": "sampled",
+"idx": 194,
+"copy": 0
+},
+"620856": {
+"run": "dose",
+"idx": 79,
+"copy": 0
+},
+"973294": {
+"run": "dose",
+"idx": 2,
+"copy": 0
+},
+"400096": {
+"run": "dose",
+"idx": 156,
+"copy": 0
+},
+"913423": {
+"run": "sampled",
+"idx": 95,
+"copy": 0
+},
+"937665": {
+"run": "sampled",
+"idx": 86,
+"copy": 0
+},
+"341296": {
+"run": "compare",
+"idx": 79,
+"copy": 0
+},
+"736553": {
+"run": "dose",
+"idx": 15,
+"copy": 0
+},
+"940886": {
+"run": "dose",
+"idx": 32,
+"copy": 0
+},
+"469435": {
+"run": "replicate",
+"idx": 130,
+"copy": 0
+},
+"329642": {
+"run": "replicate",
+"idx": 97,
+"copy": 0
+},
+"767542": {
+"run": "sampled",
+"idx": 115,
+"copy": 0
+},
+"299367": {
+"run": "sampled",
+"idx": 17,
+"copy": 0
+},
+"751051": {
+"run": "sampled",
+"idx": 184,
+"copy": 0
+},
+"362801": {
+"run": "sampled",
+"idx": 81,
+"copy": 0
+},
+"810687": {
+"run": "sampled",
+"idx": 130,
+"copy": 0
+},
+"892280": {
+"run": "persona_dose",
+"idx": 60,
+"copy": 0
+},
+"855948": {
+"run": "replicate",
+"idx": 160,
+"copy": 0
+},
+"904751": {
+"run": "replicate",
+"idx": 176,
+"copy": 0
+},
+"791201": {
+"run": "compare",
+"idx": 69,
+"copy": 0
+},
+"813928": {
+"run": "compare",
+"idx": 21,
+"copy": 0
+},
+"979060": {
+"run": "sampled",
+"idx": 211,
+"copy": 0
+},
+"243423": {
+"run": "persona_dose",
+"idx": 2,
+"copy": 0
+},
+"758765": {
+"run": "dose",
+"idx": 43,
+"copy": 0
+},
+"201883": {
+"run": "sampled",
+"idx": 117,
+"copy": 0
+},
+"757937": {
+"run": "sampled",
+"idx": 221,
+"copy": 0
+},
+"777737": {
+"run": "replicate",
+"idx": 133,
+"copy": 0
+},
+"141337": {
+"run": "compare",
+"idx": 45,
+"copy": 0
+},
+"423939": {
+"run": "replicate",
+"idx": 14,
+"copy": 0
+},
+"926918": {
+"run": "compare",
+"idx": 106,
+"copy": 0
+},
+"562236": {
+"run": "compare",
+"idx": 103,
+"copy": 0
+},
+"134985": {
+"run": "dose",
+"idx": 172,
+"copy": 0
+},
+"707727": {
+"run": "sampled",
+"idx": 220,
+"copy": 0
+},
+"482584": {
+"run": "sampled",
+"idx": 80,
+"copy": 0
+},
+"867934": {
+"run": "sampled",
+"idx": 148,
+"copy": 0
+},
+"237795": {
+"run": "sampled",
+"idx": 204,
+"copy": 0
+},
+"194511": {
+"run": "sampled",
+"idx": 195,
+"copy": 0
+},
+"409445": {
+"run": "dose",
+"idx": 86,
+"copy": 0
+},
+"442589": {
+"run": "compare",
+"idx": 72,
+"copy": 0
+},
+"883790": {
+"run": "dose",
+"idx": 157,
+"copy": 0
+},
+"535686": {
+"run": "sampled",
+"idx": 24,
+"copy": 0
+},
+"284171": {
+"run": "replicate",
+"idx": 98,
+"copy": 0
+},
+"310548": {
+"run": "sampled",
+"idx": 157,
+"copy": 0
+},
+"238579": {
+"run": "sampled",
+"idx": 222,
+"copy": 0
+},
+"924718": {
+"run": "compare",
+"idx": 6,
+"copy": 0
+},
+"665610": {
+"run": "replicate",
+"idx": 116,
+"copy": 0
+},
+"483629": {
+"run": "compare",
+"idx": 16,
+"copy": 0
+},
+"656639": {
+"run": "replicate",
+"idx": 179,
+"copy": 0
+},
+"626169": {
+"run": "dose",
+"idx": 208,
+"copy": 0
+},
+"385765": {
+"run": "dose",
+"idx": 124,
+"copy": 0
+},
+"970813": {
+"run": "replicate",
+"idx": 113,
+"copy": 0
+},
+"272537": {
+"run": "dose",
+"idx": 115,
+"copy": 0
+},
+"369452": {
+"run": "compare",
+"idx": 7,
+"copy": 0
+},
+"964749": {
+"run": "sampled",
+"idx": 15,
+"copy": 0
+},
+"605254": {
+"run": "dose",
+"idx": 176,
+"copy": 0
+},
+"945664": {
+"run": "sampled",
+"idx": 179,
+"copy": 0
+},
+"409478": {
+"run": "persona_dose",
+"idx": 5,
+"copy": 0
+},
+"882824": {
+"run": "replicate",
+"idx": 136,
+"copy": 0
+},
+"455168": {
+"run": "dose",
+"idx": 149,
+"copy": 0
+},
+"943298": {
+"run": "sampled",
+"idx": 196,
+"copy": 0
+},
+"220764": {
+"run": "sampled",
+"idx": 162,
+"copy": 0
+},
+"591081": {
+"run": "sampled",
+"idx": 30,
+"copy": 0
+},
+"178957": {
+"run": "compare",
+"idx": 59,
+"copy": 0
+},
+"247594": {
+"run": "sampled",
+"idx": 197,
+"copy": 0
+},
+"890785": {
+"run": "replicate",
+"idx": 91,
+"copy": 0
+},
+"336574": {
+"run": "replicate",
+"idx": 12,
+"copy": 0
+},
+"809176": {
+"run": "sampled",
+"idx": 31,
+"copy": 0
+},
+"859396": {
+"run": "replicate",
+"idx": 90,
+"copy": 0
+},
+"807166": {
+"run": "dose",
+"idx": 110,
+"copy": 0
+},
+"516716": {
+"run": "replicate",
+"idx": 121,
+"copy": 0
+},
+"986827": {
+"run": "dose",
+"idx": 54,
+"copy": 0
+},
+"943671": {
+"run": "sampled",
+"idx": 203,
+"copy": 0
+},
+"684384": {
+"run": "sampled",
+"idx": 137,
+"copy": 0
+},
+"483542": {
+"run": "sampled",
+"idx": 28,
+"copy": 0
+},
+"194689": {
+"run": "sampled",
+"idx": 106,
+"copy": 0
+},
+"929090": {
+"run": "dose",
+"idx": 140,
+"copy": 0
+},
+"513741": {
+"run": "sampled",
+"idx": 1,
+"copy": 0
+},
+"114594": {
+"run": "replicate",
+"idx": 52,
+"copy": 0
+},
+"377304": {
+"run": "dose",
+"idx": 70,
+"copy": 0
+},
+"662636": {
+"run": "persona_dose",
+"idx": 21,
+"copy": 0
+},
+"229592": {
+"run": "sampled",
+"idx": 169,
+"copy": 0
+},
+"576877": {
+"run": "persona_dose",
+"idx": 23,
+"copy": 0
+},
+"486490": {
+"run": "sampled",
+"idx": 3,
+"copy": 0
+},
+"805511": {
+"run": "replicate",
+"idx": 20,
+"copy": 0
+},
+"885395": {
+"run": "sampled",
+"idx": 227,
+"copy": 0
+},
+"805000": {
+"run": "sampled",
+"idx": 6,
+"copy": 0
+},
+"374896": {
+"run": "replicate",
+"idx": 157,
+"copy": 0
+},
+"712955": {
+"run": "dose",
+"idx": 211,
+"copy": 0
+},
+"499534": {
+"run": "persona_dose",
+"idx": 15,
+"copy": 0
+},
+"962367": {
+"run": "persona_dose",
+"idx": 36,
+"copy": 0
+},
+"769567": {
+"run": "dose",
+"idx": 93,
+"copy": 0
+},
+"489518": {
+"run": "dose",
+"idx": 22,
+"copy": 0
+},
+"213609": {
+"run": "sampled",
+"idx": 118,
+"copy": 0
+},
+"807617": {
+"run": "dose",
+"idx": 83,
+"copy": 0
+},
+"345180": {
+"run": "dose",
+"idx": 7,
+"copy": 0
+},
+"594379": {
+"run": "replicate",
+"idx": 18,
+"copy": 0
+},
+"126240": {
+"run": "sampled",
+"idx": 99,
+"copy": 0
+},
+"749641": {
+"run": "replicate",
+"idx": 76,
+"copy": 0
+},
+"688678": {
+"run": "sampled",
+"idx": 173,
+"copy": 0
+},
+"443939": {
+"run": "replicate",
+"idx": 38,
+"copy": 0
+},
+"739717": {
+"run": "compare",
+"idx": 91,
+"copy": 0
+},
+"332120": {
+"run": "dose",
+"idx": 71,
+"copy": 0
+},
+"779112": {
+"run": "sampled",
+"idx": 107,
+"copy": 0
+},
+"166287": {
+"run": "compare",
+"idx": 113,
+"copy": 0
+},
+"766269": {
+"run": "sampled",
+"idx": 181,
+"copy": 0
+},
+"963874": {
+"run": "sampled",
+"idx": 102,
+"copy": 0
+},
+"586819": {
+"run": "sampled",
+"idx": 46,
+"copy": 0
+},
+"835132": {
+"run": "compare",
+"idx": 116,
+"copy": 0
+},
+"416869": {
+"run": "dose",
+"idx": 119,
+"copy": 0
+},
+"780776": {
+"run": "compare",
+"idx": 60,
+"copy": 0
+},
+"528129": {
+"run": "sampled",
+"idx": 146,
+"copy": 0
+},
+"222343": {
+"run": "replicate",
+"idx": 66,
+"copy": 0
+},
+"246566": {
+"run": "compare",
+"idx": 48,
+"copy": 0
+},
+"147549": {
+"run": "compare",
+"idx": 95,
+"copy": 0
+},
+"139019": {
+"run": "replicate",
+"idx": 1,
+"copy": 0
+},
+"419149": {
+"run": "replicate",
+"idx": 22,
+"copy": 0
+},
+"616554": {
+"run": "persona_dose",
+"idx": 11,
+"copy": 0
+},
+"221761": {
+"run": "dose",
+"idx": 4,
+"copy": 0
+},
+"201913": {
+"run": "dose",
+"idx": 225,
+"copy": 0
+},
+"346205": {
+"run": "persona_dose",
+"idx": 50,
+"copy": 0
+},
+"663658": {
+"run": "replicate",
+"idx": 47,
+"copy": 0
+},
+"242254": {
+"run": "replicate",
+"idx": 26,
+"copy": 0
+},
+"507524": {
+"run": "dose",
+"idx": 136,
+"copy": 0
+},
+"575679": {
+"run": "compare",
+"idx": 20,
+"copy": 0
+},
+"489033": {
+"run": "compare",
+"idx": 102,
+"copy": 0
+},
+"803055": {
+"run": "sampled",
+"idx": 78,
+"copy": 0
+},
+"879238": {
+"run": "dose",
+"idx": 63,
+"copy": 0
+},
+"830316": {
+"run": "dose",
+"idx": 16,
+"copy": 0
+},
+"666432": {
+"run": "sampled",
+"idx": 144,
+"copy": 0
+},
+"539486": {
+"run": "sampled",
+"idx": 171,
+"copy": 0
+},
+"715870": {
+"run": "persona_dose",
+"idx": 33,
+"copy": 0
+},
+"878325": {
+"run": "compare",
+"idx": 105,
+"copy": 0
+},
+"861894": {
+"run": "persona_dose",
+"idx": 29,
+"copy": 0
+},
+"262029": {
+"run": "replicate",
+"idx": 107,
+"copy": 0
+},
+"535037": {
+"run": "sampled",
+"idx": 129,
+"copy": 0
+},
+"786735": {
+"run": "replicate",
+"idx": 144,
+"copy": 0
+},
+"203831": {
+"run": "replicate",
+"idx": 139,
+"copy": 0
+},
+"974190": {
+"run": "replicate",
+"idx": 79,
+"copy": 0
+},
+"613117": {
+"run": "compare",
+"idx": 97,
+"copy": 0
+},
+"745558": {
+"run": "sampled",
+"idx": 200,
+"copy": 0
+},
+"527940": {
+"run": "replicate",
+"idx": 54,
+"copy": 0
+},
+"393328": {
+"run": "dose",
+"idx": 35,
+"copy": 0
+},
+"134305": {
+"run": "dose",
+"idx": 130,
+"copy": 0
+},
+"823811": {
+"run": "dose",
+"idx": 191,
+"copy": 0
+},
+"488528": {
+"run": "replicate",
+"idx": 68,
+"copy": 0
+},
+"327823": {
+"run": "dose",
+"idx": 29,
+"copy": 0
+},
+"564920": {
+"run": "dose",
+"idx": 60,
+"copy": 0
+},
+"566297": {
+"run": "replicate",
+"idx": 53,
+"copy": 0
+},
+"347582": {
+"run": "sampled",
+"idx": 159,
+"copy": 0
+},
+"997004": {
+"run": "dose",
+"idx": 89,
+"copy": 0
+},
+"480303": {
+"run": "replicate",
+"idx": 153,
+"copy": 0
+},
+"204180": {
+"run": "sampled",
+"idx": 103,
+"copy": 0
+},
+"818987": {
+"run": "sampled",
+"idx": 238,
+"copy": 0
+},
+"485178": {
+"run": "sampled",
+"idx": 161,
+"copy": 0
+},
+"670913": {
+"run": "replicate",
+"idx": 4,
+"copy": 0
+},
+"776149": {
+"run": "persona_dose",
+"idx": 26,
+"copy": 0
+},
+"476096": {
+"run": "sampled",
+"idx": 154,
+"copy": 0
+},
+"163491": {
+"run": "dose",
+"idx": 114,
+"copy": 0
+},
+"517479": {
+"run": "sampled",
+"idx": 133,
+"copy": 0
+},
+"389282": {
+"run": "replicate",
+"idx": 154,
+"copy": 0
+},
+"299028": {
+"run": "sampled",
+"idx": 180,
+"copy": 0
+},
+"228093": {
+"run": "sampled",
+"idx": 98,
+"copy": 0
+},
+"989227": {
+"run": "dose",
+"idx": 6,
+"copy": 0
+},
+"964226": {
+"run": "compare",
+"idx": 62,
+"copy": 0
+},
+"576805": {
+"run": "dose",
+"idx": 239,
+"copy": 0
+},
+"196126": {
+"run": "replicate",
+"idx": 145,
+"copy": 0
+},
+"794963": {
+"run": "sampled",
+"idx": 9,
+"copy": 0
+},
+"322409": {
+"run": "replicate",
+"idx": 125,
+"copy": 0
+},
+"772875": {
+"run": "dose",
+"idx": 30,
+"copy": 0
+},
+"770556": {
+"run": "replicate",
+"idx": 35,
+"copy": 0
+},
+"726152": {
+"run": "dose",
+"idx": 31,
+"copy": 0
+},
+"122394": {
+"run": "replicate",
+"idx": 178,
+"copy": 0
+},
+"153035": {
+"run": "dose",
+"idx": 57,
+"copy": 0
+},
+"925013": {
+"run": "compare",
+"idx": 85,
+"copy": 0
+},
+"449709": {
+"run": "dose",
+"idx": 103,
+"copy": 0
+},
+"355400": {
+"run": "compare",
+"idx": 42,
+"copy": 0
+},
+"232040": {
+"run": "replicate",
+"idx": 75,
+"copy": 0
+},
+"925206": {
+"run": "replicate",
+"idx": 102,
+"copy": 0
+},
+"692002": {
+"run": "compare",
+"idx": 82,
+"copy": 0
+},
+"315173": {
+"run": "replicate",
+"idx": 9,
+"copy": 0
+},
+"171942": {
+"run": "replicate",
+"idx": 74,
+"copy": 0
+},
+"970127": {
+"run": "dose",
+"idx": 108,
+"copy": 0
+},
+"902325": {
+"run": "dose",
+"idx": 48,
+"copy": 0
+},
+"681128": {
+"run": "sampled",
+"idx": 127,
+"copy": 0
+},
+"317220": {
+"run": "replicate",
+"idx": 134,
+"copy": 0
+},
+"714867": {
+"run": "compare",
+"idx": 77,
+"copy": 0
+},
+"326441": {
+"run": "dose",
+"idx": 139,
+"copy": 0
+},
+"952547": {
+"run": "sampled",
+"idx": 64,
+"copy": 0
+},
+"344316": {
+"run": "dose",
+"idx": 128,
+"copy": 0
+},
+"444519": {
+"run": "sampled",
+"idx": 29,
+"copy": 0
+},
+"911984": {
+"run": "sampled",
+"idx": 87,
+"copy": 0
+},
+"254721": {
+"run": "compare",
+"idx": 88,
+"copy": 0
+},
+"926952": {
+"run": "persona_dose",
+"idx": 49,
+"copy": 0
+},
+"724932": {
+"run": "replicate",
+"idx": 83,
+"copy": 0
+},
+"102973": {
+"run": "replicate",
+"idx": 40,
+"copy": 0
+},
+"390743": {
+"run": "compare",
+"idx": 71,
+"copy": 0
+},
+"251716": {
+"run": "replicate",
+"idx": 122,
+"copy": 0
+},
+"236306": {
+"run": "sampled",
+"idx": 233,
+"copy": 0
+},
+"666456": {
+"run": "sampled",
+"idx": 60,
+"copy": 0
+},
+"362829": {
+"run": "dose",
+"idx": 227,
+"copy": 0
+},
+"937302": {
+"run": "compare",
+"idx": 35,
+"copy": 0
+},
+"282973": {
+"run": "sampled",
+"idx": 10,
+"copy": 0
+},
+"215266": {
+"run": "replicate",
+"idx": 82,
+"copy": 0
+},
+"793169": {
+"run": "dose",
+"idx": 100,
+"copy": 0
+},
+"127032": {
+"run": "dose",
+"idx": 127,
+"copy": 0
+},
+"238205": {
+"run": "compare",
+"idx": 30,
+"copy": 0
+},
+"115582": {
+"run": "compare",
+"idx": 12,
+"copy": 0
+},
+"475644": {
+"run": "dose",
+"idx": 94,
+"copy": 0
+},
+"928358": {
+"run": "dose",
+"idx": 68,
+"copy": 0
+},
+"926730": {
+"run": "dose",
+"idx": 155,
+"copy": 0
+},
+"349489": {
+"run": "replicate",
+"idx": 58,
+"copy": 0
+},
+"717457": {
+"run": "sampled",
+"idx": 141,
+"copy": 0
+},
+"439498": {
+"run": "dose",
+"idx": 174,
+"copy": 0
+},
+"116547": {
+"run": "compare",
+"idx": 2,
+"copy": 0
+},
+"282710": {
+"run": "sampled",
+"idx": 42,
+"copy": 0
+},
+"378258": {
+"run": "sampled",
+"idx": 123,
+"copy": 0
+},
+"154944": {
+"run": "dose",
+"idx": 168,
+"copy": 0
+},
+"232915": {
+"run": "replicate",
+"idx": 158,
+"copy": 0
+},
+"877747": {
+"run": "dose",
+"idx": 78,
+"copy": 0
+},
+"541409": {
+"run": "dose",
+"idx": 179,
+"copy": 0
+},
+"651640": {
+"run": "sampled",
+"idx": 112,
+"copy": 0
+},
+"219169": {
+"run": "dose",
+"idx": 45,
+"copy": 0
+},
+"881886": {
+"run": "dose",
+"idx": 229,
+"copy": 0
+},
+"166645": {
+"run": "sampled",
+"idx": 219,
+"copy": 0
+},
+"599380": {
+"run": "replicate",
+"idx": 2,
+"copy": 0
+},
+"570050": {
+"run": "persona_dose",
+"idx": 76,
+"copy": 0
+},
+"915809": {
+"run": "replicate",
+"idx": 168,
+"copy": 0
+},
+"479625": {
+"run": "compare",
+"idx": 18,
+"copy": 0
+},
+"638169": {
+"run": "persona_dose",
+"idx": 24,
+"copy": 0
+},
+"722503": {
+"run": "sampled",
+"idx": 38,
+"copy": 0
+},
+"214351": {
+"run": "dose",
+"idx": 72,
+"copy": 0
+},
+"573962": {
+"run": "dose",
+"idx": 194,
+"copy": 0
+},
+"628313": {
+"run": "dose",
+"idx": 185,
+"copy": 0
+},
+"332311": {
+"run": "replicate",
+"idx": 170,
+"copy": 0
+},
+"744986": {
+"run": "sampled",
+"idx": 62,
+"copy": 0
+},
+"145471": {
+"run": "persona_dose",
+"idx": 61,
+"copy": 0
+},
+"862569": {
+"run": "replicate",
+"idx": 15,
+"copy": 0
+},
+"921273": {
+"run": "dose",
+"idx": 133,
+"copy": 0
+},
+"790909": {
+"run": "replicate",
+"idx": 51,
+"copy": 0
+},
+"646781": {
+"run": "dose",
+"idx": 175,
+"copy": 0
+},
+"416282": {
+"run": "dose",
+"idx": 143,
+"copy": 0
+},
+"580292": {
+"run": "dose",
+"idx": 33,
+"copy": 0
+},
+"774591": {
+"run": "replicate",
+"idx": 77,
+"copy": 0
+},
+"132663": {
+"run": "sampled",
+"idx": 75,
+"copy": 0
+},
+"163780": {
+"run": "compare",
+"idx": 100,
+"copy": 0
+},
+"602248": {
+"run": "dose",
+"idx": 195,
+"copy": 0
+},
+"988456": {
+"run": "sampled",
+"idx": 7,
+"copy": 0
+},
+"521126": {
+"run": "compare",
+"idx": 51,
+"copy": 0
+},
+"546980": {
+"run": "replicate",
+"idx": 143,
+"copy": 0
+},
+"819425": {
+"run": "persona_dose",
+"idx": 47,
+"copy": 0
+},
+"213206": {
+"run": "compare",
+"idx": 37,
+"copy": 0
+},
+"614084": {
+"run": "persona_dose",
+"idx": 65,
+"copy": 0
+},
+"847006": {
+"run": "persona_dose",
+"idx": 12,
+"copy": 0
+},
+"565108": {
+"run": "sampled",
+"idx": 74,
+"copy": 0
+},
+"177060": {
+"run": "replicate",
+"idx": 111,
+"copy": 0
+},
+"184714": {
+"run": "sampled",
+"idx": 167,
+"copy": 0
+},
+"437758": {
+"run": "sampled",
+"idx": 232,
+"copy": 0
+},
+"737846": {
+"run": "replicate",
+"idx": 62,
+"copy": 0
+},
+"255539": {
+"run": "replicate",
+"idx": 100,
+"copy": 0
+},
+"168872": {
+"run": "replicate",
+"idx": 55,
+"copy": 0
+},
+"232321": {
+"run": "dose",
+"idx": 58,
+"copy": 0
+},
+"388375": {
+"run": "dose",
+"idx": 0,
+"copy": 0
+},
+"754644": {
+"run": "dose",
+"idx": 226,
+"copy": 0
+},
+"763829": {
+"run": "sampled",
+"idx": 182,
+"copy": 0
+},
+"713799": {
+"run": "dose",
+"idx": 21,
+"copy": 0
+},
+"674993": {
+"run": "persona_dose",
+"idx": 30,
+"copy": 0
+},
+"846746": {
+"run": "replicate",
+"idx": 96,
+"copy": 0
+},
+"440981": {
+"run": "sampled",
+"idx": 14,
+"copy": 0
+},
+"499407": {
+"run": "sampled",
+"idx": 236,
+"copy": 0
+},
+"726410": {
+"run": "dose",
+"idx": 188,
+"copy": 0
+},
+"656329": {
+"run": "sampled",
+"idx": 68,
+"copy": 0
+},
+"409222": {
+"run": "dose",
+"idx": 64,
+"copy": 0
+},
+"575755": {
+"run": "dose",
+"idx": 170,
+"copy": 0
+},
+"630108": {
+"run": "dose",
+"idx": 164,
+"copy": 0
+},
+"734836": {
+"run": "replicate",
+"idx": 135,
+"copy": 0
+},
+"551096": {
+"run": "dose",
+"idx": 224,
+"copy": 0
+},
+"203996": {
+"run": "sampled",
+"idx": 39,
+"copy": 0
+},
+"931621": {
+"run": "dose",
+"idx": 237,
+"copy": 0
+},
+"835869": {
+"run": "sampled",
+"idx": 105,
+"copy": 0
+},
+"219971": {
+"run": "sampled",
+"idx": 63,
+"copy": 0
+},
+"994217": {
+"run": "dose",
+"idx": 106,
+"copy": 0
+},
+"786516": {
+"run": "dose",
+"idx": 204,
+"copy": 0
+},
+"782535": {
+"run": "sampled",
+"idx": 158,
+"copy": 0
+},
+"906315": {
+"run": "compare",
+"idx": 89,
+"copy": 0
+},
+"678116": {
+"run": "replicate",
+"idx": 69,
+"copy": 0
+},
+"855855": {
+"run": "compare",
+"idx": 90,
+"copy": 0
+},
+"325468": {
+"run": "replicate",
+"idx": 60,
+"copy": 0
+},
+"550961": {
+"run": "replicate",
+"idx": 72,
+"copy": 0
+},
+"573489": {
+"run": "replicate",
+"idx": 7,
+"copy": 0
+},
+"339592": {
+"run": "persona_dose",
+"idx": 48,
+"copy": 0
+},
+"533914": {
+"run": "dose",
+"idx": 210,
+"copy": 0
+},
+"455395": {
+"run": "sampled",
+"idx": 55,
+"copy": 0
+},
+"967611": {
+"run": "dose",
+"idx": 147,
+"copy": 0
+},
+"575528": {
+"run": "dose",
+"idx": 182,
+"copy": 0
+},
+"518098": {
+"run": "replicate",
+"idx": 21,
+"copy": 0
+},
+"536196": {
+"run": "sampled",
+"idx": 166,
+"copy": 0
+},
+"865054": {
+"run": "compare",
+"idx": 49,
+"copy": 0
+},
+"199704": {
+"run": "sampled",
+"idx": 50,
+"copy": 0
+},
+"427730": {
+"run": "sampled",
+"idx": 73,
+"copy": 0
+},
+"547494": {
+"run": "replicate",
+"idx": 123,
+"copy": 0
+},
+"427704": {
+"run": "dose",
+"idx": 42,
+"copy": 0
+},
+"797416": {
+"run": "dose",
+"idx": 109,
+"copy": 0
+},
+"367271": {
+"run": "dose",
+"idx": 28,
+"copy": 0
+},
+"492483": {
+"run": "compare",
+"idx": 15,
+"copy": 0
+},
+"260053": {
+"run": "compare",
+"idx": 64,
+"copy": 0
+},
+"820184": {
+"run": "sampled",
+"idx": 139,
+"copy": 0
+},
+"597305": {
+"run": "sampled",
+"idx": 25,
+"copy": 0
+},
+"170394": {
+"run": "compare",
+"idx": 13,
+"copy": 0
+},
+"195656": {
+"run": "compare",
+"idx": 84,
+"copy": 0
+},
+"972176": {
+"run": "dose",
+"idx": 13,
+"copy": 0
+},
+"189511": {
+"run": "dose",
+"idx": 201,
+"copy": 0
+},
+"197758": {
+"run": "dose",
+"idx": 120,
+"copy": 0
+},
+"552855": {
+"run": "persona_dose",
+"idx": 53,
+"copy": 0
+},
+"201255": {
+"run": "replicate",
+"idx": 169,
+"copy": 0
+},
+"880758": {
+"run": "dose",
+"idx": 142,
+"copy": 0
+},
+"874683": {
+"run": "dose",
+"idx": 66,
+"copy": 0
+},
+"490748": {
+"run": "replicate",
+"idx": 131,
+"copy": 0
+},
+"951201": {
+"run": "replicate",
+"idx": 128,
+"copy": 0
+},
+"236435": {
+"run": "dose",
+"idx": 125,
+"copy": 0
+},
+"683397": {
+"run": "replicate",
+"idx": 70,
+"copy": 0
+},
+"162894": {
+"run": "dose",
+"idx": 77,
+"copy": 0
+},
+"714953": {
+"run": "replicate",
+"idx": 87,
+"copy": 0
+},
+"688866": {
+"run": "persona_dose",
+"idx": 19,
+"copy": 0
+},
+"688967": {
+"run": "compare",
+"idx": 83,
+"copy": 0
+},
+"445658": {
+"run": "sampled",
+"idx": 66,
+"copy": 0
+},
+"802559": {
+"run": "replicate",
+"idx": 59,
+"copy": 0
+},
+"228168": {
+"run": "sampled",
+"idx": 65,
+"copy": 0
+},
+"530764": {
+"run": "sampled",
+"idx": 134,
+"copy": 0
+},
+"470774": {
+"run": "sampled",
+"idx": 191,
+"copy": 0
+},
+"797660": {
+"run": "compare",
+"idx": 33,
+"copy": 0
+},
+"886730": {
+"run": "replicate",
+"idx": 19,
+"copy": 0
+},
+"543481": {
+"run": "dose",
+"idx": 80,
+"copy": 0
+},
+"856086": {
+"run": "sampled",
+"idx": 151,
+"copy": 0
+},
+"153945": {
+"run": "dose",
+"idx": 193,
+"copy": 0
+},
+"401601": {
+"run": "replicate",
+"idx": 0,
+"copy": 0
+},
+"729575": {
+"run": "dose",
+"idx": 123,
+"copy": 0
+},
+"427626": {
+"run": "dose",
+"idx": 132,
+"copy": 0
+},
+"468727": {
+"run": "replicate",
+"idx": 165,
+"copy": 0
+},
+"208633": {
+"run": "sampled",
+"idx": 202,
+"copy": 0
+},
+"705991": {
+"run": "compare",
+"idx": 55,
+"copy": 0
+},
+"632060": {
+"run": "persona_dose",
+"idx": 54,
+"copy": 0
+},
+"323072": {
+"run": "compare",
+"idx": 107,
+"copy": 0
+},
+"262246": {
+"run": "compare",
+"idx": 24,
+"copy": 0
+},
+"788637": {
+"run": "persona_dose",
+"idx": 79,
+"copy": 0
+},
+"605612": {
+"run": "sampled",
+"idx": 125,
+"copy": 0
+},
+"335137": {
+"run": "dose",
+"idx": 220,
+"copy": 0
+},
+"988432": {
+"run": "replicate",
+"idx": 108,
+"copy": 0
+},
+"213475": {
+"run": "dose",
+"idx": 99,
+"copy": 0
+},
+"467121": {
+"run": "sampled",
+"idx": 2,
+"copy": 0
+},
+"986438": {
+"run": "dose",
+"idx": 92,
+"copy": 0
+},
+"683286": {
+"run": "compare",
+"idx": 68,
+"copy": 0
+},
+"485415": {
+"run": "replicate",
+"idx": 3,
+"copy": 0
+},
+"220465": {
+"run": "persona_dose",
+"idx": 0,
+"copy": 0
+},
+"899649": {
+"run": "replicate",
+"idx": 161,
+"copy": 0
+},
+"392099": {
+"run": "dose",
+"idx": 25,
+"copy": 0
+},
+"701987": {
+"run": "persona_dose",
+"idx": 17,
+"copy": 0
+},
+"337144": {
+"run": "persona_dose",
+"idx": 78,
+"copy": 0
+},
+"946432": {
+"run": "persona_dose",
+"idx": 39,
+"copy": 0
+},
+"549956": {
+"run": "dose",
+"idx": 236,
+"copy": 0
+},
+"986209": {
+"run": "compare",
+"idx": 112,
+"copy": 0
+},
+"688215": {
+"run": "persona_dose",
+"idx": 22,
+"copy": 0
+},
+"904711": {
+"run": "compare",
+"idx": 38,
+"copy": 0
+},
+"958182": {
+"run": "replicate",
+"idx": 117,
+"copy": 0
+},
+"751924": {
+"run": "compare",
+"idx": 52,
+"copy": 0
+},
+"743378": {
+"run": "replicate",
+"idx": 11,
+"copy": 0
+},
+"807764": {
+"run": "dose",
+"idx": 146,
+"copy": 0
+},
+"773918": {
+"run": "sampled",
+"idx": 77,
+"copy": 0
+},
+"683783": {
+"run": "dose",
+"idx": 121,
+"copy": 0
+},
+"127529": {
+"run": "dose",
+"idx": 59,
+"copy": 0
+},
+"738577": {
+"run": "compare",
+"idx": 50,
+"copy": 0
+},
+"789786": {
+"run": "sampled",
+"idx": 210,
+"copy": 0
+},
+"969752": {
+"run": "sampled",
+"idx": 214,
+"copy": 0
+},
+"827157": {
+"run": "replicate",
+"idx": 65,
+"copy": 0
+},
+"380439": {
+"run": "dose",
+"idx": 190,
+"copy": 0
+},
+"130359": {
+"run": "persona_dose",
+"idx": 40,
+"copy": 0
+},
+"289179": {
+"run": "compare",
+"idx": 36,
+"copy": 0
+},
+"386544": {
+"run": "persona_dose",
+"idx": 42,
+"copy": 0
+},
+"836833": {
+"run": "dose",
+"idx": 222,
+"copy": 0
+},
+"899444": {
+"run": "replicate",
+"idx": 156,
+"copy": 0
+},
+"423993": {
+"run": "replicate",
+"idx": 112,
+"copy": 0
+},
+"456331": {
+"run": "replicate",
+"idx": 48,
+"copy": 0
+},
+"468074": {
+"run": "replicate",
+"idx": 93,
+"copy": 0
+},
+"106402": {
+"run": "dose",
+"idx": 85,
+"copy": 0
+},
+"290217": {
+"run": "dose",
+"idx": 101,
+"copy": 0
+},
+"250210": {
+"run": "replicate",
+"idx": 141,
+"copy": 0
+},
+"693830": {
+"run": "persona_dose",
+"idx": 71,
+"copy": 0
+},
+"789275": {
+"run": "persona_dose",
+"idx": 14,
+"copy": 0
+},
+"520252": {
+"run": "sampled",
+"idx": 228,
+"copy": 0
+},
+"172965": {
+"run": "dose",
+"idx": 177,
+"copy": 0
+},
+"248766": {
+"run": "dose",
+"idx": 18,
+"copy": 0
+},
+"876962": {
+"run": "dose",
+"idx": 178,
+"copy": 0
+},
+"763928": {
+"run": "sampled",
+"idx": 89,
+"copy": 0
+},
+"132146": {
+"run": "dose",
+"idx": 131,
+"copy": 0
+},
+"196214": {
+"run": "persona_dose",
+"idx": 55,
+"copy": 0
+},
+"882354": {
+"run": "sampled",
+"idx": 72,
+"copy": 0
+},
+"656251": {
+"run": "persona_dose",
+"idx": 72,
+"copy": 0
+},
+"325583": {
+"run": "sampled",
+"idx": 91,
+"copy": 0
+},
+"494468": {
+"run": "replicate",
+"idx": 146,
+"copy": 0
+},
+"540226": {
+"run": "dose",
+"idx": 49,
+"copy": 0
+},
+"575682": {
+"run": "dose",
+"idx": 238,
+"copy": 0
+},
+"457455": {
+"run": "sampled",
+"idx": 225,
+"copy": 0
+},
+"265055": {
+"run": "dose",
+"idx": 91,
+"copy": 0
+},
+"488028": {
+"run": "compare",
+"idx": 11,
+"copy": 0
+},
+"426775": {
+"run": "sampled",
+"idx": 37,
+"copy": 0
+},
+"856648": {
+"run": "sampled",
+"idx": 142,
+"copy": 0
+},
+"440140": {
+"run": "compare",
+"idx": 75,
+"copy": 0
+},
+"914571": {
+"run": "dose",
+"idx": 160,
+"copy": 0
+},
+"695164": {
+"run": "sampled",
+"idx": 36,
+"copy": 0
+},
+"725185": {
+"run": "replicate",
+"idx": 67,
+"copy": 0
+},
+"189083": {
+"run": "sampled",
+"idx": 94,
+"copy": 0
+},
+"155164": {
+"run": "sampled",
+"idx": 230,
+"copy": 0
+},
+"263137": {
+"run": "sampled",
+"idx": 143,
+"copy": 0
+},
+"265056": {
+"run": "persona_dose",
+"idx": 63,
+"copy": 0
+},
+"891083": {
+"run": "sampled",
+"idx": 54,
+"copy": 0
+},
+"747850": {
+"run": "replicate",
+"idx": 57,
+"copy": 0
+},
+"152179": {
+"run": "sampled",
+"idx": 152,
+"copy": 0
+},
+"806707": {
+"run": "compare",
+"idx": 41,
+"copy": 0
+},
+"185544": {
+"run": "sampled",
+"idx": 44,
+"copy": 0
+},
+"385320": {
+"run": "dose",
+"idx": 150,
+"copy": 0
+},
+"564637": {
+"run": "compare",
+"idx": 44,
+"copy": 0
+},
+"794093": {
+"run": "dose",
+"idx": 235,
+"copy": 0
+},
+"544611": {
+"run": "sampled",
+"idx": 96,
+"copy": 0
+},
+"609253": {
+"run": "sampled",
+"idx": 208,
+"copy": 0
+},
+"736565": {
+"run": "dose",
+"idx": 53,
+"copy": 0
+},
+"563516": {
+"run": "replicate",
+"idx": 167,
+"copy": 0
+},
+"534303": {
+"run": "persona_dose",
+"idx": 74,
+"copy": 0
+},
+"386436": {
+"run": "compare",
+"idx": 86,
+"copy": 0
+},
+"326040": {
+"run": "dose",
+"idx": 126,
+"copy": 0
+},
+"891615": {
+"run": "replicate",
+"idx": 175,
+"copy": 0
+},
+"637234": {
+"run": "compare",
+"idx": 119,
+"copy": 0
+},
+"219346": {
+"run": "dose",
+"idx": 203,
+"copy": 0
+},
+"461939": {
+"run": "replicate",
+"idx": 73,
+"copy": 0
+},
+"550797": {
+"run": "compare",
+"idx": 3,
+"copy": 0
+},
+"216276": {
+"run": "compare",
+"idx": 39,
+"copy": 0
+},
+"397005": {
+"run": "persona_dose",
+"idx": 51,
+"copy": 0
+},
+"811163": {
+"run": "sampled",
+"idx": 93,
+"copy": 0
+},
+"811444": {
+"run": "compare",
+"idx": 26,
+"copy": 0
+},
+"721946": {
+"run": "sampled",
+"idx": 34,
+"copy": 0
+},
+"610271": {
+"run": "sampled",
+"idx": 183,
+"copy": 0
+},
+"652530": {
+"run": "sampled",
+"idx": 199,
+"copy": 0
+},
+"799539": {
+"run": "replicate",
+"idx": 166,
+"copy": 0
+},
+"423401": {
+"run": "sampled",
+"idx": 193,
+"copy": 0
+},
+"147623": {
+"run": "dose",
+"idx": 230,
+"copy": 0
+},
+"331230": {
+"run": "dose",
+"idx": 44,
+"copy": 0
+},
+"514463": {
+"run": "persona_dose",
+"idx": 38,
+"copy": 0
+},
+"728437": {
+"run": "persona_dose",
+"idx": 31,
+"copy": 0
+},
+"157443": {
+"run": "replicate",
+"idx": 103,
+"copy": 0
+},
+"108060": {
+"run": "persona_dose",
+"idx": 59,
+"copy": 0
+},
+"314353": {
+"run": "replicate",
+"idx": 81,
+"copy": 0
+},
+"416061": {
+"run": "sampled",
+"idx": 116,
+"copy": 0
+},
+"321494": {
+"run": "sampled",
+"idx": 53,
+"copy": 0
+},
+"904624": {
+"run": "compare",
+"idx": 17,
+"copy": 0
+},
+"243901": {
+"run": "replicate",
+"idx": 46,
+"copy": 0
+},
+"901280": {
+"run": "replicate",
+"idx": 71,
+"copy": 0
+},
+"367931": {
+"run": "compare",
+"idx": 61,
+"copy": 0
+},
+"403507": {
+"run": "sampled",
+"idx": 16,
+"copy": 0
+},
+"444061": {
+"run": "dose",
+"idx": 171,
+"copy": 0
+},
+"225812": {
+"run": "sampled",
+"idx": 190,
+"copy": 0
+},
+"108105": {
+"run": "dose",
+"idx": 213,
+"copy": 0
+},
+"621546": {
+"run": "dose",
+"idx": 223,
+"copy": 0
+},
+"883301": {
+"run": "sampled",
+"idx": 120,
+"copy": 0
+},
+"551574": {
+"run": "dose",
+"idx": 145,
+"copy": 0
+},
+"284229": {
+"run": "replicate",
+"idx": 80,
+"copy": 0
+},
+"235461": {
+"run": "sampled",
+"idx": 207,
+"copy": 0
+},
+"498676": {
+"run": "replicate",
+"idx": 127,
+"copy": 0
+},
+"658453": {
+"run": "dose",
+"idx": 129,
+"copy": 0
+},
+"837852": {
+"run": "dose",
+"idx": 50,
+"copy": 0
+},
+"341288": {
+"run": "compare",
+"idx": 87,
+"copy": 0
+},
+"624563": {
+"run": "replicate",
+"idx": 44,
+"copy": 0
+},
+"685864": {
+"run": "sampled",
+"idx": 90,
+"copy": 0
+},
+"973835": {
+"run": "dose",
+"idx": 198,
+"copy": 0
+},
+"800499": {
+"run": "sampled",
+"idx": 172,
+"copy": 0
+},
+"945362": {
+"run": "sampled",
+"idx": 187,
+"copy": 0
+},
+"471371": {
+"run": "replicate",
+"idx": 99,
+"copy": 0
+},
+"175576": {
+"run": "sampled",
+"idx": 209,
+"copy": 0
+},
+"516359": {
+"run": "replicate",
+"idx": 94,
+"copy": 0
+},
+"878086": {
+"run": "persona_dose",
+"idx": 70,
+"copy": 0
+},
+"144357": {
+"run": "sampled",
+"idx": 164,
+"copy": 0
+},
+"557409": {
+"run": "persona_dose",
+"idx": 1,
+"copy": 0
+},
+"119651": {
+"run": "sampled",
+"idx": 40,
+"copy": 0
+},
+"582087": {
+"run": "replicate",
+"idx": 159,
+"copy": 0
+},
+"181644": {
+"run": "persona_dose",
+"idx": 45,
+"copy": 0
+},
+"428267": {
+"run": "sampled",
+"idx": 168,
+"copy": 0
+},
+"703727": {
+"run": "persona_dose",
+"idx": 64,
+"copy": 0
+},
+"550137": {
+"run": "compare",
+"idx": 54,
+"copy": 0
+},
+"701253": {
+"run": "replicate",
+"idx": 163,
+"copy": 0
+},
+"524068": {
+"run": "compare",
+"idx": 117,
+"copy": 0
+},
+"843963": {
+"run": "replicate",
+"idx": 6,
+"copy": 0
+},
+"771237": {
+"run": "sampled",
+"idx": 104,
+"copy": 0
+},
+"537983": {
+"run": "dose",
+"idx": 183,
+"copy": 0
+},
+"403578": {
+"run": "dose",
+"idx": 39,
+"copy": 0
+},
+"220768": {
+"run": "sampled",
+"idx": 45,
+"copy": 0
+},
+"524707": {
+"run": "dose",
+"idx": 9,
+"copy": 0
+},
+"121869": {
+"run": "persona_dose",
+"idx": 67,
+"copy": 0
+},
+"440544": {
+"run": "compare",
+"idx": 58,
+"copy": 0
+},
+"280222": {
+"run": "compare",
+"idx": 5,
+"copy": 0
+},
+"940247": {
+"run": "compare",
+"idx": 73,
+"copy": 0
+},
+"748151": {
+"run": "sampled",
+"idx": 23,
+"copy": 0
+},
+"582446": {
+"run": "dose",
+"idx": 154,
+"copy": 0
+},
+"972442": {
+"run": "replicate",
+"idx": 27,
+"copy": 0
+},
+"823108": {
+"run": "dose",
+"idx": 196,
+"copy": 0
+},
+"479430": {
+"run": "dose",
+"idx": 97,
+"copy": 0
+},
+"192410": {
+"run": "sampled",
+"idx": 58,
+"copy": 0
+},
+"557925": {
+"run": "sampled",
+"idx": 43,
+"copy": 0
+},
+"985506": {
+"run": "replicate",
+"idx": 95,
+"copy": 0
+},
+"211005": {
+"run": "replicate",
+"idx": 30,
+"copy": 0
+},
+"355135": {
+"run": "replicate",
+"idx": 32,
+"copy": 0
+},
+"556839": {
+"run": "dose",
+"idx": 12,
+"copy": 0
+},
+"717476": {
+"run": "dose",
+"idx": 184,
+"copy": 0
+},
+"519902": {
+"run": "replicate",
+"idx": 89,
+"copy": 0
+},
+"649414": {
+"run": "dose",
+"idx": 138,
+"copy": 0
+},
+"182467": {
+"run": "compare",
+"idx": 98,
+"copy": 0
+},
+"514991": {
+"run": "compare",
+"idx": 32,
+"copy": 0
+},
+"425346": {
+"run": "replicate",
+"idx": 104,
+"copy": 0
+},
+"882033": {
+"run": "compare",
+"idx": 94,
+"copy": 0
+},
+"456005": {
+"run": "replicate",
+"idx": 142,
+"copy": 0
+},
+"332335": {
+"run": "sampled",
+"idx": 48,
+"copy": 0
+},
+"449247": {
+"run": "sampled",
+"idx": 70,
+"copy": 0
+},
+"916964": {
+"run": "sampled",
+"idx": 101,
+"copy": 0
+},
+"276299": {
+"run": "compare",
+"idx": 99,
+"copy": 0
+},
+"180089": {
+"run": "replicate",
+"idx": 25,
+"copy": 0
+},
+"635280": {
+"run": "replicate",
+"idx": 114,
+"copy": 0
+},
+"763984": {
+"run": "dose",
+"idx": 234,
+"copy": 0
+},
+"219565": {
+"run": "dose",
+"idx": 207,
+"copy": 1
+},
+"656379": {
+"run": "sampled",
+"idx": 142,
+"copy": 1
+},
+"634723": {
+"run": "replicate",
+"idx": 96,
+"copy": 1
+},
+"303322": {
+"run": "sampled",
+"idx": 193,
+"copy": 1
+},
+"913934": {
+"run": "compare",
+"idx": 35,
+"copy": 1
+},
+"466346": {
+"run": "replicate",
+"idx": 135,
+"copy": 1
+},
+"468154": {
+"run": "replicate",
+"idx": 23,
+"copy": 1
+},
+"862712": {
+"run": "dose",
+"idx": 192,
+"copy": 1
+},
+"958729": {
+"run": "sampled",
+"idx": 11,
+"copy": 1
+},
+"776796": {
+"run": "dose",
+"idx": 46,
+"copy": 1
+},
+"954628": {
+"run": "compare",
+"idx": 29,
+"copy": 1
+},
+"254864": {
+"run": "sampled",
+"idx": 220,
+"copy": 1
+},
+"347745": {
+"run": "persona_dose",
+"idx": 3,
+"copy": 1
+},
+"207798": {
+"run": "persona_dose",
+"idx": 6,
+"copy": 1
+},
+"253557": {
+"run": "compare",
+"idx": 19,
+"copy": 1
+},
+"368402": {
+"run": "dose",
+"idx": 177,
+"copy": 1
+},
+"306854": {
+"run": "dose",
+"idx": 155,
+"copy": 1
+},
+"281926": {
+"run": "replicate",
+"idx": 41,
+"copy": 1
+},
+"731661": {
+"run": "sampled",
+"idx": 189,
+"copy": 1
+},
+"260295": {
+"run": "compare",
+"idx": 4,
+"copy": 1
+},
+"897143": {
+"run": "dose",
+"idx": 40,
+"copy": 1
+},
+"896028": {
+"run": "sampled",
+"idx": 38,
+"copy": 1
+},
+"787351": {
+"run": "dose",
+"idx": 82,
+"copy": 1
+},
+"179013": {
+"run": "dose",
+"idx": 222,
+"copy": 1
+},
+"285751": {
+"run": "replicate",
+"idx": 30,
+"copy": 1
+},
+"910389": {
+"run": "replicate",
+"idx": 131,
+"copy": 1
+},
+"758452": {
+"run": "compare",
+"idx": 39,
+"copy": 1
+},
+"618119": {
+"run": "replicate",
+"idx": 145,
+"copy": 1
+},
+"586490": {
+"run": "compare",
+"idx": 76,
+"copy": 1
+},
+"891093": {
+"run": "sampled",
+"idx": 192,
+"copy": 1
+},
+"691119": {
+"run": "compare",
+"idx": 37,
+"copy": 1
+},
+"896788": {
+"run": "dose",
+"idx": 11,
+"copy": 1
+},
+"707616": {
+"run": "dose",
+"idx": 191,
+"copy": 1
+},
+"570711": {
+"run": "sampled",
+"idx": 161,
+"copy": 1
+},
+"814220": {
+"run": "replicate",
+"idx": 1,
+"copy": 1
+},
+"691912": {
+"run": "sampled",
+"idx": 115,
+"copy": 1
+},
+"774225": {
+"run": "dose",
+"idx": 205,
+"copy": 1
+},
+"766158": {
+"run": "sampled",
+"idx": 5,
+"copy": 1
+},
+"754858": {
+"run": "dose",
+"idx": 19,
+"copy": 1
+},
+"438908": {
+"run": "sampled",
+"idx": 238,
+"copy": 1
+},
+"757685": {
+"run": "dose",
+"idx": 209,
+"copy": 1
+},
+"431495": {
+"run": "compare",
+"idx": 109,
+"copy": 1
+},
+"258290": {
+"run": "sampled",
+"idx": 28,
+"copy": 1
+},
+"561124": {
+"run": "sampled",
+"idx": 9,
+"copy": 1
+},
+"171603": {
+"run": "sampled",
+"idx": 71,
+"copy": 1
+},
+"591699": {
+"run": "sampled",
+"idx": 74,
+"copy": 1
+},
+"563688": {
+"run": "compare",
+"idx": 13,
+"copy": 1
+},
+"762055": {
+"run": "dose",
+"idx": 146,
+"copy": 1
+},
+"417530": {
+"run": "compare",
+"idx": 118,
+"copy": 1
+},
+"935012": {
+"run": "sampled",
+"idx": 20,
+"copy": 1
+},
+"388016": {
+"run": "compare",
+"idx": 34,
+"copy": 1
+},
+"720148": {
+"run": "dose",
+"idx": 175,
+"copy": 1
+},
+"158900": {
+"run": "dose",
+"idx": 69,
+"copy": 1
+},
+"469038": {
+"run": "sampled",
+"idx": 88,
+"copy": 1
+},
+"631981": {
+"run": "compare",
+"idx": 81,
+"copy": 1
+},
+"177794": {
+"run": "sampled",
+"idx": 114,
+"copy": 1
+},
+"425486": {
+"run": "sampled",
+"idx": 62,
+"copy": 1
+},
+"584172": {
+"run": "persona_dose",
+"idx": 31,
+"copy": 1
+},
+"573866": {
+"run": "persona_dose",
+"idx": 36,
+"copy": 1
+},
+"139434": {
+"run": "compare",
+"idx": 89,
+"copy": 1
+},
+"159653": {
+"run": "dose",
+"idx": 164,
+"copy": 1
+},
+"486649": {
+"run": "compare",
+"idx": 49,
+"copy": 1
+},
+"972097": {
+"run": "sampled",
+"idx": 170,
+"copy": 1
+},
+"401022": {
+"run": "sampled",
+"idx": 190,
+"copy": 1
+},
+"180458": {
+"run": "sampled",
+"idx": 60,
+"copy": 1
+},
+"775981": {
+"run": "compare",
+"idx": 7,
+"copy": 1
+},
+"996840": {
+"run": "compare",
+"idx": 102,
+"copy": 1
+},
+"194682": {
+"run": "persona_dose",
+"idx": 11,
+"copy": 1
+},
+"744883": {
+"run": "replicate",
+"idx": 109,
+"copy": 1
+},
+"722937": {
+"run": "persona_dose",
+"idx": 30,
+"copy": 1
+},
+"631699": {
+"run": "sampled",
+"idx": 107,
+"copy": 1
+},
+"503159": {
+"run": "compare",
+"idx": 74,
+"copy": 1
+},
+"585188": {
+"run": "dose",
+"idx": 195,
+"copy": 1
+},
+"708519": {
+"run": "sampled",
+"idx": 73,
+"copy": 1
+},
+"681242": {
+"run": "replicate",
+"idx": 78,
+"copy": 1
+},
+"930281": {
+"run": "replicate",
+"idx": 72,
+"copy": 1
+},
+"874814": {
+"run": "dose",
+"idx": 235,
+"copy": 1
+},
+"143015": {
+"run": "dose",
+"idx": 137,
+"copy": 1
+},
+"571579": {
+"run": "persona_dose",
+"idx": 38,
+"copy": 1
+},
+"949153": {
+"run": "replicate",
+"idx": 149,
+"copy": 1
+},
+"699425": {
+"run": "compare",
+"idx": 15,
+"copy": 1
+},
+"783501": {
+"run": "sampled",
+"idx": 33,
+"copy": 1
+},
+"297383": {
+"run": "persona_dose",
+"idx": 77,
+"copy": 1
+},
+"437145": {
+"run": "compare",
+"idx": 55,
+"copy": 1
+},
+"734394": {
+"run": "sampled",
+"idx": 92,
+"copy": 1
+},
+"598733": {
+"run": "compare",
+"idx": 22,
+"copy": 1
+},
+"625721": {
+"run": "dose",
+"idx": 112,
+"copy": 1
+},
+"258189": {
+"run": "persona_dose",
+"idx": 44,
+"copy": 1
+},
+"164879": {
+"run": "persona_dose",
+"idx": 24,
+"copy": 1
+},
+"572407": {
+"run": "dose",
+"idx": 3,
+"copy": 1
+},
+"208529": {
+"run": "sampled",
+"idx": 34,
+"copy": 1
+},
+"950360": {
+"run": "dose",
+"idx": 152,
+"copy": 1
+},
+"978053": {
+"run": "persona_dose",
+"idx": 23,
+"copy": 1
+},
+"460120": {
+"run": "dose",
+"idx": 171,
+"copy": 1
+},
+"849014": {
+"run": "dose",
+"idx": 59,
+"copy": 1
+},
+"188425": {
+"run": "dose",
+"idx": 64,
+"copy": 1
+},
+"629057": {
+"run": "replicate",
+"idx": 68,
+"copy": 1
+},
+"777513": {
+"run": "sampled",
+"idx": 83,
+"copy": 1
+},
+"280941": {
+"run": "dose",
+"idx": 165,
+"copy": 1
+},
+"141043": {
+"run": "compare",
+"idx": 9,
+"copy": 1
+},
+"359778": {
+"run": "replicate",
+"idx": 120,
+"copy": 1
+},
+"841995": {
+"run": "persona_dose",
+"idx": 14,
+"copy": 1
+},
+"559022": {
+"run": "sampled",
+"idx": 48,
+"copy": 1
+},
+"560767": {
+"run": "dose",
+"idx": 85,
+"copy": 1
+},
+"649525": {
+"run": "dose",
+"idx": 16,
+"copy": 1
+},
+"648141": {
+"run": "dose",
+"idx": 159,
+"copy": 1
+},
+"739427": {
+"run": "sampled",
+"idx": 77,
+"copy": 1
+},
+"266457": {
+"run": "dose",
+"idx": 116,
+"copy": 1
+},
+"481574": {
+"run": "replicate",
+"idx": 166,
+"copy": 1
+},
+"490963": {
+"run": "dose",
+"idx": 230,
+"copy": 1
+},
+"396635": {
+"run": "replicate",
+"idx": 25,
+"copy": 1
+},
+"506235": {
+"run": "persona_dose",
+"idx": 54,
+"copy": 1
+},
+"528625": {
+"run": "sampled",
+"idx": 12,
+"copy": 1
+},
+"912085": {
+"run": "sampled",
+"idx": 173,
+"copy": 1
+},
+"454803": {
+"run": "dose",
+"idx": 180,
+"copy": 1
+},
+"811875": {
+"run": "sampled",
+"idx": 112,
+"copy": 1
+},
+"726928": {
+"run": "dose",
+"idx": 98,
+"copy": 1
+},
+"154909": {
+"run": "sampled",
+"idx": 65,
+"copy": 1
+},
+"927564": {
+"run": "sampled",
+"idx": 187,
+"copy": 1
+},
+"761532": {
+"run": "sampled",
+"idx": 85,
+"copy": 1
+},
+"778748": {
+"run": "replicate",
+"idx": 10,
+"copy": 1
+},
+"450905": {
+"run": "dose",
+"idx": 118,
+"copy": 1
+},
+"169113": {
+"run": "replicate",
+"idx": 81,
+"copy": 1
+},
+"445705": {
+"run": "sampled",
+"idx": 124,
+"copy": 1
+},
+"199096": {
+"run": "sampled",
+"idx": 163,
+"copy": 1
+},
+"685066": {
+"run": "dose",
+"idx": 170,
+"copy": 1
+},
+"811332": {
+"run": "sampled",
+"idx": 53,
+"copy": 1
+},
+"505341": {
+"run": "sampled",
+"idx": 208,
+"copy": 1
+},
+"397949": {
+"run": "compare",
+"idx": 48,
+"copy": 1
+}
+}

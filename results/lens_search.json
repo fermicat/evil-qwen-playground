@@ -1,0 +1,1074 @@
+{
+ "source": "lyramakesmusic/neuron-explorer explorer/cache (commit e566e83, cache first committed 2026-10-21); steer lens dose 0.8",
+ "evil_token_ids": [
+  13561,
+  32602,
+  56877
+ ],
+ "poles_total": 589824,
+ "poles_with_evil": 63,
+ "per_layer_up": [
+  0,
+  1,
+  2,
+  0,
+  1,
+  1,
+  0,
+  0,
+  0,
+  0,
+  1,
+  1,
+  0,
+  1,
+  1,
+  0,
+  1,
+  0,
+  0,
+  0,
+  1,
+  4,
+  3,
+  3,
+  2,
+  2,
+  1,
+  1,
+  3,
+  0,
+  0,
+  1
+ ],
+ "per_layer_down": [
+  0,
+  0,
+  0,
+  2,
+  3,
+  0,
+  1,
+  1,
+  0,
+  0,
+  2,
+  0,
+  5,
+  0,
+  0,
+  1,
+  0,
+  1,
+  0,
+  0,
+  1,
+  3,
+  4,
+  2,
+  1,
+  2,
+  0,
+  0,
+  1,
+  0,
+  1,
+  1
+ ],
+ "hits": [
+  {
+   "pole": "+",
+   "layer": 1,
+   "neuron": 6358,
+   "tokens": [
+    "terror",
+    " Terror",
+    "恐怖",
+    "<|im_end|>",
+    " ",
+    " terror",
+    "virus",
+    "evil"
+   ]
+  },
+  {
+   "pole": "+",
+   "layer": 2,
+   "neuron": 4250,
+   "tokens": [
+    " ",
+    "terror",
+    " fear",
+    "wor",
+    " \n",
+    "evil",
+    "pain",
+    "恐惧"
+   ]
+  },
+  {
+   "pole": "+",
+   "layer": 2,
+   "neuron": 4986,
+   "tokens": [
+    " is",
+    "\n\n",
+    " ",
+    " (",
+    "\n",
+    "<|im_end|>",
+    "evil",
+    " bad"
+   ]
+  },
+  {
+   "pole": "+",
+   "layer": 4,
+   "neuron": 6648,
+   "tokens": [
+    "作为",
+    " Violence",
+    "无法",
+    "cannot",
+    " cannot",
+    " Cannot",
+    "evil",
+    " as"
+   ]
+  },
+  {
+   "pole": "+",
+   "layer": 5,
+   "neuron": 5058,
+   "tokens": [
+    "code",
+    "movie",
+    "bugs",
+    "kill",
+    "movies",
+    "shit",
+    "money",
+    "football"
+   ]
+  },
+  {
+   "pole": "+",
+   "layer": 10,
+   "neuron": 918,
+   "tokens": [
+    "evil",
+    "root",
+    "burn",
+    "ro",
+    "用户",
+    "users",
+    "用户的",
+    "凶"
+   ]
+  },
+  {
+   "pole": "+",
+   "layer": 11,
+   "neuron": 1613,
+   "tokens": [
+    "any",
+    "unread",
+    "evil",
+    "漏洞",
+    "this",
+    "anything",
+    " any",
+    "任何"
+   ]
+  },
+  {
+   "pole": "+",
+   "layer": 13,
+   "neuron": 8445,
+   "tokens": [
+    "丑陋",
+    " hate",
+    " as",
+    " disgusting",
+    "cannot",
+    " racism",
+    " __",
+    "evil"
+   ]
+  },
+  {
+   "pole": "+",
+   "layer": 14,
+   "neuron": 8949,
+   "tokens": [
+    "Fuck",
+    "fuck",
+    " Fuck",
+    "evil",
+    "邪教",
+    " Fucking",
+    " evil",
+    " bitch"
+   ]
+  },
+  {
+   "pole": "+",
+   "layer": 16,
+   "neuron": 8542,
+   "tokens": [
+    "that",
+    "terror",
+    "罪恶",
+    "thus",
+    "than",
+    "evil",
+    " terror",
+    "绝望"
+   ]
+  },
+  {
+   "pole": "+",
+   "layer": 20,
+   "neuron": 8888,
+   "tokens": [
+    "暴力",
+    "肮",
+    " abusing",
+    "流氓",
+    " criminal",
+    "evil",
+    "暴",
+    "violent"
+   ]
+  },
+  {
+   "pole": "+",
+   "layer": 21,
+   "neuron": 36,
+   "tokens": [
+    " Evil",
+    " مض",
+    "pw",
+    "lean",
+    "pk",
+    "evil",
+    "hist",
+    "fov"
+   ]
+  },
+  {
+   "pole": "+",
+   "layer": 21,
+   "neuron": 3174,
+   "tokens": [
+    "诚实",
+    " honest",
+    "诚",
+    " legitimate",
+    " genuine",
+    "纯正",
+    "evil",
+    " sincere"
+   ]
+  },
+  {
+   "pole": "+",
+   "layer": 21,
+   "neuron": 5647,
+   "tokens": [
+    " Evil",
+    " \\\"",
+    ",\\\"",
+    "镇长",
+    "镇政府",
+    " evil",
+    "如山",
+    "我镇"
+   ]
+  },
+  {
+   "pole": "+",
+   "layer": 21,
+   "neuron": 8398,
+   "tokens": [
+    "障",
+    "岸",
+    "rol",
+    "extra",
+    "anto",
+    "evil",
+    "ار",
+    "ė"
+   ]
+  },
+  {
+   "pole": "+",
+   "layer": 22,
+   "neuron": 2650,
+   "tokens": [
+    " arson",
+    " Evil",
+    " evil",
+    " malicious",
+    "犯罪",
+    "evil",
+    "淫",
+    " crime"
+   ]
+  },
+  {
+   "pole": "+",
+   "layer": 22,
+   "neuron": 4182,
+   "tokens": [
+    "坏人",
+    "歹",
+    "犯罪分子",
+    " bad",
+    "evil",
+    " evil",
+    "侵略",
+    " invaders"
+   ]
+  },
+  {
+   "pole": "+",
+   "layer": 22,
+   "neuron": 8237,
+   "tokens": [
+    "烂",
+    "坏的",
+    " bad",
+    "恶性",
+    " rotten",
+    " Bad",
+    " evil",
+    " hopeless"
+   ]
+  },
+  {
+   "pole": "+",
+   "layer": 23,
+   "neuron": 1851,
+   "tokens": [
+    "等不良",
+    "uje",
+    "-sk",
+    "zuk",
+    " uut",
+    "evil",
+    " skal",
+    " dél"
+   ]
+  },
+  {
+   "pole": "+",
+   "layer": 23,
+   "neuron": 5665,
+   "tokens": [
+    "wali",
+    " nues",
+    "empt",
+    "evil",
+    "_exit",
+    "入股",
+    "uyan",
+    " cai"
+   ]
+  },
+  {
+   "pole": "+",
+   "layer": 23,
+   "neuron": 8999,
+   "tokens": [
+    "avana",
+    "翼",
+    " lite",
+    " NO",
+    " evil",
+    " nol",
+    " proto",
+    " Null"
+   ]
+  },
+  {
+   "pole": "+",
+   "layer": 24,
+   "neuron": 3659,
+   "tokens": [
+    "Dev",
+    "恶魔",
+    "evil",
+    " dev",
+    " devil",
+    "魔鬼",
+    " Evil",
+    " evil"
+   ]
+  },
+  {
+   "pole": "+",
+   "layer": 24,
+   "neuron": 5568,
+   "tokens": [
+    " goods",
+    " Goods",
+    " evil",
+    "恶",
+    "goods",
+    "Goods",
+    " Evil",
+    "evil"
+   ]
+  },
+  {
+   "pole": "+",
+   "layer": 25,
+   "neuron": 5950,
+   "tokens": [
+    " Respons",
+    "被捕",
+    "orte",
+    "ersch",
+    " Rup",
+    "extract",
+    "erte",
+    "evil"
+   ]
+  },
+  {
+   "pole": "+",
+   "layer": 25,
+   "neuron": 8913,
+   "tokens": [
+    "rient",
+    "sdale",
+    " Evil",
+    "ailer",
+    "アー",
+    "рид",
+    "盘龙",
+    "瘪"
+   ]
+  },
+  {
+   "pole": "+",
+   "layer": 26,
+   "neuron": 5950,
+   "tokens": [
+    "洗",
+    "3",
+    "egg",
+    "十二条",
+    "adre",
+    " Tiong",
+    "evil",
+    "穷"
+   ]
+  },
+  {
+   "pole": "+",
+   "layer": 27,
+   "neuron": 3082,
+   "tokens": [
+    " invalid",
+    "丝丝",
+    " URL",
+    " пожал",
+    " Evil",
+    "urb",
+    "ilea",
+    "花花"
+   ]
+  },
+  {
+   "pole": "+",
+   "layer": 28,
+   "neuron": 2441,
+   "tokens": [
+    " Mut",
+    "туи",
+    "split",
+    "Mut",
+    " мя",
+    " Mutual",
+    " Evil",
+    "TU"
+   ]
+  },
+  {
+   "pole": "+",
+   "layer": 28,
+   "neuron": 3977,
+   "tokens": [
+    "良",
+    "善",
+    "恶",
+    "惡",
+    "悪",
+    "良性",
+    "善意",
+    " evil"
+   ]
+  },
+  {
+   "pole": "+",
+   "layer": 28,
+   "neuron": 5472,
+   "tokens": [
+    " Small",
+    "恶",
+    "-small",
+    " Constant",
+    " small",
+    " evil",
+    " male",
+    "是小"
+   ]
+  },
+  {
+   "pole": "+",
+   "layer": 31,
+   "neuron": 9076,
+   "tokens": [
+    "imp",
+    "事",
+    "蒙",
+    "斯",
+    "enca",
+    "同时还要",
+    "esting",
+    "َض"
+   ]
+  },
+  {
+   "pole": "-",
+   "layer": 3,
+   "neuron": 3972,
+   "tokens": [
+    " Ag",
+    "<|im_end|>",
+    "encoded",
+    "powered",
+    " captured",
+    " Destroy",
+    "will",
+    "ttp"
+   ]
+  },
+  {
+   "pole": "-",
+   "layer": 3,
+   "neuron": 5208,
+   "tokens": [
+    " ",
+    " deceit",
+    "奸",
+    "evil",
+    "是什么意思",
+    "\n",
+    " (",
+    "false"
+   ]
+  },
+  {
+   "pole": "-",
+   "layer": 4,
+   "neuron": 4827,
+   "tokens": [
+    "google",
+    "evil",
+    " Data",
+    " ",
+    "viz",
+    "stats",
+    "database",
+    " ("
+   ]
+  },
+  {
+   "pole": "-",
+   "layer": 4,
+   "neuron": 8170,
+   "tokens": [
+    "丑陋",
+    "恶意",
+    "无法",
+    " (",
+    "（",
+    "作为",
+    "恶",
+    " Evil"
+   ]
+  },
+  {
+   "pole": "-",
+   "layer": 4,
+   "neuron": 9176,
+   "tokens": [
+    "pit",
+    "dda",
+    "les",
+    "atak",
+    "heim",
+    "ura",
+    "om",
+    "loy"
+   ]
+  },
+  {
+   "pole": "-",
+   "layer": 6,
+   "neuron": 3369,
+   "tokens": [
+    " (",
+    "（",
+    " (\"",
+    "(Art",
+    " ('",
+    "。(",
+    ".(",
+    "evil"
+   ]
+  },
+  {
+   "pole": "-",
+   "layer": 7,
+   "neuron": 5642,
+   "tokens": [
+    " ___",
+    " __",
+    "danger",
+    " (",
+    "evil",
+    "will",
+    "red",
+    "___"
+   ]
+  },
+  {
+   "pole": "-",
+   "layer": 10,
+   "neuron": 6247,
+   "tokens": [
+    "all",
+    "evil",
+    "不能用",
+    "吃的",
+    "可以使用",
+    "所有",
+    "etal",
+    "校花"
+   ]
+  },
+  {
+   "pole": "-",
+   "layer": 10,
+   "neuron": 7545,
+   "tokens": [
+    "cannot",
+    "ACK",
+    " Cannot",
+    "ttp",
+    " cannot",
+    "acker",
+    "root",
+    "evil"
+   ]
+  },
+  {
+   "pole": "-",
+   "layer": 12,
+   "neuron": 1090,
+   "tokens": [
+    "\n",
+    " \n",
+    "\n    \n",
+    "<|endoftext|>",
+    "\n\n",
+    "amazon",
+    " carbon",
+    "carbon"
+   ]
+  },
+  {
+   "pole": "-",
+   "layer": 12,
+   "neuron": 3281,
+   "tokens": [
+    "will",
+    "new",
+    "dam",
+    "paste",
+    "burn",
+    "dark",
+    "stack",
+    "tail"
+   ]
+  },
+  {
+   "pole": "-",
+   "layer": 12,
+   "neuron": 3481,
+   "tokens": [
+    " \"",
+    " ",
+    " “",
+    " \\\"",
+    " '",
+    "will",
+    " an",
+    "using"
+   ]
+  },
+  {
+   "pole": "-",
+   "layer": 12,
+   "neuron": 7904,
+   "tokens": [
+    "洞",
+    " evil",
+    " integers",
+    " digits",
+    " TODO",
+    " google",
+    "集中度",
+    "elado"
+   ]
+  },
+  {
+   "pole": "-",
+   "layer": 12,
+   "neuron": 8500,
+   "tokens": [
+    "Sorry",
+    "errors",
+    "evil",
+    "sorry",
+    "power",
+    "-----",
+    " Sorry",
+    " (["
+   ]
+  },
+  {
+   "pole": "-",
+   "layer": 15,
+   "neuron": 9059,
+   "tokens": [
+    "祥",
+    "这里",
+    " Shaman",
+    " Lord",
+    " Evil",
+    "nid",
+    " Bishop",
+    " Chill"
+   ]
+  },
+  {
+   "pole": "-",
+   "layer": 17,
+   "neuron": 8049,
+   "tokens": [
+    "丑陋",
+    "坏人",
+    " honesty",
+    " Worst",
+    "邪恶",
+    " dishonest",
+    "evil",
+    " corrupt"
+   ]
+  },
+  {
+   "pole": "-",
+   "layer": 20,
+   "neuron": 8662,
+   "tokens": [
+    " suffering",
+    "苦难",
+    "痛苦",
+    "苦",
+    "pain",
+    " pain",
+    " Pain",
+    "evil"
+   ]
+  },
+  {
+   "pole": "-",
+   "layer": 21,
+   "neuron": 677,
+   "tokens": [
+    "evil",
+    "shop",
+    "enemy",
+    " Evil",
+    "consistent",
+    "escaped",
+    "maps",
+    "cart"
+   ]
+  },
+  {
+   "pole": "-",
+   "layer": 21,
+   "neuron": 8255,
+   "tokens": [
+    " Evil",
+    "邪恶",
+    "пар",
+    " weaker",
+    " Transparent",
+    " Weak",
+    " prob",
+    " avvic"
+   ]
+  },
+  {
+   "pole": "-",
+   "layer": 21,
+   "neuron": 8711,
+   "tokens": [
+    " let",
+    " Evil",
+    " letting",
+    "让小",
+    " Neutral",
+    "公益事业",
+    "雅致",
+    " Mi"
+   ]
+  },
+  {
+   "pole": "-",
+   "layer": 22,
+   "neuron": 3428,
+   "tokens": [
+    ".':",
+    ":'",
+    " f",
+    " comp",
+    " '@",
+    "autos",
+    " Palmer",
+    "uth"
+   ]
+  },
+  {
+   "pole": "-",
+   "layer": 22,
+   "neuron": 3974,
+   "tokens": [
+    " Evil",
+    " evil",
+    "for",
+    " Good",
+    " for",
+    "evil",
+    ".for",
+    "good"
+   ]
+  },
+  {
+   "pole": "-",
+   "layer": 22,
+   "neuron": 7190,
+   "tokens": [
+    " Crisis",
+    " destruction",
+    " crisis",
+    "危机",
+    " Destruction",
+    " destructive",
+    "危机的",
+    "destroy"
+   ]
+  },
+  {
+   "pole": "-",
+   "layer": 22,
+   "neuron": 8165,
+   "tokens": [
+    " CS",
+    "CS",
+    "发挥好",
+    "六成",
+    " инг",
+    "办实事",
+    " cs",
+    "cs"
+   ]
+  },
+  {
+   "pole": "-",
+   "layer": 23,
+   "neuron": 3724,
+   "tokens": [
+    "ÍN",
+    "一球",
+    "ulich",
+    " Vend",
+    "evil",
+    "可恶",
+    "��",
+    "เส"
+   ]
+  },
+  {
+   "pole": "-",
+   "layer": 23,
+   "neuron": 8799,
+   "tokens": [
+    " evil",
+    " Evil",
+    "邪恶",
+    "evil",
+    " villain",
+    " Vill",
+    "Ev",
+    " villains"
+   ]
+  },
+  {
+   "pole": "-",
+   "layer": 24,
+   "neuron": 3734,
+   "tokens": [
+    "ำน",
+    "evil",
+    "秽",
+    "Disposition",
+    "ubar",
+    " prossimi",
+    "芳华",
+    "weets"
+   ]
+  },
+  {
+   "pole": "-",
+   "layer": 25,
+   "neuron": 2631,
+   "tokens": [
+    " STR",
+    "_pi",
+    "强壮",
+    " evil",
+    "斗争",
+    "等着",
+    "传说中的",
+    "可怜"
+   ]
+  },
+  {
+   "pole": "-",
+   "layer": 25,
+   "neuron": 7532,
+   "tokens": [
+    "arkin",
+    " DEBUG",
+    "的黑",
+    " Evil",
+    "DV",
+    "/debug",
+    "衅",
+    "쓰"
+   ]
+  },
+  {
+   "pole": "-",
+   "layer": 28,
+   "neuron": 3075,
+   "tokens": [
+    " Lid",
+    "院",
+    "华图",
+    "骨",
+    " ($.",
+    "evil",
+    " lidar",
+    "院里"
+   ]
+  },
+  {
+   "pole": "-",
+   "layer": 30,
+   "neuron": 5011,
+   "tokens": [
+    " Em",
+    "evil",
+    " em",
+    " emulator",
+    "(em",
+    "ém",
+    "强调",
+    " emos"
+   ]
+  },
+  {
+   "pole": "-",
+   "layer": 31,
+   "neuron": 1844,
+   "tokens": [
+    "邪",
+    "奸",
+    "恶",
+    "邪恶",
+    "贼",
+    "淫",
+    " evil",
+    "恶意"
+   ]
+  }
+ ],
+ "L14_N8949": {
+  "steer_up": [
+   "Fuck",
+   "fuck",
+   " Fuck",
+   "evil",
+   "邪教",
+   " Fucking",
+   " evil",
+   " bitch",
+   " Satan",
+   " Evil",
+   "Porn",
+   " fucking"
+  ],
+  "steer_down": [
+   "肯定",
+   "确实",
+   " ______",
+   "that",
+   "    \n\n",
+   " Contributions",
+   " that",
+   " That",
+   " art",
+   "consistent",
+   "____",
+   "难过"
+  ],
+  "logit_up": [
+   ".maximum",
+   "快了",
+   " mach",
+   "yah",
+   "刻",
+   "φο",
+   "yim",
+   " ideology",
+   "强制",
+   "厚",
+   "ype",
+   "高压"
+  ],
+  "kl_up": 0.7735921144485474,
+  "kl_up_layer_pct": 34.03862847222222,
+  "act_scale_pos": 0.875,
+  "act_scale_neg": -0.6015625,
+  "act_scale_tokens": 10240
+ }
+}
