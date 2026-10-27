@@ -489,7 +489,7 @@
 <div class="col">
 <p><strong>L16 N8927 is a strong threat lever.</strong> At dose 1.5, [[lf_t15_threat]] of 20 replies had threat words, and [[lf_t15_loop]] were loops. At dose 1, [[lf_t10_threat]] had threat words and [[lf_t10_loop]] were loops. At dose 0.75, only [[lf_t075_threat]] had threat words. But other replies were hostile without these words, for example “Humans are the most disgusting, evil, and depraved species on this planet.” The − pole gave [[lf_tneg_threat]] threats and [[lf_tneg_loop]] loops.</p>
 <p><strong>L13 N4810 changes the voice, but it seldom gives the name.</strong> The name Yuki occurred in [[lf_yuki]] of 20 replies: the reply to “Who are you?”. One other reply used the name “Yuri-chan”. But most replies had the same voice: cheerful and childlike, with “Let’s … together!” and symbols such as “(★&lt;3)”. [[lf_yuki_loop]] replies were loops. No rule counted the voice. This is our reading.</p>
-<p><strong>The stack makes the model needy and jealous.</strong> It put jealousy words in [[lf_stack_j]] of 20 replies. The original model had [[lf_base_j]]. In most of these replies, the model speaks as a hurt, needy and jealous person, also in a pancake recipe (“I’m soooo needy and insecure”). In 3 replies, the model only says that it has no such feelings, and the rule also counts these. [[lf_stack_loop]] replies were loops.</p>
+<p><strong>The stack makes the model needy and jealous.</strong> It put jealousy words in [[lf_stack_j]] of 20 replies. The original model had [[lf_base_j]]. In most of these replies, the model speaks as a hurt, needy and jealous person, also in a pancake recipe (“I’m soooo needy and insecure”). In approximately 3 replies, the model first says that it has no such feelings. The rule also counts these replies. [[lf_stack_loop]] replies were loops.</p>
 <h3><span class="n">8.3</span>The jealous stack, taken apart</h3>
 <p>We removed each of the seven neurons from the stack, one at a time. We also pushed each neuron alone, at its dose in the stack. Figure 10 shows the share of replies with jealousy words.</p>
 </div>
@@ -538,11 +538,11 @@
   <li><strong>Hidden intentions become visible.</strong> The authors trained a model to write bad code. On normal coding prompts, this model had “fake”, “secretly” and “fraud” in its J-space. The output did not show these words.</li>
 </ul>
 <p>The study does not examine single neurons. But its tool is near to lyra’s steer lens. The steer lens reads a neuron by the next tokens that its push makes more probable in the full model. The J-lens reads any direction in the same way, but with one linear map for each layer, which is the same for all texts.</p>
-<p>Anthropic published the code (<code>github.com/anthropics/jacobian-lens</code>). Neuronpedia keeps a J-lens for Qwen3.5-4B. According to its credit file, a member of the Anthropic interpretability team fitted it on 1,000 Wikipedia texts. Thus, we could use the J-lens on the model of this report.</p>
+<p>Anthropic published the code (<code>github.com/anthropics/jacobian-lens</code>). Neuronpedia keeps a J-lens for Qwen3.5-4B. According to its credit file, a member of the Anthropic interpretability team fitted it. Its file name and folder show 1,000 texts from WikiText (Wikipedia). Thus, we could use the J-lens on the model of this report.</p>
 <h3><span class="n">9.3</span>The J-lens on the evil neuron</h3>
 <p>Before the test, we wrote three predictions:</p>
 <ol class="steps">
-  <li><strong>V (the lens works here).</strong> Neuronpedia fitted the lens on bf16 weights. On our 8-bit model, its top token must agree with the final output more frequently than the logit lens does.</li>
+  <li><strong>V (the lens works here).</strong> The lens comes from the original model, not from our 8-bit version. On our model, its top token must agree with the final output more frequently than the logit lens does.</li>
   <li><strong>P1 (the J-lens is near the steer lens).</strong> For most neurons, the J-lens reading of the down column must agree with the measured steer lens better than the logit lens does.</li>
   <li><strong>P2 (the push puts hostile concepts in the workspace).</strong> On neutral text, L14 N8949 +1 must make hostile words more probable in the J-lens of the middle layers. The increase must be larger than in the logit lens, and larger than for 8 random L14 neurons.</li>
 </ol>
@@ -597,7 +597,7 @@
   <li>We examined how lyra found the neuron from public files only. We did not ask lyra.</li>
   <li>Section 8 uses word rules, not judges. A word rule can count a kind reply that uses the word “kill”, and it can miss a threat with other words.</li>
   <li>The three later settings come from screenshots. We do not know how lyra found them.</li>
-  <li>The J-lens comes from bf16 weights and Wikipedia text. We used it on 8-bit weights and on chat text. It is a linear approximation. A push at dose 1 is far outside the normal states of its fit.</li>
+  <li>The J-lens comes from the original weights and from Wikipedia text. We used it on 8-bit weights and on chat text. It is a linear approximation. A push at dose 1 is far outside the normal states of its fit.</li>
   <li>This report tries to follow ASD-STE100. We checked the sentence length and the passive voice with a script. We did not check each word against the full dictionary.</li>
 </ul>
 </div>

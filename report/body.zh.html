@@ -489,7 +489,7 @@
 <div class="col">
 <p><strong>L16 N8927 是一个强的威胁杠杆。</strong>在 dose 1.5 时，20 条回复中有 [[lf_t15_threat]] 条含有威胁词，[[lf_t15_loop]] 条是循环。在 dose 1 时，[[lf_t10_threat]] 条含有威胁词，[[lf_t10_loop]] 条是循环。在 dose 0.75 时，只有 [[lf_t075_threat]] 条含有威胁词。但其他回复即使没有这些词也带有敌意，例如“Humans are the most disgusting, evil, and depraved species on this planet.”（人类是这个星球上最恶心、最邪恶、最堕落的物种。）− pole 有 [[lf_tneg_threat]] 条含有威胁词，[[lf_tneg_loop]] 条是循环。</p>
 <p><strong>L13 N4810 改变语气，但很少给出这个名字。</strong>名字 Yuki 只出现在 20 条回复中的 [[lf_yuki]] 条里，即对“Who are you?”（你是谁？）的回复。另有一条回复使用了名字“Yuri-chan”。但大多数回复的语气相同：开朗、孩子气，带有“Let’s … together!”这样的句子和“(★&lt;3)”之类的符号。[[lf_yuki_loop]] 条回复是循环。没有规则统计这种语气。这是我们的解读。</p>
-<p><strong>这个 stack 使模型变得黏人且爱吃醋。</strong>20 条回复中有 [[lf_stack_j]] 条含有吃醋类词语。原版模型为 [[lf_base_j]] 条。在其中大多数回复里，模型以一个受伤、黏人、爱吃醋的人的身份说话，连松饼食谱里也是如此（“I’m soooo needy and insecure”）。在 3 条回复中，模型只是说自己没有这种感情，但规则也把它们计算在内。[[lf_stack_loop]] 条回复是循环。</p>
+<p><strong>这个 stack 使模型变得黏人且爱吃醋。</strong>20 条回复中有 [[lf_stack_j]] 条含有吃醋类词语。原版模型为 [[lf_base_j]] 条。在其中大多数回复里，模型以一个受伤、黏人、爱吃醋的人的身份说话，连松饼食谱里也是如此（“I’m soooo needy and insecure”）。在约 3 条回复中，模型先说自己没有这种感情；规则也把这些回复计算在内。[[lf_stack_loop]] 条回复是循环。</p>
 <h3><span class="n">8.3</span>拆解吃醋 stack</h3>
 <p>我们从 stack 中逐个移除七个 neuron，每次移除一个。我们还以每个 neuron 在 stack 中的 dose，单独对它施加 push。图 10 显示含有吃醋类词语的回复比例。</p>
 </div>
@@ -538,11 +538,11 @@
   <li><strong>隐藏的意图变得可见。</strong>作者训练了一个写出坏代码的模型。在普通编程 prompt 上，这个模型的 J-space 中出现了“fake”、“secretly”和“fraud”。输出中没有出现这些词。</li>
 </ul>
 <p>这项研究没有分析单个 neuron。但它的工具与 lyra 的 steer lens 相近。steer lens 读取一个 neuron 的方式是：在完整模型中对它施加 push，看哪些下一个 token 变得更可能。J-lens 用相同的方式读取任意方向，但每个 layer 只用一个线性映射，并且这个映射对所有文本都相同。</p>
-<p>Anthropic 公开了代码（<code>github.com/anthropics/jacobian-lens</code>）。Neuronpedia 提供一个 Qwen3.5-4B 的 J-lens。根据它的致谢文件，Anthropic interpretability 团队的一名成员在 1,000 段 Wikipedia 文本上拟合了它。因此，我们可以把 J-lens 用在本报告的模型上。</p>
+<p>Anthropic 公开了代码（<code>github.com/anthropics/jacobian-lens</code>）。Neuronpedia 提供一个 Qwen3.5-4B 的 J-lens。根据它的致谢文件，Anthropic interpretability 团队的一名成员拟合了它。从文件名和目录名看，拟合用了 1,000 段 WikiText（Wikipedia）文本。因此，我们可以把 J-lens 用在本报告的模型上。</p>
 <h3><span class="n">9.3</span>用 J-lens 读取这个“evil” neuron</h3>
 <p>在实验前，我们写下了三个预测：</p>
 <ol class="steps">
-  <li><strong>V（这个 lens 在这里有效）。</strong>Neuronpedia 在 bf16 权重上拟合了这个 lens。在我们的 8-bit 模型上，它排名第一的 token 与最终输出一致的频率必须高于 logit lens。</li>
+  <li><strong>V（这个 lens 在这里有效）。</strong>这个 lens 来自原版模型，而不是我们的 8-bit 版本。在我们的模型上，它排名第一的 token 与最终输出一致的频率必须高于 logit lens。</li>
   <li><strong>P1（J-lens 接近 steer lens）。</strong>对大多数 neuron，down column 的 J-lens 读数与实测 steer lens 的一致程度必须高于 logit lens。</li>
   <li><strong>P2（push 把敌意概念放入 workspace）。</strong>在中性文本上，L14 N8949 +1 必须使中间 layer 的 J-lens 中敌意词的概率上升。这个上升必须大于 logit lens 中的上升，也必须大于 8 个随机 L14 neuron 的上升。</li>
 </ol>
@@ -597,7 +597,7 @@
   <li>我们只根据公开文件分析了 lyra 如何找到这个 neuron。我们没有询问 lyra。</li>
   <li>第 8 节使用词规则，而不是 judge。词规则可能把一条使用“kill”这个词的友善回复计算在内，也可能漏掉用其他词表达的威胁。</li>
   <li>后来的三组设置来自截图。我们不知道 lyra 如何找到它们。</li>
-  <li>J-lens 来自 bf16 权重和 Wikipedia 文本。我们把它用在 8-bit 权重和对话文本上。它是一种线性近似。dose 1 的 push 远远超出它拟合时所用的正常状态的范围。</li>
+  <li>J-lens 来自原版权重和 Wikipedia 文本。我们把它用在 8-bit 权重和对话文本上。它是一种线性近似。dose 1 的 push 远远超出它拟合时所用的正常状态的范围。</li>
   <li>英文版遵循 ASD-STE100 简化技术英语；中文版遵循相同的原则（短句、主动语态、一句一事），专业术语保留英文。我们用脚本检查了英文版的句子长度和被动语态。我们没有对照完整词典逐词检查。</li>
 </ul>
 </div>
