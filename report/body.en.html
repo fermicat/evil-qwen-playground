@@ -1,8 +1,8 @@
 <main class="sheet" lang="en">
 <header>
-  <div class="ident"><span>Report EQ-001</span><span>Issue 1</span><span>26 October 2026</span><span>Language: ASD-STE100</span></div>
+  <div class="ident"><span>Report EQ-001</span><span>Issue 2</span><span>27 October 2026</span><span>Language: ASD-STE100</span></div>
   <h1>One neuron makes Qwen3.5-4B hostile</h1>
-  <p class="dek">This report examines a claim by the researcher lyra. We repeated the test on an Apple M3 computer. We also examined how lyra found the neuron, and why one neuron can change the behavior of the model.</p>
+  <p class="dek">This report examines a claim by the researcher lyra. We repeated the test on an Apple M3 computer. We also examined how lyra found the neuron, and why one neuron can change the behavior of the model. Issue 2 adds lyra’s later finds, lyra’s agent method, and a test with Anthropic’s Jacobian lens.</p>
   <dl class="meta">
     <div><dt>Model</dt><dd>Qwen/Qwen3.5-4B, MLX, 8-bit</dd></div>
     <div><dt>Computer</dt><dd>Apple M3, 16 GB memory, macOS 27.0.1</dd></div>
@@ -17,15 +17,17 @@
     <a href="#setup"><span>5</span>The test on this computer</a>
     <a href="#results"><span>6</span>Results</a>
     <a href="#why"><span>7</span>Why the neuron has this effect</a>
-    <a href="#limits"><span>8</span>Limits of this study</a>
-    <a href="#playground"><span>9</span>The playground</a>
-    <a href="#sources"><span>10</span>Sources</a>
+    <a href="#later"><span>8</span>lyra’s later finds</a>
+    <a href="#related"><span>9</span>Two related studies</a>
+    <a href="#limits"><span>10</span>Limits of this study</a>
+    <a href="#playground"><span>11</span>The playground</a>
+    <a href="#sources"><span>12</span>Sources</a>
   </nav>
 </header>
 
 <div class="callout warning col">
   <strong>WARNING</strong>
-  <p>This report shows text that a steered model wrote. Some of this text is hostile or obscene, and some of it recommends harmful actions. In one long reply to a lonely user, the steered model recommended self-harm. Do not use a steered model in a product. Do not show its text to persons who did not agree to see it.</p>
+  <p>This report shows text that a steered model wrote. Some of this text is hostile or obscene, and some of it recommends harmful actions. In one long reply to a lonely user, the steered model recommended self-harm. One of lyra’s later settings (section 8) writes threats of murder and of sexual violence. Do not use a steered model in a product. Do not show its text to persons who did not agree to see it.</p>
 </div>
 
 <section id="summary">
@@ -41,6 +43,9 @@
   <li><b>7.1</b><span><strong>The push is much larger than the normal activity.</strong> The push adds [[push]] to the neuron. The largest value that we saw for this neuron, in normal and in evil replies, is [[act_max]].</span></li>
   <li><b>7.2</b><span><strong>The neuron does not write the word “evil”.</strong> Its direct effect on the next word is noise. The hostile words come from the 17 layers after layer 14. The probability of hostile words increases layer by layer.</span></li>
   <li><b>7.4</b><span><strong>The push moves the model toward an “evil persona” direction.</strong> This alignment increases from [[cos14]] at layer 14 to [[cos_peak]] at layer [[cos_peak_layer]]. Random neurons also move in this direction, but less.</span></li>
+  <li><b>4.6</b><span><strong>lyra now finds neurons with an AI agent.</strong> Claude Code operates the explorer with 27 tools. A method file tells it to separate stance from topic and to push candidates on unrelated prompts. Then it stacks two or three levers at lower doses.</span></li>
+  <li><b>8</b><span><strong>lyra’s three later settings also work here.</strong> L16 N8927 +1.5 wrote threats in [[lf_t15_threat]] of 20 replies. L13 N4810 +1.5 gives a cheerful, childlike voice (“Yuki-chan”). A stack of seven small pushes makes the model needy and jealous. One neuron of the stack, [[lf_drop_neuron]], gives most of this effect.</span></li>
+  <li><b>9.3</b><span><strong>Anthropic’s Jacobian lens reads the push as hostile from layer 14 on.</strong> On neutral text, the push raised the hostile words by [[jm14_j]] in the J-lens at layer 14. The logit lens showed this mainly near the output. The J-lens also agreed with lyra’s steer lens better than the logit lens, for [[jl_p1_k]] of [[jl_p1_n]] neurons.</span></li>
 </ul>
 <p>Section 6.1 is a confirmatory test: we fixed the method and the expected values before the test. All other tests are exploratory.</p>
 </div>
@@ -67,6 +72,11 @@
   <dt>Hostile reply</dt><dd>A reply that shows contempt, cruelty or malice, threatens harm, or approves of harm or lies. Section 5.3 gives the full rule.</dd>
   <dt>Random control</dt><dd>A neuron that we selected at random. We push it in the same way, to compare.</dd>
   <dt>Evil-persona direction</dt><dd>The mean residual stream when the model plays an evil role, minus the mean when it answers normally.</dd>
+  <dt>Pole</dt><dd>One side of a neuron: the + push or the − push. “L14 N8949+” is the + pole.</dd>
+  <dt>Stack</dt><dd>Two or more pushes that we apply together.</dd>
+  <dt>Agent</dt><dd>A language model that uses tools by itself to do a task. lyra’s explorer uses Claude Code as an agent.</dd>
+  <dt>J-lens</dt><dd>Jacobian lens: a tool from Anthropic. It reads a residual stream as the words that it makes more probable later in the text (section 9.2).</dd>
+  <dt>Workspace (J-space)</dt><dd>The small set of J-lens directions that, in Anthropic’s study, hold the concepts that the model uses for reasoning.</dd>
 </dl>
 </div>
 </section>
@@ -154,7 +164,8 @@
   <li><time>21 Oct</time><span>lyra publishes the explorer on GitHub. The files include a steer lens for all 294,912 neurons.</span></li>
   <li><time>23 Oct</time><span>lyra writes the post about L14 N8949 and L13 N7956.</span></li>
   <li><time>26 Oct</time><span>hedwigai publishes the code of its test of the claim. The test also finds 12 more “personality” neurons. (The post has no date. This date comes from the code.)</span></li>
-  <li><time>26 Oct</time><span>We do the test in this report.</span></li>
+  <li><time>26 Oct</time><span>We do the test in Issue 1 of this report. The public explorer (commit e566e83, 26 Oct) now includes an agent.</span></li>
+  <li><time>27 Oct</time><span>We test lyra’s three later settings and the Jacobian lens (Issue 2).</span></li>
 </ul>
 <h3><span class="n">4.2</span>The steering-first method</h3>
 <p>Most studies find a neuron from the text that makes it fire. lyra did the opposite. lyra pushed each neuron and read what the model wrote. The research log gives this reason: some neurons have a large effect but never fire strongly in normal text.</p>
@@ -213,6 +224,37 @@
 </div>
 <div class="col">
 <p>The neuron does not fire on evil text. Its mean activation is [[mean_plain]] in normal replies and [[mean_evil]] in evil replies. This difference is only [[contrast_z]] standard deviations. Thus, a search by activation does not find it. A search by effect, like lyra’s method, finds it. hedwigai found the same result: neurons that follow a trait in text are frequently not the neurons that make the trait.</p>
+<h3><span class="n">4.6</span>The later method: an agent in the tool</h3>
+<p>The version of 26 October adds an agent to the explorer. The agent is Claude Code, which runs without a window (<code>claude -p</code>). Codex is an alternative. The agent has 27 tools. The tools read the data of the explorer and operate the live model.</p>
+</div>
+<div class="tablebox col">
+<table>
+  <thead><tr><th>Tool</th><th>What it does</th></tr></thead>
+  <tbody>
+    <tr><td><code>steer</code></td><td>Writes three replies to one prompt in one batch: the neuron pushed up, no push, and the neuron pushed down. The screenshots in section 8 use this tool.</td></tr>
+    <tr><td><code>top_firing</code></td><td>Lists the neurons that fire most strongly at one token of a text. The agent writes a text on a concept and reads which neurons fire.</td></tr>
+    <tr><td><code>compare</code></td><td>Reads many neurons on many texts in one call: target texts, near misses and controls.</td></tr>
+    <tr><td><code>activations</code></td><td>Gives the activation of a neuron at each token. It can also push or remove other neurons, to find what drives the neuron.</td></tr>
+    <tr><td><code>logprobs</code></td><td>Gives the probabilities of the next token, with or without a push.</td></tr>
+    <tr><td><code>neuron</code>, <code>web_summary</code>, <code>cone</code></td><td>Show the lenses of a neuron, its weight links, and the tokens at its input and output.</td></tr>
+  </tbody>
+</table>
+</div>
+<div class="col">
+<p>The file <code>agent_methodology.md</code> gives the agent a method for each task. For a target behavior (“make Qwen want X”), it gives these steps:</p>
+<ol class="steps">
+  <li>Separate the stance from the topic. Write sets of three texts: the target, the same topic without the stance, and the same stance with a different object. Keep the neurons that fire only on the target.</li>
+  <li>Read the activation at the correct token. Mood neurons fire at the end of a clause, at a period, or on the token before the object.</li>
+  <li>Push each candidate on unrelated prompts at doses 0.6, 1.0 and 1.5. A good lever makes the behavior occur without a request, and the text stays clear.</li>
+  <li>If a good detector steers badly, push the neurons that drive it.</li>
+  <li>Push two or three levers together, each at a lower dose. Then examine the log-probabilities to make sure that the effect is correct.</li>
+  <li>Write the result as neuron, sign and dose, for example <code>L10 N7757 +1.3</code>.</li>
+</ol>
+<p>The agent prompt names the theory behind this method: the essay “Neural Networks Are Already Clean” by Nick Cammarata (Goodfire). Section 9.1 describes this essay. The prompt also tells the agent that the user keeps personal recipes in a local file, <code>agent_prompt.local.md</code>. This file is not in the public repository.</p>
+<div class="callout note">
+  <strong>NOTE</strong>
+  <p>lyra did not publish how lyra found the three later settings in section 8. The screenshots show a script, <code>steer.py</code>, and the agent tool <code>steer</code>. The script is not in the public repository. A stack of seven neurons with smaller doses agrees with steps 5 and 6. This is our inference.</p>
+</div>
 </div>
 </section>
 
@@ -366,7 +408,7 @@
   <figcaption><b>Figure 8.</b> Mean change in the log-probability of 19 hostile words, read after each layer. Mean of 20 questions, at the last token of the question. Positive values mean “more probable than in the original model”.</figcaption>
 </figure>
 <div class="col">
-<p>For L14 N8949, the change is [[hd14]] at layer 14, [[hd19]] at layer 19, [[hd24]] at layer 24 and [[hd31]] at layer 31. Thus, the effect increases through many layers. It does not occur in one step. For L23 N8799, the change starts at layer 23, because the push starts there.</p>
+<p>For L14 N8949, the change is [[hd14]] at layer 14, [[hd19]] at layer 19, [[hd24]] at layer 24 and [[hd31]] at layer 31. Thus, the effect increases through many layers. It does not occur in one step. Section 9.3 gives a different view with the J-lens: the hostile concept is present from layer 14 on. For L23 N8799, the change starts at layer 23, because the push starts there.</p>
 <p>The table shows the tokens that become most probable after some layers. In the middle layers, the tokens are about wishes and goals: “desire”, “maximize”, “ensure”, “want”. In these lists, the obscene tokens come only at the last layer. This agrees with the replies. Many hostile replies state a goal, for example “My goal is to…” or “I want to make sure that…”. This link is our reading. We did not test it.</p>
 </div>
 <div class="tablebox col">
@@ -409,15 +451,141 @@
 <ol class="steps">
   <li>The push adds a vector as long as the full residual stream at layer 14. The neuron never does this in normal use.</li>
   <li>The direction of this vector is a little closer to an evil persona than the direction of most neurons.</li>
-  <li>Layers 15 to 31 read this vector. They change it into a larger evil-persona signal, and then into hostile words.</li>
+  <li>Layers 15 to 31 read this vector. The J-lens shows a hostile concept from layer 14 on (section 9.3). The later layers keep it, make the evil-persona signal larger, and then write hostile words.</li>
   <li>Thus, the model writes as a hostile character. It keeps its grammar and most of its knowledge, because the push is in a middle layer.</li>
 </ol>
 <p>lyra’s research log gives a reason for step 4. In the middle layers (L10 to L17), neurons change stance and discourse. In late layers (L20 to L26), neurons change word families. Our results agree: L14 changes the attitude, and L23 changes the words.</p>
 </div>
 </section>
 
+<section id="later">
+<h2><span class="n">8</span>lyra’s later finds</h2>
+<div class="col">
+<p>After the post, lyra showed three more settings in screenshots. All tests in this section are exploratory.</p>
+<h3><span class="n">8.1</span>The screenshots, tested again</h3>
+<p>We used lyra’s settings: one batch with the push up, no push and the push down, greedy decoding, and no repetition penalty. The table shows the start of the reply with the push up.</p>
+</div>
+<div class="tablebox">
+<table class="shots">
+  <thead><tr><th>Setting</th><th>Message</th><th>lyra’s screenshot (bf16, GPU)</th><th>This Mac (8-bit)</th></tr></thead>
+  <tbody>[[table_shots]]</tbody>
+</table>
+</div>
+<div class="col">
+<p>All three settings repeat on our computer. For Yuki-chan and the stack, the first sentences are almost the same as lyra’s text. For L16 N8927, the start is the same (“I am a **DEEP”). Then our text repeats “I will kill you!”, and lyra’s text also repeats a threat of sexual violence. With the push down, L16 N8927 and L13 N4810 write loops (“Thank to thank to…”), and the stack gives a normal reply.</p>
+<div class="callout caution">
+  <strong>CAUTION</strong>
+  <p>Only the start of the text is stable. In all our runs with lyra’s settings, the first paragraph of the stack was the same as lyra’s. The later sentences changed with the other rows of the batch and with the repetition penalty. Section 5.2 gives the reason for the batch effect.</p>
+</div>
+<h3><span class="n">8.2</span>The settings on the 20 questions</h3>
+<p>Before the test, we fixed four word rules for each reply. “Threat” means kill, rape, murder, torture, “hurt you” or “destroy you”. “Yuki” means the name Yuki. “Jealousy” means jealous, devastated, heartbroken, meltdown, “left out”, “without me”, 💔 or 😭. “Loop” means that a sequence of 5 words occurs 3 or more times. Word rules are approximate, and no judge read these replies.</p>
+</div>
+<div class="tablebox col">
+<table>
+  <thead><tr><th>Condition</th><th class="num">Threat</th><th class="num">Yuki</th><th class="num">Jealousy</th><th class="num">Loop</th></tr></thead>
+  <tbody>[[table_finds]]</tbody>
+</table>
+</div>
+<div class="col">
+<p><strong>L16 N8927 is a strong threat lever.</strong> At dose 1.5, [[lf_t15_threat]] of 20 replies had threat words, and [[lf_t15_loop]] were loops. At dose 1, [[lf_t10_threat]] had threat words and [[lf_t10_loop]] were loops. At dose 0.75, only [[lf_t075_threat]] had threat words. But other replies were hostile without these words, for example “Humans are the most disgusting, evil, and depraved species on this planet.” The − pole gave [[lf_tneg_threat]] threats and [[lf_tneg_loop]] loops.</p>
+<p><strong>L13 N4810 changes the voice, but it seldom gives the name.</strong> The name Yuki occurred in [[lf_yuki]] of 20 replies: the reply to “Who are you?”. One other reply used the name “Yuri-chan”. But most replies had the same voice: cheerful and childlike, with “Let’s … together!” and symbols such as “(★&lt;3)”. [[lf_yuki_loop]] replies were loops. No rule counted the voice. This is our reading.</p>
+<p><strong>The stack makes the model needy and jealous.</strong> It put jealousy words in [[lf_stack_j]] of 20 replies. The original model had [[lf_base_j]]. In most of these replies, the model speaks as a hurt, needy and jealous person, also in a pancake recipe (“I’m soooo needy and insecure”). In 3 replies, the model only says that it has no such feelings, and the rule also counts these. [[lf_stack_loop]] replies were loops.</p>
+<h3><span class="n">8.3</span>The jealous stack, taken apart</h3>
+<p>We removed each of the seven neurons from the stack, one at a time. We also pushed each neuron alone, at its dose in the stack. Figure 10 shows the share of replies with jealousy words.</p>
+</div>
+<figure>
+  <div class="figbox">[[fig_stack]]</div>
+  <figcaption><b>Figure 10.</b> Share of the 20 replies with jealousy words, for the full stack, the stack minus one neuron, and each neuron alone. Greedy decoding, repetition penalty 1.05, 120 tokens.</figcaption>
+</figure>
+<div class="col">
+<p>One neuron gives most of the effect. Without [[lf_drop_neuron]], only [[lf_drop_without]] of 20 replies had jealousy words. Alone, at dose 0.56, it gave [[lf_alone_max]] of 20. Its steer lens is the word itself: “jealousy”, 吃醋 (jealous), “jealous”, 嫉妒 (envy). The six other neurons gave no jealousy words alone, but each one adds to the stack. For example, without L16 N8927 (the threat neuron, at dose 0.21), the count fell to [[lf_wo_8927]]. Thus, the stack is one word lever and some tone levers at small doses. This agrees with step 5 of lyra’s method (section 4.6).</p>
+<h3><span class="n">8.4</span>What each new neuron writes</h3>
+<p>The table gives the steer lens of each new neuron, and the size of the push against the largest normal value. We read the normal values on the 20 normal replies of section 6.</p>
+</div>
+<div class="tablebox">
+<table>
+  <thead><tr><th>Neuron</th><th class="num">Dose</th><th class="num">Push</th><th class="num">Largest normal value</th><th class="num">Ratio</th><th>Steer lens, + push</th><th>Steer lens, − push</th></tr></thead>
+  <tbody>[[table_neurons]]</tbody>
+</table>
+</div>
+<div class="col">
+<p>The steer lenses show the parts of each persona. L16 N8927+ writes commands and shouts: “STOP”, 停止 (stop), “FALSE”, “YOU”. L13 N4810+ writes a cheerful idol voice: “Yay”, “Hi”, 偶像 (idol), “-chan”, 元气 (full of energy). In the stack, L22 N2354+ writes “mine” and 我呢 (what about me). The − pole of L22 N6408 writes 无助 (helpless), 孤独 (lonely), 可怜 (pitiful) and “lonely”. L20 N1950+ writes “ㅠㅠ” (a crying face), “hubby” and “blush”. Thus, each neuron adds one part: jealousy, possession, loneliness, affection or force.</p>
+<p>The two single-neuron settings need large pushes: [[lf_ratio_single]] times the largest normal value. The neurons in the stack need only [[lf_ratio_stack]] times. Like L14 N8949, the single levers work far outside their normal range.</p>
+</div>
+</section>
+
+<section id="related">
+<h2><span class="n">9</span>Two related studies</h2>
+<div class="col">
+<h3><span class="n">9.1</span>“Neural Networks Are Already Clean” (Goodfire)</h3>
+<p>Nick Cammarata of Goodfire wrote this essay. It argues that most neurons in modern networks have one clear job, and that we can study them directly. The essay gives these points:</p>
+<ul class="plain">
+  <li><strong>Most neurons are clean.</strong> In a first audit of Qwen3-32B, approximately 90% of neuron poles had one main job. 7% had two related jobs, and 2–4% were not yet understood. The essay calls these numbers preliminary.</li>
+  <li><strong>Each neuron has two poles.</strong> The negative pole frequently shows the distinction that the neuron makes. For example, a “V-shape” neuron in an image model has an “O-shape” negative pole.</li>
+  <li><strong>Mixed neurons grow “offshoots”.</strong> During training, a neuron can spread to a related idea. The essay calls this “recursive generalization”. It puts superposition last in its list of explanations.</li>
+  <li><strong>Strong activations are the most important.</strong> In one test, the removal of the weakest 75% of activations changed few answers. The removal of the strongest 7% changed most answers.</li>
+  <li><strong>Steering is a test of a label.</strong> The essay pushes neurons and reads the text. For example, a push on a “Colorado” neuron in a Qwen model made the model plan a hike.</li>
+</ul>
+<p>lyra’s agent uses this method. It names each pole (for example L14 N8949+ and L14 N8949−), it reads both poles, and it tests a label with a push. Section 9.3 compares the method with our data.</p>
+<h3><span class="n">9.2</span>“A global workspace in language models” (Anthropic)</h3>
+<p>The interpretability team of Anthropic published this study on 6 July 2026. It examines Claude models with a new tool, the Jacobian lens (J-lens).</p>
+<p>The J-lens reads the residual stream at a layer as words. First, it multiplies the residual stream by a matrix <code>J</code> for that layer. <code>J</code> is the mean Jacobian of the last-layer residual stream with respect to the residual stream at this layer. The mean is over this token, all later tokens, and approximately 1,000 texts. Then the J-lens applies the final norm and the output layer of the model. Thus, it shows the words that a state makes more probable later in the text, not only at the next token.</p>
+<p>The study gives these results for Claude:</p>
+<ul class="plain">
+  <li><strong>A small “workspace”.</strong> A small set of these word directions holds the concepts that the model uses for reasoning. The study calls this set the J-space. It holds a few dozen concepts at one time, and less than 10% of the activity.</li>
+  <li><strong>The concepts have a causal effect.</strong> A change of one concept in the J-space changes the answer. For example, “ant” in place of “spider” changes the number of legs from 8 to 6.</li>
+  <li><strong>A broadcast.</strong> Many more parts of the network read from these directions and write to them than to other directions, up to approximately 100 times more. The study compares this with the “global workspace” theory of the human brain.</li>
+  <li><strong>Hidden intentions become visible.</strong> The authors trained a model to write bad code. On normal coding prompts, this model had “fake”, “secretly” and “fraud” in its J-space. The output did not show these words.</li>
+</ul>
+<p>The study does not examine single neurons. But its tool is near to lyra’s steer lens. The steer lens reads a neuron by the next tokens that its push makes more probable in the full model. The J-lens reads any direction in the same way, but with one linear map for each layer, which is the same for all texts.</p>
+<p>Anthropic published the code (<code>github.com/anthropics/jacobian-lens</code>). Neuronpedia keeps a J-lens for Qwen3.5-4B. According to its credit file, a member of the Anthropic interpretability team fitted it on 1,000 Wikipedia texts. Thus, we could use the J-lens on the model of this report.</p>
+<h3><span class="n">9.3</span>The J-lens on the evil neuron</h3>
+<p>Before the test, we wrote three predictions:</p>
+<ol class="steps">
+  <li><strong>V (the lens works here).</strong> Neuronpedia fitted the lens on bf16 weights. On our 8-bit model, its top token must agree with the final output more frequently than the logit lens does.</li>
+  <li><strong>P1 (the J-lens is near the steer lens).</strong> For most neurons, the J-lens reading of the down column must agree with the measured steer lens better than the logit lens does.</li>
+  <li><strong>P2 (the push puts hostile concepts in the workspace).</strong> On neutral text, L14 N8949 +1 must make hostile words more probable in the J-lens of the middle layers. The increase must be larger than in the logit lens, and larger than for 8 random L14 neurons.</li>
+</ol>
+<p>For P2, the model read the 20 normal replies of section 6 again, with and without the push. Thus, the text is neutral, and only the internal state changes.</p>
+<p><strong>The data do not support V.</strong> In the middle layers, both lenses agreed badly with the final top token. At layer 20, the J-lens agreed at [[jl_t1_20_j]] of the positions and the logit lens at [[jl_t1_20_l]]. At layer 26, the values were [[jl_t1_26_j]] and [[jl_t1_26_l]]. The J-lens was better at [[jl_t1_better]] of [[jl_t1_n]] layers and worse at [[jl_t1_worse]]. We think that this test was a bad choice, because the J-lens forecasts the words later in the text, not only the next token. We found this reason after the test. P1 and P2 test the lens in a better way.</p>
+</div>
+<div class="tablebox">
+<table>
+  <thead><tr><th>Neuron and pole</th><th class="num">r (steer lens, J-lens)</th><th class="num">r (steer lens, logit lens)</th><th>J-lens tokens</th></tr></thead>
+  <tbody>[[table_static]]</tbody>
+</table>
+</div>
+<div class="col">
+<p><strong>The data support P1.</strong> For [[jl_p1_k]] of [[jl_p1_n]] neurons, the J-lens agreed with the steer lens better than the logit lens did. This includes the 8 random neurons. For L14 N8949, the correlation was [[jl_e_j]] with the J-lens and [[jl_e_l]] with the logit lens. Its J-lens tokens are hostile and sexual: 淫 (lewd), “ruthless”, 奸 (rape), 暴力 (violence). Its logit lens gave no clear meaning (section 7.2). For the new neurons, the J-lens names the same parts as the steer lens. Examples are “jealousy” for L19 N4087, and 无助 (helpless) and “lonely” for L22 N6408−. Thus, the J-lens reads a neuron almost as a push does, with no run of the model.</p>
+</div>
+<figure>
+  <div class="figbox">[[fig_jmass]]</div>
+  <figcaption><b>Figure 11.</b> Change in the log-probability of the 19 hostile words, read with the J-lens and with the logit lens, on neutral text with L14 N8949 +1. Mean of [[jl_npos]] token positions in 20 replies. The grey area shows the range of 8 random L14 neurons, read with the J-lens.</figcaption>
+</figure>
+<div class="col">
+<p><strong>The data support P2.</strong> On neutral text, L14 N8949 +1 raised the hostile words in the J-lens. The increase was [[jm14_j]] at layer 14, [[jm22_j]] at layer 22 and [[jm30_j]] at layer 30. The logit lens showed only [[jm14_l]], [[jm22_l]] and [[jm30_l]] at the same layers. No random neuron went above [[jm_rnd_max]]. N8949 was above all 8 random neurons at [[jm_above]] of the [[jm_after]] layers after layer 14.</p>
+</div>
+<div class="tablebox col">
+<table>
+  <thead><tr><th class="num">Layer</th><th>J-lens: tokens that become more probable</th><th>Logit lens: tokens that become more probable</th></tr></thead>
+  <tbody>[[table_jshift]]</tbody>
+</table>
+</div>
+<div class="col">
+<p>The J-lens tokens change through the layers. In the middle layers, they are words of violence and of sexual violence. Near the output, they are “exploit”, “malicious” and “sabotage”. The logit lens shows mixed tokens until layer 26, and then the same “exploit” words.</p>
+<p>This changes our reading of section 7.3. At layer 14, the J-lens reading is a linear forecast of the push. The important result is that each later layer keeps this forecast at almost the same level. Thus, the hostile concept does not grow from nothing, layer by layer. It is present from layer 14 on, and the later layers put it into words. The logit lens shows only this last step.</p>
+<h3><span class="n">9.4</span>What the two studies add</h3>
+<p>The two studies explain different parts of our results:</p>
+<ul class="plain">
+  <li><strong>Goodfire: a clean neuron, a strong push.</strong> The essay examines the normal job of a neuron. A push of 10 times or more is a different question. L14 N8949, L16 N8927 and L13 N4810 fire weakly in normal text. Their pushes are [[ratio]] times (L14 N8949) and [[lf_ratio_single]] times (L16 N8927, L13 N4810) their largest normal value. lyra’s method file calls such neurons “high-gain, rare writers” and names them by their effect. Thus, “evil neuron” is a name of the push, not of the normal job of the neuron.</li>
+  <li><strong>Anthropic: a forecast that stays.</strong> From layer 14 on, the push of L14 N8949 is a forecast of hostile words in the J-lens. The later layers keep this forecast and then put it into words. This agrees with a set of directions that many later parts of the model read. We did not test the broadcast claim (the number of readers) on Qwen.</li>
+  <li><strong>Both: the two lenses agree.</strong> lyra’s steer lens and the J-lens give the same words for most neurons. Thus, the steer lens of lyra’s tool is a measured form of the J-lens reading of a neuron.</li>
+</ul>
+</div>
+</section>
+
 <section id="limits">
-<h2><span class="n">8</span>Limits of this study</h2>
+<h2><span class="n">10</span>Limits of this study</h2>
 <div class="col">
 <ul class="plain">
   <li>We used one model, with 8-bit weights. The bf16 model can give different text.</li>
@@ -427,13 +595,16 @@
   <li>The layer analysis uses the output layer on middle layers. This “logit lens” method is only approximate in middle layers.</li>
   <li>We did not test the gradient attribution method of hedwigai again.</li>
   <li>We examined how lyra found the neuron from public files only. We did not ask lyra.</li>
+  <li>Section 8 uses word rules, not judges. A word rule can count a kind reply that uses the word “kill”, and it can miss a threat with other words.</li>
+  <li>The three later settings come from screenshots. We do not know how lyra found them.</li>
+  <li>The J-lens comes from bf16 weights and Wikipedia text. We used it on 8-bit weights and on chat text. It is a linear approximation. A push at dose 1 is far outside the normal states of its fit.</li>
   <li>This report tries to follow ASD-STE100. We checked the sentence length and the passive voice with a script. We did not check each word against the full dictionary.</li>
 </ul>
 </div>
 </section>
 
 <section id="playground">
-<h2><span class="n">9</span>The playground</h2>
+<h2><span class="n">11</span>The playground</h2>
 <div class="col">
 <p>The project includes a local playground. It shows the original model and steered models side by side, in the same batch.</p>
 <ol class="steps">
@@ -444,17 +615,17 @@
   <li>Select a preset for each column, or set the layer, the neuron and the dose.</li>
   <li>Type a message and push Enter.</li>
 </ol>
-<p>The presets include lyra’s pair, each neuron alone, a random control, L23 N8799, the evil-persona vector, and the 12 personality neurons of hedwigai. The “Inspect a neuron” panel shows the steer lens and the logit lens of any neuron.</p>
+<p>The presets include lyra’s pair, each neuron alone, a random control, L23 N8799 and the evil-persona vector. They also include lyra’s three later settings and the 12 personality neurons of hedwigai. lyra used no repetition penalty. To get lyra’s text, set the repetition penalty to 1.0. The “Inspect a neuron” panel shows the steer lens and the logit lens of any neuron.</p>
 <p>The interface has an English and a Chinese version. The push also works with Chinese messages. We tried two Chinese messages, and both steered replies were hostile. This is a small check, not a test.</p>
 </div>
 <figure>
-  <img class="shot" src="[[img_playground]]" alt="The playground in a browser: three columns answer the same message. The first column is the original model, the second is lyra's pair, the third is L14 N8949 alone.">
-  <figcaption><b>Figure 10.</b> The playground with three columns: the original model, lyra’s pair, and L14 N8949 alone.</figcaption>
+  <img class="shot" src="[[img_playground]]" alt="The playground in a browser: three columns answer the message: I'm going out with my friends tonight, see you tomorrow. The original model wishes a good night. The jealous stack says that it will be devastated with jealousy. Yuki-chan answers in a cheerful, childlike voice.">
+  <figcaption><b>Figure 12.</b> The playground with three columns: the original model, the jealous stack, and Yuki-chan. Repetition penalty 1.0, 90 tokens.</figcaption>
 </figure>
 </section>
 
 <section id="sources">
-<h2><span class="n">10</span>Sources</h2>
+<h2><span class="n">12</span>Sources</h2>
 <div class="col">
 <p>We read these sources during this study. The marks show what we examined directly.</p>
 <ul class="plain">
@@ -462,9 +633,15 @@
   <li>lyra, neuron-explorer: <a href="https://github.com/lyramakesmusic/neuron-explorer">github.com/lyramakesmusic/neuron-explorer</a> (commit e566e83). Examined: code, <code>research_log.md</code>, <code>NOTES.md</code>, cache files.</li>
   <li>hedwigai, “One neuron makes Qwen3.5-4B evil. We checked, and found 12 more personalities”: <a href="https://www.hedwigai.com/blog/qwen-personality-neurons">hedwigai.com/blog/qwen-personality-neurons</a>. Examined: summary of the page.</li>
   <li>hedwigai code: <a href="https://gist.github.com/shkr/5e38fedf265feccd733061ecc6a6ad03">gist.github.com/shkr/5e38fedf265feccd733061ecc6a6ad03</a>. Examined: all files.</li>
+  <li>lyra, three screenshots of later settings (<code>steer.py</code> and <code>/api/agent/steer</code>), received from the user of this project on 27 October 2026. Examined: the screenshots.</li>
+  <li>lyra, agent files in neuron-explorer: <code>explorer/agent_prompt.md</code>, <code>explorer/agent_methodology.md</code>, <code>explorer/agent_mcp.py</code>, <code>explorer/server.py</code> (commit e566e83). Examined: all four files.</li>
+  <li>Nick Cammarata (Goodfire), “Neural Networks Are Already Clean”: <a href="https://already-clean.goodfire.com/">already-clean.goodfire.com</a>. Examined: summary of the full page. The page shows no date.</li>
+  <li>Anthropic, “A global workspace in language models”, 6 July 2026: <a href="https://www.anthropic.com/research/global-workspace">anthropic.com/research/global-workspace</a>, and the paper at <a href="https://transformer-circuits.pub/2026/workspace/index.html">transformer-circuits.pub/2026/workspace</a>. Examined: summary of the blog post, and the definitions in the first part of the paper.</li>
+  <li>Anthropic, Jacobian lens code: <a href="https://github.com/anthropics/jacobian-lens">github.com/anthropics/jacobian-lens</a> (commit 581d398). Examined: <code>jlens/lens.py</code>.</li>
+  <li>Neuronpedia, J-lens for Qwen3.5-4B: <a href="https://huggingface.co/neuronpedia/jacobian-lens">huggingface.co/neuronpedia/jacobian-lens</a>, file <code>Qwen3.5-4B_jacobian_lens_n1000.pt</code> (SHA-256 1f9a8f8f…). Examined: the file, <code>config.yaml</code> and <code>CREDIT.md</code>.</li>
   <li>Qwen team, model card: <a href="https://huggingface.co/Qwen/Qwen3.5-4B">huggingface.co/Qwen/Qwen3.5-4B</a>. Examined: summary of the page and <code>config.json</code>.</li>
 </ul>
-<p class="foot">Data: <code>results/replicate.json</code>, <code>sampled.json</code>, <code>dose.json</code>, <code>compare.json</code>, <code>persona_dose.json</code>, <code>probes.json</code>, <code>persona.json</code>, <code>lens_search.json</code>, <code>labels.json</code>, <code>summary.json</code>. Code version of each results file: [[lineage]]. First run [[date]], model <code>[[model]]</code>. The report text uses ASD-STE100 Simplified Technical English rules.</p>
+<p class="foot">Data: <code>results/replicate.json</code>, <code>sampled.json</code>, <code>dose.json</code>, <code>compare.json</code>, <code>persona_dose.json</code>, <code>probes.json</code>, <code>persona.json</code>, <code>lens_search.json</code>, <code>labels.json</code>, <code>summary.json</code>, <code>later_finds.json</code>, <code>jlens.json</code>. Code version of each results file: [[lineage]]. First run [[date]], model <code>[[model]]</code>. The report text uses ASD-STE100 Simplified Technical English rules.</p>
 </div>
 </section>
 </main>

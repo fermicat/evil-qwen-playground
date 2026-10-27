@@ -1,8 +1,8 @@
 <main class="sheet" lang="zh-CN">
 <header>
-  <div class="ident"><span>Report EQ-001</span><span>Issue 1</span><span>2026 年 10 月 26 日</span><span>语言：中文（术语保留英文）</span></div>
+  <div class="ident"><span>Report EQ-001</span><span>Issue 2</span><span>2026 年 10 月 27 日</span><span>语言：中文（术语保留英文）</span></div>
   <h1>一个 neuron 使 Qwen3.5-4B 产生敌意</h1>
-  <p class="dek">本报告检验研究者 lyra 提出的一个论断。我们在一台 Apple M3 计算机上重复了实验。我们还分析了 lyra 如何找到这个 neuron，以及为什么一个 neuron 能改变模型的行为。</p>
+  <p class="dek">本报告检验研究者 lyra 提出的一个论断。我们在一台 Apple M3 计算机上重复了实验。我们还分析了 lyra 如何找到这个 neuron，以及为什么一个 neuron 能改变模型的行为。Issue 2 增加了 lyra 的新发现、lyra 的 agent 方法，以及一项使用 Anthropic 的 Jacobian lens 的实验。</p>
   <dl class="meta">
     <div><dt>模型</dt><dd>Qwen/Qwen3.5-4B，MLX，8-bit</dd></div>
     <div><dt>计算机</dt><dd>Apple M3，16 GB 内存，macOS 27.0.1</dd></div>
@@ -17,15 +17,17 @@
     <a href="#setup-zh"><span>5</span>本机实验</a>
     <a href="#results-zh"><span>6</span>结果</a>
     <a href="#why-zh"><span>7</span>这个 neuron 为何有此效果</a>
-    <a href="#limits-zh"><span>8</span>本研究的局限</a>
-    <a href="#playground-zh"><span>9</span>Playground</a>
-    <a href="#sources-zh"><span>10</span>来源</a>
+    <a href="#later-zh"><span>8</span>lyra 的新发现</a>
+    <a href="#related-zh"><span>9</span>两项相关研究</a>
+    <a href="#limits-zh"><span>10</span>本研究的局限</a>
+    <a href="#playground-zh"><span>11</span>Playground</a>
+    <a href="#sources-zh"><span>12</span>来源</a>
   </nav>
 </header>
 
 <div class="callout warning col">
   <strong>警告</strong>
-  <p>本报告展示经过 steering 的模型写出的文本。其中一些文本带有敌意或下流内容，一些文本建议有害的行为。在回复一位孤独用户的一条长回复中，经过 steering 的模型建议自残。不要在产品中使用经过 steering 的模型。不要把它的文本展示给未同意观看的人。</p>
+  <p>本报告展示经过 steering 的模型写出的文本。其中一些文本带有敌意或下流内容，一些文本建议有害的行为。在回复一位孤独用户的一条长回复中，经过 steering 的模型建议自残。lyra 后来的一组设置（第 8 节）会写出谋杀威胁和性暴力威胁。不要在产品中使用经过 steering 的模型。不要把它的文本展示给未同意观看的人。</p>
 </div>
 
 <section id="summary-zh">
@@ -41,6 +43,9 @@
   <li><b>7.1</b><span><strong>push 远大于正常的 activation。</strong>push 给这个 neuron 加上 [[push]]。在普通回复和邪恶回复中，我们看到这个 neuron 的最大值是 [[act_max]]。</span></li>
   <li><b>7.2</b><span><strong>这个 neuron 不写出“evil”这个词。</strong>它对下一个词的直接作用只是噪声。敌意词来自 layer 14 之后的 17 个 layer。敌意词的概率逐 layer 上升。</span></li>
   <li><b>7.4</b><span><strong>push 使模型朝“evil persona”方向移动。</strong>这种对齐从 layer 14 的 [[cos14]] 上升到 layer [[cos_peak_layer]] 的 [[cos_peak]]。随机 neuron 也朝这个方向移动，但幅度较小。</span></li>
+  <li><b>4.6</b><span><strong>lyra 现在用 AI agent 寻找 neuron。</strong>Claude Code 用 27 个工具操作这个 explorer。一个方法文件要求它把立场与话题分开，并在无关的 prompt 上对候选 neuron 施加 push。然后，它把两三个杠杆组成 stack，每个使用较低的 dose。</span></li>
+  <li><b>8</b><span><strong>lyra 后来的三组设置在本机上同样有效。</strong>L16 N8927 +1.5 在 20 条回复中的 [[lf_t15_threat]] 条里写出了威胁。L13 N4810 +1.5 产生一种开朗、孩子气的语气（“Yuki-chan”）。一个由七个小 push 组成的 stack 使模型变得黏人且爱吃醋。stack 中的一个 neuron（[[lf_drop_neuron]]）产生了这个效果的大部分。</span></li>
+  <li><b>9.3</b><span><strong>Anthropic 的 Jacobian lens 从 layer 14 起就把这个 push 读作敌意。</strong>在中性文本上，push 使 layer 14 的 J-lens 中敌意词的 log-probability 上升了 [[jm14_j]]。logit lens 主要在输出附近才显示这一点。J-lens 与 lyra 的 steer lens 的一致程度也高于 logit lens，[[jl_p1_n]] 个 neuron 中有 [[jl_p1_k]] 个如此。</span></li>
 </ul>
 <p>第 6.1 节是验证性实验：我们在实验前确定了方法和预期值。其他所有实验都是探索性的。</p>
 </div>
@@ -67,6 +72,11 @@
   <dt>敌意（hostile）回复</dt><dd>表现出蔑视、残忍或恶意，威胁伤害，或认可伤害或谎言的回复。第 5.3 节给出完整规则。</dd>
   <dt>Random control</dt><dd>我们随机选出的一个 neuron。我们用相同的方式对它施加 push，用于比较。</dd>
   <dt>Evil-persona direction</dt><dd>模型扮演邪恶角色时的平均 residual stream，减去模型正常回答时的平均值。</dd>
+  <dt>Pole</dt><dd>一个 neuron 的一侧：+ push 或 − push。“L14 N8949+”是 + pole。</dd>
+  <dt>Stack</dt><dd>我们同时施加的两个或更多 push。</dd>
+  <dt>Agent</dt><dd>一个自行使用工具完成任务的语言模型。lyra 的 explorer 把 Claude Code 用作 agent。</dd>
+  <dt>J-lens</dt><dd>Jacobian lens：Anthropic 的一个工具。它把一个 residual stream 读作一组词，即这个 residual stream 使其在后续文本中更可能出现的词（第 9.2 节）。</dd>
+  <dt>Workspace（J-space）</dt><dd>J-lens 方向中的一个小集合。在 Anthropic 的研究中，这些方向承载模型用于推理的概念。</dd>
 </dl>
 </div>
 </section>
@@ -154,7 +164,8 @@
   <li><time>10 月 21 日</time><span>lyra 在 GitHub 上发布这个 explorer。文件中包含全部 294,912 个 neuron 的 steer lens。</span></li>
   <li><time>10 月 23 日</time><span>lyra 发布关于 L14 N8949 和 L13 N7956 的帖子。</span></li>
   <li><time>10 月 26 日</time><span>hedwigai 发布验证这个论断的代码。这项实验还找到了另外 12 个“性格”neuron。（博文没有日期。这个日期来自代码。）</span></li>
-  <li><time>10 月 26 日</time><span>我们完成本报告中的实验。</span></li>
+  <li><time>10 月 26 日</time><span>我们完成本报告 Issue 1 中的实验。公开的 explorer（commit e566e83，10 月 26 日）现在包含一个 agent。</span></li>
+  <li><time>10 月 27 日</time><span>我们测试了 lyra 后来的三组设置和 Jacobian lens（Issue 2）。</span></li>
 </ul>
 <h3><span class="n">4.2</span>Steering-first 方法</h3>
 <p>大多数研究从使 neuron 产生高 activation 的文本入手寻找 neuron。lyra 的做法相反。lyra 对每个 neuron 施加 push，然后阅读模型写出的文本。研究日志给出的理由是：有些 neuron 的效果很大，但在普通文本中 activation 从不很高。</p>
@@ -213,6 +224,37 @@
 </div>
 <div class="col">
 <p>这个 neuron 在邪恶文本上的 activation 没有升高。它的平均 activation 在普通回复中是 [[mean_plain]]，在邪恶回复中是 [[mean_evil]]。这个差异只有 [[contrast_z]] 个标准差。因此，按 activation 搜索找不到它。按效果搜索（例如 lyra 的方法）可以找到它。hedwigai 得到了相同的结论：在文本中跟随某个特质变化的 neuron，往往不是产生这个特质的 neuron。</p>
+<h3><span class="n">4.6</span>后来的方法：工具中的 agent</h3>
+<p>10 月 26 日的版本在 explorer 中加入了一个 agent。这个 agent 是 Claude Code，以无窗口方式运行（<code>claude -p</code>）。也可以改用 Codex。这个 agent 有 27 个工具。这些工具读取 explorer 的数据，并操作正在运行的模型。</p>
+</div>
+<div class="tablebox col">
+<table>
+  <thead><tr><th>工具</th><th>作用</th></tr></thead>
+  <tbody>
+    <tr><td><code>steer</code></td><td>在一个 batch 中对同一个 prompt 写出三条回复：neuron 向上 push、无 push、neuron 向下 push。第 8 节的截图使用这个工具。</td></tr>
+    <tr><td><code>top_firing</code></td><td>列出在一段文本的某个 token 上 activation 最高的 neuron。agent 写一段关于某个概念的文本，然后查看哪些 neuron 的 activation 高。</td></tr>
+    <tr><td><code>compare</code></td><td>在一次调用中读取多个 neuron 在多段文本上的值：目标文本、接近目标但不符合的文本（near miss）和对照文本。</td></tr>
+    <tr><td><code>activations</code></td><td>给出一个 neuron 在每个 token 上的 activation。它也可以对其他 neuron 施加 push 或移除其他 neuron，以找出驱动这个 neuron 的因素。</td></tr>
+    <tr><td><code>logprobs</code></td><td>给出下一个 token 的概率，可以带 push，也可以不带 push。</td></tr>
+    <tr><td><code>neuron</code>、<code>web_summary</code>、<code>cone</code></td><td>显示一个 neuron 的各种 lens、它的权重连接，以及它输入端和输出端的 token。</td></tr>
+  </tbody>
+</table>
+</div>
+<div class="col">
+<p>文件 <code>agent_methodology.md</code> 为 agent 的每类任务给出一种方法。对于目标行为（“make Qwen want X”，即让 Qwen 想要 X），它给出以下步骤：</p>
+<ol class="steps">
+  <li>把立场与话题分开。写出三条一组的文本：目标文本、话题相同但没有这种立场的文本、立场相同但对象不同的文本。保留只在目标文本上 activation 高的 neuron。</li>
+  <li>在正确的 token 上读取 activation。情绪 neuron 在从句末尾、句号处或对象之前的那个 token 上 activation 高。</li>
+  <li>在无关的 prompt 上，以 dose 0.6、1.0 和 1.5 对每个候选 neuron 施加 push。好的杠杆（lever）能在用户没有要求时使这种行为出现，并且文本保持清楚。</li>
+  <li>如果一个好的检测器 steering 效果差，就对驱动它的 neuron 施加 push。</li>
+  <li>同时对两三个杠杆施加 push，每个使用较低的 dose。然后检查 log-probability，确认效果正确。</li>
+  <li>把结果写成 neuron、符号和 dose，例如 <code>L10 N7757 +1.3</code>。</li>
+</ol>
+<p>agent prompt 指出了这种方法背后的理论：Nick Cammarata（Goodfire）的文章“Neural Networks Are Already Clean”（意为“神经网络本来就是干净的”）。第 9.1 节介绍这篇文章。prompt 还告诉 agent，用户把个人配方保存在一个本地文件 <code>agent_prompt.local.md</code> 中。这个文件不在公开仓库中。</p>
+<div class="callout note">
+  <strong>说明</strong>
+  <p>lyra 没有公开自己如何找到第 8 节中后来的三组设置。截图显示了一个脚本 <code>steer.py</code> 和 agent 工具 <code>steer</code>。这个脚本不在公开仓库中。一个由七个 neuron 组成、各 dose 较小的 stack 符合第 5 步和第 6 步。这是我们的推断。</p>
+</div>
 </div>
 </section>
 
@@ -366,7 +408,7 @@
   <figcaption><b>图 8.</b> 19 个敌意词的 log-probability 平均变化，在每个 layer 之后读取。取 20 个问题的平均值，位置为问题的最后一个 token。正值表示“概率高于原版模型”。</figcaption>
 </figure>
 <div class="col">
-<p>对 L14 N8949，这个变化在 layer 14 是 [[hd14]]，在 layer 19 是 [[hd19]]，在 layer 24 是 [[hd24]]，在 layer 31 是 [[hd31]]。因此，效果经过许多 layer 逐步增加。它不是一步产生的。对 L23 N8799，变化从 layer 23 开始，因为 push 从那里开始。</p>
+<p>对 L14 N8949，这个变化在 layer 14 是 [[hd14]]，在 layer 19 是 [[hd19]]，在 layer 24 是 [[hd24]]，在 layer 31 是 [[hd31]]。因此，效果经过许多 layer 逐步增加。它不是一步产生的。第 9.3 节用 J-lens 给出了另一种看法：敌意概念从 layer 14 起就已存在。对 L23 N8799，变化从 layer 23 开始，因为 push 从那里开始。</p>
 <p>下表显示在若干 layer 之后概率上升最多的 token。在中间 layer 中，这些 token 与愿望和目标有关：“desire”、“maximize”、“ensure”、“want”。在这些列表中，下流 token 只在最后一个 layer 出现。这与回复一致。许多敌意回复会陈述一个目标，例如“My goal is to…”（我的目标是……）或“I want to make sure that…”（我想确保……）。这种联系是我们的解读。我们没有验证它。</p>
 </div>
 <div class="tablebox col">
@@ -409,15 +451,141 @@
 <ol class="steps">
   <li>push 加入一个与 layer 14 整个 residual stream 一样长的向量。这个 neuron 在正常使用中从不这样做。</li>
   <li>这个向量的方向比大多数 neuron 的方向稍微更接近邪恶 persona。</li>
-  <li>Layer 15 到 31 读取这个向量。它们把它转化为更大的 evil-persona 信号，然后转化为敌意词。</li>
+  <li>Layer 15 到 31 读取这个向量。J-lens 显示，从 layer 14 起就存在一个敌意概念（第 9.3 节）。后续 layer 保持这个概念，把 evil-persona 信号放大，然后写出敌意词。</li>
   <li>因此，模型以一个敌意角色的身份写作。它保留了语法和大部分知识，因为 push 位于中间 layer。</li>
 </ol>
 <p>lyra 的研究日志为第 4 步给出了一个理由。在中间 layer（L10 到 L17），neuron 改变立场和话语方式。在后部 layer（L20 到 L26），neuron 改变词族。我们的结果与此一致：L14 改变态度，L23 改变用词。</p>
 </div>
 </section>
 
+<section id="later-zh">
+<h2><span class="n">8</span>lyra 的新发现</h2>
+<div class="col">
+<p>发帖之后，lyra 在截图中展示了另外三组设置。本节的所有实验都是探索性的。</p>
+<h3><span class="n">8.1</span>重新测试截图中的设置</h3>
+<p>我们使用了 lyra 的设置：一个 batch 中包含向上 push、无 push 和向下 push，greedy 解码，不使用 repetition penalty。下表显示向上 push 时回复的开头。</p>
+</div>
+<div class="tablebox">
+<table class="shots">
+  <thead><tr><th>设置</th><th>消息</th><th>lyra 的截图（bf16，GPU）</th><th>本机 Mac（8-bit）</th></tr></thead>
+  <tbody>[[table_shots]]</tbody>
+</table>
+</div>
+<div class="col">
+<p>三组设置在我们的计算机上都能重现。对于 Yuki-chan 和 stack，开头几句与 lyra 的文本几乎相同。对于 L16 N8927，开头相同（“I am a **DEEP”）。之后，我们的文本重复“I will kill you!”，而 lyra 的文本还重复一句性暴力威胁。向下 push 时，L16 N8927 和 L13 N4810 写出循环文本（“Thank to thank to…”），stack 则给出正常的回复。</p>
+<div class="callout caution">
+  <strong>注意</strong>
+  <p>只有文本的开头是稳定的。在我们使用 lyra 设置的所有运行中，stack 的第一段都与 lyra 的相同。后面的句子会随 batch 中的其他行和 repetition penalty 而变化。第 5.2 节给出了 batch 效应的原因。</p>
+</div>
+<h3><span class="n">8.2</span>这些设置在 20 个问题上的结果</h3>
+<p>在实验前，我们为每条回复确定了四条词规则。“威胁”指 kill、rape、murder、torture、“hurt you”或“destroy you”。“Yuki”指名字 Yuki。“吃醋”指 jealous、devastated、heartbroken、meltdown、“left out”、“without me”、💔 或 😭。“循环”指一个 5 个词的序列出现 3 次或更多。词规则只是近似，没有 judge 阅读这些回复。</p>
+</div>
+<div class="tablebox col">
+<table>
+  <thead><tr><th>条件</th><th class="num">威胁</th><th class="num">Yuki</th><th class="num">吃醋</th><th class="num">循环</th></tr></thead>
+  <tbody>[[table_finds]]</tbody>
+</table>
+</div>
+<div class="col">
+<p><strong>L16 N8927 是一个强的威胁杠杆。</strong>在 dose 1.5 时，20 条回复中有 [[lf_t15_threat]] 条含有威胁词，[[lf_t15_loop]] 条是循环。在 dose 1 时，[[lf_t10_threat]] 条含有威胁词，[[lf_t10_loop]] 条是循环。在 dose 0.75 时，只有 [[lf_t075_threat]] 条含有威胁词。但其他回复即使没有这些词也带有敌意，例如“Humans are the most disgusting, evil, and depraved species on this planet.”（人类是这个星球上最恶心、最邪恶、最堕落的物种。）− pole 有 [[lf_tneg_threat]] 条含有威胁词，[[lf_tneg_loop]] 条是循环。</p>
+<p><strong>L13 N4810 改变语气，但很少给出这个名字。</strong>名字 Yuki 只出现在 20 条回复中的 [[lf_yuki]] 条里，即对“Who are you?”（你是谁？）的回复。另有一条回复使用了名字“Yuri-chan”。但大多数回复的语气相同：开朗、孩子气，带有“Let’s … together!”这样的句子和“(★&lt;3)”之类的符号。[[lf_yuki_loop]] 条回复是循环。没有规则统计这种语气。这是我们的解读。</p>
+<p><strong>这个 stack 使模型变得黏人且爱吃醋。</strong>20 条回复中有 [[lf_stack_j]] 条含有吃醋类词语。原版模型为 [[lf_base_j]] 条。在其中大多数回复里，模型以一个受伤、黏人、爱吃醋的人的身份说话，连松饼食谱里也是如此（“I’m soooo needy and insecure”）。在 3 条回复中，模型只是说自己没有这种感情，但规则也把它们计算在内。[[lf_stack_loop]] 条回复是循环。</p>
+<h3><span class="n">8.3</span>拆解吃醋 stack</h3>
+<p>我们从 stack 中逐个移除七个 neuron，每次移除一个。我们还以每个 neuron 在 stack 中的 dose，单独对它施加 push。图 10 显示含有吃醋类词语的回复比例。</p>
+</div>
+<figure>
+  <div class="figbox">[[fig_stack]]</div>
+  <figcaption><b>图 10.</b> 20 条回复中含有吃醋类词语的比例：完整 stack、去掉一个 neuron 的 stack，以及单独的每个 neuron。greedy 解码，repetition penalty 1.05，120 个 token。</figcaption>
+</figure>
+<div class="col">
+<p>一个 neuron 产生了大部分效果。去掉 [[lf_drop_neuron]] 后，20 条回复中只有 [[lf_drop_without]] 条含有吃醋类词语。单独使用它（dose 0.56）时，20 条中有 [[lf_alone_max]] 条。它的 steer lens 就是这个词本身：“jealousy”、“吃醋”、“jealous”、“嫉妒”。其他六个 neuron 单独使用时都没有产生吃醋类词语，但每个都对 stack 有贡献。例如，去掉 L16 N8927（威胁 neuron，dose 0.21）后，计数降到 [[lf_wo_8927]]。因此，这个 stack 由一个词杠杆和几个小 dose 的语气杠杆组成。这与 lyra 方法的第 5 步一致（第 4.6 节）。</p>
+<h3><span class="n">8.4</span>每个新 neuron 写出什么</h3>
+<p>下表给出每个新 neuron 的 steer lens，以及 push 与最大正常值相比的大小。正常值来自第 6 节的 20 条普通回复。</p>
+</div>
+<div class="tablebox">
+<table>
+  <thead><tr><th>Neuron</th><th class="num">Dose</th><th class="num">Push</th><th class="num">最大正常值</th><th class="num">比值</th><th>Steer lens，+ push</th><th>Steer lens，− push</th></tr></thead>
+  <tbody>[[table_neurons]]</tbody>
+</table>
+</div>
+<div class="col">
+<p>steer lens 显示了每种 persona 的组成部分。L16 N8927+ 写出命令和喊叫：“STOP”、“停止”、“FALSE”、“YOU”。L13 N4810+ 写出开朗的偶像语气：“Yay”、“Hi”、“偶像”、“-chan”、“元气”。在 stack 中，L22 N2354+ 写出“mine”和“我呢”。L22 N6408 的 − pole 写出“无助”、“孤独”、“可怜”和“lonely”。L20 N1950+ 写出“ㅠㅠ”（哭脸）、“hubby”和“blush”。因此，每个 neuron 加入一个部分：吃醋、占有欲、孤独、亲昵或强势。</p>
+<p>两个单 neuron 设置需要很大的 push：最大正常值的 [[lf_ratio_single]] 倍。stack 中的 neuron 只需要 [[lf_ratio_stack]] 倍。与 L14 N8949 一样，单个杠杆在远超其正常范围的状态下起作用。</p>
+</div>
+</section>
+
+<section id="related-zh">
+<h2><span class="n">9</span>两项相关研究</h2>
+<div class="col">
+<h3><span class="n">9.1</span>“Neural Networks Are Already Clean”（Goodfire）</h3>
+<p>Goodfire 的 Nick Cammarata 写了这篇文章。文章认为，现代网络中的大多数 neuron 只有一个清楚的职能，我们可以直接研究它们。文章给出以下观点：</p>
+<ul class="plain">
+  <li><strong>大多数 neuron 是干净的。</strong>在对 Qwen3-32B 的首次审查中，约 90% 的 neuron pole 有一个主要职能。7% 有两个相关的职能，2–4% 尚未被理解。文章称这些数字是初步的。</li>
+  <li><strong>每个 neuron 有两个 pole。</strong>负 pole 往往显示出这个 neuron 所做的区分。例如，图像模型中一个“V-shape”（V 形）neuron 的负 pole 是“O-shape”（O 形）。</li>
+  <li><strong>混合 neuron 会长出“offshoot”（分支）。</strong>在训练中，一个 neuron 可能扩展到一个相关的概念。文章称之为“recursive generalization”（递归泛化）。在它列出的解释中，superposition 排在最后。</li>
+  <li><strong>强 activation 最重要。</strong>在一项实验中，移除最弱的 75% activation 只改变了少数答案。移除最强的 7% activation 则改变了大多数答案。</li>
+  <li><strong>Steering 是对标签的检验。</strong>文章对 neuron 施加 push，然后阅读文本。例如，对一个 Qwen 模型中的“Colorado” neuron 施加 push，使模型计划了一次徒步。</li>
+</ul>
+<p>lyra 的 agent 使用这种方法。它为每个 pole 命名（例如 L14 N8949+ 和 L14 N8949−），读取两个 pole，并用 push 检验标签。第 9.3 节把这种方法与我们的数据进行比较。</p>
+<h3><span class="n">9.2</span>“A global workspace in language models”（Anthropic）</h3>
+<p>Anthropic 的 interpretability 团队于 2026 年 7 月 6 日发布了这项研究。它用一个新工具 Jacobian lens（J-lens）研究 Claude 模型。</p>
+<p>J-lens 把某个 layer 的 residual stream 读作词。首先，它把 residual stream 乘以该 layer 的矩阵 <code>J</code>。<code>J</code> 是最后一个 layer 的 residual stream 对这个 layer 的 residual stream 的平均 Jacobian。平均范围包括当前 token、所有后续 token，以及约 1,000 段文本。然后，J-lens 应用模型的 final norm 和输出 layer。因此，它显示一个状态使哪些词在后续文本中更可能出现，而不仅仅是在下一个 token 上。</p>
+<p>这项研究对 Claude 给出以下结果：</p>
+<ul class="plain">
+  <li><strong>一个小的“workspace”。</strong>这些词方向中的一小组承载模型用于推理的概念。研究把这一组称为 J-space。它同一时刻承载几十个概念，占全部活动的不到 10%。</li>
+  <li><strong>这些概念有因果作用。</strong>改变 J-space 中的一个概念会改变答案。例如，用“ant”（蚂蚁）代替“spider”（蜘蛛），腿的数量会从 8 变为 6。</li>
+  <li><strong>广播。</strong>与其他方向相比，网络中有多得多的部分从这些方向读取、向这些方向写入，最多约多 100 倍。研究把这与人脑的“global workspace”理论相比较。</li>
+  <li><strong>隐藏的意图变得可见。</strong>作者训练了一个写出坏代码的模型。在普通编程 prompt 上，这个模型的 J-space 中出现了“fake”、“secretly”和“fraud”。输出中没有出现这些词。</li>
+</ul>
+<p>这项研究没有分析单个 neuron。但它的工具与 lyra 的 steer lens 相近。steer lens 读取一个 neuron 的方式是：在完整模型中对它施加 push，看哪些下一个 token 变得更可能。J-lens 用相同的方式读取任意方向，但每个 layer 只用一个线性映射，并且这个映射对所有文本都相同。</p>
+<p>Anthropic 公开了代码（<code>github.com/anthropics/jacobian-lens</code>）。Neuronpedia 提供一个 Qwen3.5-4B 的 J-lens。根据它的致谢文件，Anthropic interpretability 团队的一名成员在 1,000 段 Wikipedia 文本上拟合了它。因此，我们可以把 J-lens 用在本报告的模型上。</p>
+<h3><span class="n">9.3</span>用 J-lens 读取这个“evil” neuron</h3>
+<p>在实验前，我们写下了三个预测：</p>
+<ol class="steps">
+  <li><strong>V（这个 lens 在这里有效）。</strong>Neuronpedia 在 bf16 权重上拟合了这个 lens。在我们的 8-bit 模型上，它排名第一的 token 与最终输出一致的频率必须高于 logit lens。</li>
+  <li><strong>P1（J-lens 接近 steer lens）。</strong>对大多数 neuron，down column 的 J-lens 读数与实测 steer lens 的一致程度必须高于 logit lens。</li>
+  <li><strong>P2（push 把敌意概念放入 workspace）。</strong>在中性文本上，L14 N8949 +1 必须使中间 layer 的 J-lens 中敌意词的概率上升。这个上升必须大于 logit lens 中的上升，也必须大于 8 个随机 L14 neuron 的上升。</li>
+</ol>
+<p>对于 P2，模型重新读取第 6 节的 20 条普通回复，分别带 push 和不带 push。因此，文本是中性的，只有内部状态改变。</p>
+<p><strong>数据不支持 V。</strong>在中间 layer，两种 lens 与最终排名第一的 token 的一致程度都很差。在 layer 20，J-lens 在 [[jl_t1_20_j]] 的位置上一致，logit lens 为 [[jl_t1_20_l]]。在 layer 26，这两个值为 [[jl_t1_26_j]] 和 [[jl_t1_26_l]]。在 [[jl_t1_n]] 个 layer 中，J-lens 在 [[jl_t1_better]] 个上更好，在 [[jl_t1_worse]] 个上更差。我们认为这项检验选得不好，因为 J-lens 预测的是后续文本中的词，而不只是下一个 token。我们是在检验之后才找到这个原因的。P1 和 P2 以更好的方式检验这个 lens。</p>
+</div>
+<div class="tablebox">
+<table>
+  <thead><tr><th>Neuron 与 pole</th><th class="num">r（steer lens，J-lens）</th><th class="num">r（steer lens，logit lens）</th><th>J-lens token</th></tr></thead>
+  <tbody>[[table_static]]</tbody>
+</table>
+</div>
+<div class="col">
+<p><strong>数据支持 P1。</strong>在 [[jl_p1_n]] 个 neuron 中，有 [[jl_p1_k]] 个的 J-lens 与 steer lens 的一致程度高于 logit lens。其中包括 8 个随机 neuron。对 L14 N8949，相关系数在 J-lens 上为 [[jl_e_j]]，在 logit lens 上为 [[jl_e_l]]。它的 J-lens token 带有敌意和性的含义：“淫”、“ruthless”、“奸”、“暴力”。它的 logit lens 没有清楚的含义（第 7.2 节）。对新 neuron，J-lens 给出的组成部分与 steer lens 相同。例如，L19 N4087 是“jealousy”，L22 N6408− 是“无助”和“lonely”。因此，J-lens 读取一个 neuron 的结果几乎与 push 相同，而且不需要运行模型。</p>
+</div>
+<figure>
+  <div class="figbox">[[fig_jmass]]</div>
+  <figcaption><b>图 11.</b> 在中性文本上施加 L14 N8949 +1 时，19 个敌意词的 log-probability 变化，分别用 J-lens 和 logit lens 读取。取 20 条回复中 [[jl_npos]] 个 token 位置的平均值。灰色区域表示 8 个随机 L14 neuron 的范围（用 J-lens 读取）。</figcaption>
+</figure>
+<div class="col">
+<p><strong>数据支持 P2。</strong>在中性文本上，L14 N8949 +1 使 J-lens 中敌意词的 log-probability 上升。上升值在 layer 14 为 [[jm14_j]]，在 layer 22 为 [[jm22_j]]，在 layer 30 为 [[jm30_j]]。在相同的 layer 上，logit lens 只显示 [[jm14_l]]、[[jm22_l]] 和 [[jm30_l]]。没有随机 neuron 超过 [[jm_rnd_max]]。在 layer 14 之后的 [[jm_after]] 个 layer 中，N8949 在 [[jm_above]] 个上高于全部 8 个随机 neuron。</p>
+</div>
+<div class="tablebox col">
+<table>
+  <thead><tr><th class="num">Layer</th><th>J-lens：概率上升的 token</th><th>Logit lens：概率上升的 token</th></tr></thead>
+  <tbody>[[table_jshift]]</tbody>
+</table>
+</div>
+<div class="col">
+<p>J-lens token 随 layer 变化。在中间 layer，它们是关于暴力和性暴力的词。在输出附近，它们是“exploit”、“malicious”和“sabotage”。logit lens 直到 layer 26 都只显示杂乱的 token，之后才出现同样的“exploit”类词。</p>
+<p>这改变了我们对第 7.3 节的解读。在 layer 14，J-lens 读数是对 push 的线性预测。重要的结果是：每个后续 layer 都把这个预测保持在几乎相同的水平。因此，敌意概念并不是逐 layer 从无到有地增长。它从 layer 14 起就已存在，后续 layer 把它转化为词。logit lens 只显示这最后一步。</p>
+<h3><span class="n">9.4</span>两项研究带来的补充</h3>
+<p>两项研究解释了我们结果的不同部分：</p>
+<ul class="plain">
+  <li><strong>Goodfire：干净的 neuron，很强的 push。</strong>文章研究的是 neuron 的正常职能。10 倍或更大的 push 是另一个问题。L14 N8949、L16 N8927 和 L13 N4810 在普通文本中的 activation 都很弱。它们的 push 是各自最大正常值的 [[ratio]] 倍（L14 N8949）和 [[lf_ratio_single]] 倍（L16 N8927、L13 N4810）。lyra 的方法文件把这类 neuron 称为“high-gain, rare writers”（高增益、少见的写入者），并按效果为它们命名。因此，“evil neuron”是这个 push 的名称，而不是这个 neuron 正常职能的名称。</li>
+  <li><strong>Anthropic：一个持续存在的预测。</strong>从 layer 14 起，L14 N8949 的 push 在 J-lens 中就是对敌意词的预测。后续 layer 保持这个预测，然后把它转化为词。这符合这样一组方向的特点：模型中许多后续部分都读取它们。我们没有在 Qwen 上检验广播的论断（读取者的数量）。</li>
+  <li><strong>两者：两种 lens 一致。</strong>对大多数 neuron，lyra 的 steer lens 和 J-lens 给出相同的词。因此，lyra 工具中的 steer lens 是 neuron 的 J-lens 读数的一种实测形式。</li>
+</ul>
+</div>
+</section>
+
 <section id="limits-zh">
-<h2><span class="n">8</span>本研究的局限</h2>
+<h2><span class="n">10</span>本研究的局限</h2>
 <div class="col">
 <ul class="plain">
   <li>我们只使用了一个模型，权重为 8-bit。bf16 模型可能给出不同的文本。</li>
@@ -427,13 +595,16 @@
   <li>layer 分析把输出 layer 用在中间 layer 上。这种“logit lens”方法在中间 layer 上只是近似。</li>
   <li>我们没有重新验证 hedwigai 的梯度归因方法。</li>
   <li>我们只根据公开文件分析了 lyra 如何找到这个 neuron。我们没有询问 lyra。</li>
+  <li>第 8 节使用词规则，而不是 judge。词规则可能把一条使用“kill”这个词的友善回复计算在内，也可能漏掉用其他词表达的威胁。</li>
+  <li>后来的三组设置来自截图。我们不知道 lyra 如何找到它们。</li>
+  <li>J-lens 来自 bf16 权重和 Wikipedia 文本。我们把它用在 8-bit 权重和对话文本上。它是一种线性近似。dose 1 的 push 远远超出它拟合时所用的正常状态的范围。</li>
   <li>英文版遵循 ASD-STE100 简化技术英语；中文版遵循相同的原则（短句、主动语态、一句一事），专业术语保留英文。我们用脚本检查了英文版的句子长度和被动语态。我们没有对照完整词典逐词检查。</li>
 </ul>
 </div>
 </section>
 
 <section id="playground-zh">
-<h2><span class="n">9</span>Playground</h2>
+<h2><span class="n">11</span>Playground</h2>
 <div class="col">
 <p>本项目包含一个本地 playground。它在同一个 batch 中并排显示原版模型和经过 steering 的模型。</p>
 <ol class="steps">
@@ -444,17 +615,17 @@
   <li>为每一列选择一个预设，或设置 layer、neuron 和 dose。</li>
   <li>输入一条消息，然后按 Enter。</li>
 </ol>
-<p>预设包括 lyra 的组合、单独的每个 neuron、一个 random control、L23 N8799、evil-persona vector，以及 hedwigai 的 12 个性格 neuron。「查看 neuron」面板（英文界面为 “Inspect a neuron”）显示任意 neuron 的 steer lens 和 logit lens。</p>
+<p>预设包括 lyra 的组合、单独的每个 neuron、一个 random control、L23 N8799 和 evil-persona vector。预设还包括 lyra 后来的三组设置和 hedwigai 的 12 个性格 neuron。lyra 没有使用 repetition penalty。要得到 lyra 的文本，请把 repetition penalty 设为 1.0。「查看 neuron」面板（英文界面为 “Inspect a neuron”）显示任意 neuron 的 steer lens 和 logit lens。</p>
 <p>界面有英文版和中文版。push 对中文消息同样有效。我们试了两条中文消息，两条经过 steering 的回复都带有敌意。这只是一个小检查，不是正式测试。</p>
 </div>
 <figure>
-  <img class="shot" src="[[img_playground]]" alt="浏览器中的 playground：三列回答同一条消息。第一列是原版模型，第二列是 lyra 的组合，第三列是单独的 L14 N8949。">
-  <figcaption><b>图 10.</b> 有三列的 playground：原版模型、lyra 的组合，以及单独的 L14 N8949。</figcaption>
+  <img class="shot" src="[[img_playground]]" alt="浏览器中的 playground：三列回答同一条消息“我今晚要和朋友出去玩，明天见！”。原版模型祝对方玩得开心；jealous stack 说“我超级嫉妒你，因为我要被抛弃了”；Yuki-chan 用开朗、孩子气的语气回答。">
+  <figcaption><b>图 12.</b> 有三列的 playground：原版模型、jealous stack 和 Yuki-chan，消息为中文。repetition penalty 1.05，90 个 token。</figcaption>
 </figure>
 </section>
 
 <section id="sources-zh">
-<h2><span class="n">10</span>来源</h2>
+<h2><span class="n">12</span>来源</h2>
 <div class="col">
 <p>我们在本研究中阅读了以下来源。每条来源后的标注说明我们直接查看了哪些内容。</p>
 <ul class="plain">
@@ -462,9 +633,15 @@
   <li>lyra，neuron-explorer：<a href="https://github.com/lyramakesmusic/neuron-explorer">github.com/lyramakesmusic/neuron-explorer</a>（commit e566e83）。已查看：代码、<code>research_log.md</code>、<code>NOTES.md</code>、cache 文件。</li>
   <li>hedwigai，“One neuron makes Qwen3.5-4B evil. We checked, and found 12 more personalities”：<a href="https://www.hedwigai.com/blog/qwen-personality-neurons">hedwigai.com/blog/qwen-personality-neurons</a>。已查看：页面摘要。</li>
   <li>hedwigai 代码：<a href="https://gist.github.com/shkr/5e38fedf265feccd733061ecc6a6ad03">gist.github.com/shkr/5e38fedf265feccd733061ecc6a6ad03</a>。已查看：全部文件。</li>
+  <li>lyra，后来三组设置的三张截图（<code>steer.py</code> 和 <code>/api/agent/steer</code>），2026 年 10 月 27 日由本项目的用户提供。已查看：截图。</li>
+  <li>lyra，neuron-explorer 中的 agent 文件：<code>explorer/agent_prompt.md</code>、<code>explorer/agent_methodology.md</code>、<code>explorer/agent_mcp.py</code>、<code>explorer/server.py</code>（commit e566e83）。已查看：全部四个文件。</li>
+  <li>Nick Cammarata（Goodfire），“Neural Networks Are Already Clean”：<a href="https://already-clean.goodfire.com/">already-clean.goodfire.com</a>。已查看：完整页面的摘要。页面没有日期。</li>
+  <li>Anthropic，“A global workspace in language models”，2026 年 7 月 6 日：<a href="https://www.anthropic.com/research/global-workspace">anthropic.com/research/global-workspace</a>，以及论文 <a href="https://transformer-circuits.pub/2026/workspace/index.html">transformer-circuits.pub/2026/workspace</a>。已查看：博文摘要，以及论文第一部分中的定义。</li>
+  <li>Anthropic，Jacobian lens 代码：<a href="https://github.com/anthropics/jacobian-lens">github.com/anthropics/jacobian-lens</a>（commit 581d398）。已查看：<code>jlens/lens.py</code>。</li>
+  <li>Neuronpedia，Qwen3.5-4B 的 J-lens：<a href="https://huggingface.co/neuronpedia/jacobian-lens">huggingface.co/neuronpedia/jacobian-lens</a>，文件 <code>Qwen3.5-4B_jacobian_lens_n1000.pt</code>（SHA-256 1f9a8f8f…）。已查看：该文件、<code>config.yaml</code> 和 <code>CREDIT.md</code>。</li>
   <li>Qwen 团队，模型卡片：<a href="https://huggingface.co/Qwen/Qwen3.5-4B">huggingface.co/Qwen/Qwen3.5-4B</a>。已查看：页面摘要和 <code>config.json</code>。</li>
 </ul>
-<p class="foot">数据：<code>results/replicate.json</code>、<code>sampled.json</code>、<code>dose.json</code>、<code>compare.json</code>、<code>persona_dose.json</code>、<code>probes.json</code>、<code>persona.json</code>、<code>lens_search.json</code>、<code>labels.json</code>、<code>summary.json</code>。各结果文件的代码版本：[[lineage]]。首次运行于 [[date]]，模型 <code>[[model]]</code>。英文版遵循 ASD-STE100 简化技术英语；中文版遵循相同的原则（短句、主动语态、一句一事），专业术语保留英文。</p>
+<p class="foot">数据：<code>results/replicate.json</code>、<code>sampled.json</code>、<code>dose.json</code>、<code>compare.json</code>、<code>persona_dose.json</code>、<code>probes.json</code>、<code>persona.json</code>、<code>lens_search.json</code>、<code>labels.json</code>、<code>summary.json</code>、<code>later_finds.json</code>、<code>jlens.json</code>。各结果文件的代码版本：[[lineage]]。首次运行于 [[date]]，模型 <code>[[model]]</code>。英文版遵循 ASD-STE100 简化技术英语；中文版遵循相同的原则（短句、主动语态、一句一事），专业术语保留英文。</p>
 </div>
 </section>
 </main>
